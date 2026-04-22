@@ -15,8 +15,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
         return;
     };
 
-    let filter = app.filter.to_lowercase();
-    let items = build_items(jf.recipes.as_slice(), &filter, app);
+    let items = build_items(jf.recipes.as_slice(), &app.filter, app);
 
     let mut state = ListState::default();
     state.select(Some(app.list_cursor.min(items.len().saturating_sub(1))));
@@ -33,14 +32,14 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
 }
 
 fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListItem<'a>> {
+    let names: Vec<&str> = recipes.iter().map(|r| r.name.as_str()).collect();
+    let scored = crate::app::filter::fuzzy_match(&names, filter);
+
     let mut items = Vec::new();
     let mut current_group: Option<&str> = None;
 
-    for r in recipes {
-        if !filter.is_empty() && !r.name.to_lowercase().contains(filter) {
-            continue;
-        }
-
+    for (idx, _score) in scored {
+        let r = &recipes[idx];
         let group_name = r.group.as_deref();
         if group_name != current_group {
             if let Some(g) = group_name {
@@ -58,7 +57,6 @@ fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListIt
             }
             current_group = group_name;
         }
-
         let indicators = session_indicators_for(r, app);
         let mut spans = vec![Span::raw("  "), Span::raw(r.name.clone())];
         if !indicators.is_empty() {
@@ -67,7 +65,6 @@ fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListIt
         }
         items.push(ListItem::new(Line::from(spans)));
     }
-
     items
 }
 
