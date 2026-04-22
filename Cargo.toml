@@ -1,0 +1,46 @@
+[package]
+name = "lazyjust"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.78"
+description = "Terminal UI for the `just` command runner"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/nick-hartjes/lazyjust-rs"
+
+[[bin]]
+name = "lazyjust"
+path = "src/main.rs"
+
+[lib]
+name = "lazyjust"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+crossterm = { version = "0.27", features = ["event-stream"] }
+dirs = "5"
+futures = "0.3"
+ignore = "0.4"
+nucleo = "0.5"
+portable-pty = "0.8"
+ratatui = "0.26"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-appender = "0.2"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+vt100 = "0.15"
+
+[dev-dependencies]
+insta = { version = "1", features = ["yaml"] }
+pretty_assertions = "1"
+rstest = "0.19"
+tempfile = "3"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
