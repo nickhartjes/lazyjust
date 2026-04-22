@@ -12,8 +12,8 @@ pub struct Justfile {
 
 #[derive(Debug, Clone)]
 pub struct Recipe {
-    pub name: String,              // e.g. "build" or "api::serve"
-    pub module_path: Vec<String>,  // e.g. ["api"] for modded recipes
+    pub name: String,             // e.g. "build" or "api::serve"
+    pub module_path: Vec<String>, // e.g. ["api"] for modded recipes
     pub group: Option<String>,
     pub params: Vec<Param>,
     pub doc: Option<String>,
@@ -54,10 +54,20 @@ pub enum Focus {
 pub enum Mode {
     Normal,
     FilterInput,
-    ParamInput { recipe_idx: usize, values: Vec<String>, cursor: usize },
-    Dropdown { filter: String, cursor: usize },
+    ParamInput {
+        recipe_idx: usize,
+        values: Vec<String>,
+        cursor: usize,
+    },
+    Dropdown {
+        filter: String,
+        cursor: usize,
+    },
     Help,
-    Confirm { prompt: String, on_accept: ConfirmAction },
+    Confirm {
+        prompt: String,
+        on_accept: ConfirmAction,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
