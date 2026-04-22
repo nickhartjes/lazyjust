@@ -190,6 +190,30 @@ pub fn reduce(app: &mut App, action: Action) {
             }
         }
 
+        Action::ParamChar(c) => {
+            if let Mode::ParamInput { values, cursor, .. } = &mut app.mode {
+                if let Some(v) = values.get_mut(*cursor) {
+                    v.push(c);
+                }
+            }
+        }
+        Action::ParamBackspace => {
+            if let Mode::ParamInput { values, cursor, .. } = &mut app.mode {
+                if let Some(v) = values.get_mut(*cursor) {
+                    v.pop();
+                }
+            }
+        }
+        Action::ParamNext => {
+            if let Mode::ParamInput { values, cursor, .. } = &mut app.mode {
+                if *cursor + 1 < values.len() {
+                    *cursor += 1;
+                }
+            }
+        }
+        Action::CancelParam => app.mode = Mode::Normal,
+        // ParamCommit handled by event_loop (needs side effects)
+
         // Remaining actions handled in later tasks.
         _ => {}
     }

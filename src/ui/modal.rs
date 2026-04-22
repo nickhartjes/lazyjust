@@ -11,6 +11,10 @@ pub fn render(f: &mut Frame, app: &App) {
         Mode::Dropdown { filter, cursor } => render_dropdown(f, app, filter, *cursor),
         Mode::Help => render_help(f),
         Mode::Confirm { prompt, .. } => render_confirm(f, prompt),
+        Mode::ParamInput { .. } => {
+            let area = centered(f.size(), 60, 12);
+            super::param_modal::render(f, app, area);
+        }
         _ => {}
     }
 }

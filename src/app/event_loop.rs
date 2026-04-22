@@ -145,6 +145,14 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         {
                             break;
                         }
+                        if let Action::ParamCommit = action {
+                            if let crate::app::types::Mode::ParamInput { values, .. } = app.mode.clone() {
+                                app.mode = crate::app::types::Mode::Normal;
+                                do_spawn(&mut app, &mut mgr, &mut screens, &cfg, &values, event_tx.clone())?;
+                                dirty = true;
+                                continue;
+                            }
+                        }
                         if let Action::RunHighlighted { force_new } = action {
                             spawn_highlighted(&mut app, &mut mgr, &mut screens, &cfg, force_new, event_tx.clone())?;
                         } else {

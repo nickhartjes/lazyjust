@@ -61,3 +61,7 @@ setup:
 # Tail the application log
 logs:
     @echo tail -f /var/log/app.log
+
+# Greet the user
+greet name:
+    @echo "hi {{name}}"
