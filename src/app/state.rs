@@ -49,9 +49,16 @@ impl App {
         self.justfiles.get_mut(self.active_justfile)
     }
 
+    /// Hand out the next `SessionId` and advance the counter. Call sites that
+    /// need to allocate an id use `app.next_session_id()`; the bare field
+    /// `app.next_session_id` still reads the next-to-be-handed-out value —
+    /// this field/method name overlap is intentional.
     pub fn next_session_id(&mut self) -> SessionId {
         let id = self.next_session_id;
-        self.next_session_id += 1;
+        self.next_session_id = self
+            .next_session_id
+            .checked_add(1)
+            .expect("SessionId overflow: 2^64 sessions");
         id
     }
 
