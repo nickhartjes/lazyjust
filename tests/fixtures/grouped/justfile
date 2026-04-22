@@ -35,6 +35,11 @@ test-one name:
 test-watch:
     @echo watchexec -e rs -- cargo test
 
+# Prompt for a name and greet
+[group('test')]
+prompt:
+    @read -p "name? " name && echo "hi $name"
+
 # --- deploy group ------------------------------------------------------------
 
 # Deploy to staging or prod

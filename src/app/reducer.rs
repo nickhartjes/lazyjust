@@ -151,6 +151,45 @@ pub fn reduce(app: &mut App, action: Action) {
             }
         }
 
+        Action::CycleFocus => {
+            app.focus = match app.focus {
+                crate::app::types::Focus::List => crate::app::types::Focus::Session,
+                crate::app::types::Focus::Session => crate::app::types::Focus::List,
+                other => other,
+            };
+        }
+        Action::FocusList => app.focus = crate::app::types::Focus::List,
+        Action::FocusSession => app.focus = crate::app::types::Focus::Session,
+        Action::FocusNextSession => {
+            let ids: Vec<_> = app.sessions.iter().map(|s| s.id).collect();
+            if let Some(cur) = app.active_session {
+                if let Some(i) = ids.iter().position(|id| *id == cur) {
+                    if let Some(next) = ids.get(i + 1) {
+                        app.active_session = Some(*next);
+                        if let Some(s) = app.session_mut(*next) {
+                            s.unread = false;
+                        }
+                    }
+                }
+            } else if let Some(first) = ids.first() {
+                app.active_session = Some(*first);
+            }
+        }
+        Action::FocusPrevSession => {
+            let ids: Vec<_> = app.sessions.iter().map(|s| s.id).collect();
+            if let Some(cur) = app.active_session {
+                if let Some(i) = ids.iter().position(|id| *id == cur) {
+                    if i > 0 {
+                        let prev = ids[i - 1];
+                        app.active_session = Some(prev);
+                        if let Some(s) = app.session_mut(prev) {
+                            s.unread = false;
+                        }
+                    }
+                }
+            }
+        }
+
         // Remaining actions handled in later tasks.
         _ => {}
     }

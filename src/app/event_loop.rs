@@ -81,6 +81,24 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         dirty = true;
                         continue;
                     }
+                    if let crossterm::event::Event::Key(key) = evt {
+                        if app.focus == crate::app::types::Focus::Session
+                            && app.mode == crate::app::types::Mode::Normal
+                        {
+                            if key.code == crossterm::event::KeyCode::F(12) {
+                                crate::app::reducer::reduce(&mut app, Action::FocusList);
+                                dirty = true;
+                                continue;
+                            }
+                            let bytes = encode_key(key);
+                            if !bytes.is_empty() {
+                                if let Some(sid) = app.active_session {
+                                    let _ = mgr.write(sid, &bytes);
+                                }
+                                continue;
+                            }
+                        }
+                    }
                     if let Some(action) = input::handle_event(&evt, &app.mode) {
                         if matches!(action, Action::ConfirmQuit) {
                             for id in mgr.running_ids() {
@@ -229,19 +247,29 @@ pub fn do_spawn(
 
     let id = app.next_session_id();
     let log_path = crate::logging::session_log_path(cfg, id, &recipe_name)?;
+
+    // Compute right-pane dims for initial PTY size; subtract 2 for borders.
+    let (rows, cols) = {
+        // Use a safe fallback if terminal.size() is unavailable here.
+        // We don't have direct access to terminal from do_spawn; approximate
+        // from app's assumed default (80x24) and resize on next Resize event.
+        // TODO: plumb terminal.size() into do_spawn.
+        (24, 80)
+    };
+
     let meta = mgr.spawn_recipe(
         id,
         &justfile_path,
         &recipe_name,
         args,
         &cwd,
-        24,
-        80,
+        rows,
+        cols,
         log_path,
         tx,
     )?;
 
-    screens.insert(id, vt100::Parser::new(24, 80, 0));
+    screens.insert(id, vt100::Parser::new(rows, cols, 0));
     app.sessions.push(meta);
     app.active_session = Some(id);
     app.focus = crate::app::types::Focus::Session;
@@ -252,4 +280,39 @@ pub fn do_spawn(
         }
     }
     Ok(())
+}
+
+fn encode_key(key: crossterm::event::KeyEvent) -> Vec<u8> {
+    use crossterm::event::{KeyCode, KeyModifiers};
+    let ctrl = key.modifiers.contains(KeyModifiers::CONTROL);
+    match key.code {
+        KeyCode::Char(c) => {
+            if ctrl {
+                let byte = match c {
+                    '@' => 0x00,
+                    'a'..='z' => (c as u8) - b'a' + 1,
+                    '[' => 0x1b,
+                    '\\' => 0x1c,
+                    ']' => 0x1d,
+                    '^' => 0x1e,
+                    '_' => 0x1f,
+                    _ => return Vec::new(),
+                };
+                vec![byte]
+            } else {
+                c.to_string().into_bytes()
+            }
+        }
+        KeyCode::Enter => b"\r".to_vec(),
+        KeyCode::Tab => b"\t".to_vec(),
+        KeyCode::Backspace => b"\x7f".to_vec(),
+        KeyCode::Esc => b"\x1b".to_vec(),
+        KeyCode::Up => b"\x1b[A".to_vec(),
+        KeyCode::Down => b"\x1b[B".to_vec(),
+        KeyCode::Right => b"\x1b[C".to_vec(),
+        KeyCode::Left => b"\x1b[D".to_vec(),
+        KeyCode::Home => b"\x1b[H".to_vec(),
+        KeyCode::End => b"\x1b[F".to_vec(),
+        _ => Vec::new(),
+    }
 }

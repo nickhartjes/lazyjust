@@ -68,12 +68,23 @@ fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListIt
     items
 }
 
-fn session_indicators_for<'a>(_r: &'a Recipe, _app: &App) -> Vec<Span<'a>> {
-    // filled in Task 20 once sessions exist
-    Vec::new()
+fn session_indicators_for<'a>(r: &'a Recipe, app: &App) -> Vec<Span<'a>> {
+    let mut out = Vec::new();
+    let mut emitted = 0usize;
+    for &sid in r.runs.iter().rev() {
+        if emitted >= 3 {
+            out.push(Span::raw(format!(" (+{} more)", r.runs.len() - 3)));
+            break;
+        }
+        if let Some(s) = app.session(sid) {
+            out.push(Span::raw(" "));
+            out.push(status_span(s.status, s.unread));
+            emitted += 1;
+        }
+    }
+    out
 }
 
-#[allow(dead_code)]
 fn status_span(status: Status, unread: bool) -> Span<'static> {
     let (icon, color) = match status {
         Status::Running => ("●", Color::Blue),
