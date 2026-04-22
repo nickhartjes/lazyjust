@@ -61,7 +61,7 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
 
     loop {
         if dirty && last_render.elapsed() >= cfg.render_throttle {
-            terminal.draw(|f| ui::render(f, &app))?;
+            terminal.draw(|f| ui::render(f, &app, &screens))?;
             last_render = Instant::now();
             dirty = false;
         }
@@ -69,9 +69,14 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
         tokio::select! {
             Some(ct) = crossterm_events.next() => {
                 if let Ok(evt) = ct {
-                    if let crossterm::event::Event::Resize(cols, rows) = evt {
-                        for id in mgr.running_ids() {
-                            let _ = mgr.resize(id, rows, cols);
+                    if let crossterm::event::Event::Resize(_, _) = evt {
+                        let size = terminal.size()?;
+                        let panes = crate::ui::layout::compute(size, &app);
+                        let pane_rows = panes.right.height.saturating_sub(2);
+                        let pane_cols = panes.right.width.saturating_sub(2);
+                        for (id, screen) in screens.iter_mut() {
+                            screen.set_size(pane_rows, pane_cols);
+                            let _ = mgr.resize(*id, pane_rows, pane_cols);
                         }
                         dirty = true;
                         continue;
