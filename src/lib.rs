@@ -3,6 +3,7 @@ pub mod cli;
 pub mod config;
 pub mod discovery;
 pub mod error;
+pub mod input;
 pub mod logging;
 
 pub use error::{Error, Result};
