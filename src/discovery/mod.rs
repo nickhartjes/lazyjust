@@ -60,8 +60,14 @@ fn dump_and_parse(path: &Path) -> Result<Justfile> {
     let json = String::from_utf8_lossy(&output.stdout);
     let recipes = parse::parse_dump_with_path(&json, &path.to_path_buf())?;
 
-    let mut groups: Vec<String> = recipes.iter().filter_map(|r| r.group.clone()).collect();
-    groups.dedup();
+    let mut groups: Vec<String> = Vec::new();
+    for r in &recipes {
+        if let Some(g) = &r.group {
+            if !groups.iter().any(|existing| existing == g) {
+                groups.push(g.clone());
+            }
+        }
+    }
 
     Ok(Justfile {
         path: path.to_path_buf(),
