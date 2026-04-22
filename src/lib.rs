@@ -5,6 +5,7 @@ pub mod discovery;
 pub mod error;
 pub mod input;
 pub mod logging;
+pub mod ui;
 
 pub use error::{Error, Result};
 
