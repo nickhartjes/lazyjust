@@ -1,4 +1,3 @@
-use crate::app::types::Recipe;
 use crate::app::App;
 use ratatui::layout::Rect;
 use ratatui::style::{Color, Style};
@@ -52,5 +51,3 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
         .wrap(Wrap { trim: false });
     f.render_widget(p, area);
 }
-
-fn _unused(_r: &Recipe) {}
