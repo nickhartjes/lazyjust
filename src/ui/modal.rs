@@ -60,26 +60,32 @@ fn render_dropdown(f: &mut Frame, app: &App, filter: &str, cursor: usize) {
 }
 
 fn render_help(f: &mut Frame) {
-    let area = centered(f.size(), 60, 18);
+    let area = centered(f.size(), 64, 22);
     f.render_widget(Clear, area);
     let lines: Vec<Line> = [
         "lazyjust — keybindings",
         "",
-        "  j/k, ↑/↓    move list cursor",
-        "  h/l         cycle recipe run history",
-        "  Enter       run recipe (focus running if exists)",
-        "  Shift+Enter / r   always spawn new run",
-        "  /           fuzzy filter",
-        "  d           switch justfile",
-        "  Tab         cycle focus list/session",
-        "  K           kill focused session",
-        "  x           close focused session",
-        "  Ctrl+o/i    next/prev unread session",
-        "  L           copy log path",
-        "  > < =       resize panes",
-        "  F12         leave session pane",
-        "  ?           this help",
-        "  q           quit",
+        "  List focus:",
+        "    j/k, ↑/↓    move list cursor",
+        "    h/l         cycle recipe run history",
+        "    Enter       run recipe (focus running if exists)",
+        "    Shift+Enter / r   always spawn new run",
+        "    /           fuzzy filter",
+        "    d           switch justfile",
+        "    Tab         cycle focus list/session",
+        "    K           kill focused session",
+        "    x           close focused session",
+        "    Ctrl+o/i    next/prev unread session",
+        "    L           copy log path",
+        "    > < =       resize panes",
+        "    ?           this help",
+        "    q           quit",
+        "",
+        "  Session focus:",
+        "    PgUp/PgDn   scroll output",
+        "    Home/End    top / bottom of scrollback",
+        "    F12         leave session pane",
+        "    (all other keys forwarded to the PTY)",
     ]
     .into_iter()
     .map(Line::from)

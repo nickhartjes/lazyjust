@@ -19,6 +19,10 @@ use std::io::stdout;
 use std::time::Instant;
 use tokio::sync::mpsc;
 
+/// vt100 scrollback capacity per session. User scrolls with PgUp/PgDn/Home/End
+/// when session pane is focused.
+const SCROLLBACK_LINES: usize = 2000;
+
 pub struct TerminalGuard;
 
 impl TerminalGuard {
@@ -89,6 +93,36 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                                 crate::app::reducer::reduce(&mut app, Action::FocusList);
                                 dirty = true;
                                 continue;
+                            }
+                            // Scrollback controls — consumed locally, not forwarded to PTY.
+                            if let Some(sid) = app.active_session {
+                                if let Some(screen) = screens.get_mut(&sid) {
+                                    let cur = screen.screen().scrollback();
+                                    match key.code {
+                                        crossterm::event::KeyCode::PageUp => {
+                                            screen.set_scrollback(cur.saturating_add(10));
+                                            dirty = true;
+                                            continue;
+                                        }
+                                        crossterm::event::KeyCode::PageDown => {
+                                            screen.set_scrollback(cur.saturating_sub(10));
+                                            dirty = true;
+                                            continue;
+                                        }
+                                        crossterm::event::KeyCode::Home => {
+                                            // Top of scrollback = large offset, vt100 clamps to actual size.
+                                            screen.set_scrollback(usize::MAX / 2);
+                                            dirty = true;
+                                            continue;
+                                        }
+                                        crossterm::event::KeyCode::End => {
+                                            screen.set_scrollback(0);
+                                            dirty = true;
+                                            continue;
+                                        }
+                                        _ => {}
+                                    }
+                                }
                             }
                             let bytes = encode_key(key);
                             if !bytes.is_empty() {
@@ -269,7 +303,7 @@ pub fn do_spawn(
         tx,
     )?;
 
-    screens.insert(id, vt100::Parser::new(rows, cols, 0));
+    screens.insert(id, vt100::Parser::new(rows, cols, SCROLLBACK_LINES));
     app.sessions.push(meta);
     app.active_session = Some(id);
     app.focus = crate::app::types::Focus::Session;
