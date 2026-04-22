@@ -78,7 +78,63 @@ pub fn reduce(app: &mut App, action: Action) {
         Action::OpenHelp => app.mode = Mode::Help,
         Action::CloseHelp => app.mode = Mode::Normal,
 
+        Action::OpenDropdown => {
+            app.mode = Mode::Dropdown {
+                filter: String::new(),
+                cursor: app.active_justfile,
+            };
+        }
+        Action::DropdownChar(c) => {
+            if let Mode::Dropdown { filter, cursor } = &mut app.mode {
+                filter.push(c);
+                *cursor = 0;
+            }
+        }
+        Action::DropdownBackspace => {
+            if let Mode::Dropdown { filter, .. } = &mut app.mode {
+                filter.pop();
+            }
+        }
+        Action::DropdownCursorDown => {
+            let max = app.justfiles.len().saturating_sub(1);
+            if let Mode::Dropdown { cursor, .. } = &mut app.mode {
+                if *cursor < max {
+                    *cursor += 1;
+                }
+            }
+        }
+        Action::DropdownCursorUp => {
+            if let Mode::Dropdown { cursor, .. } = &mut app.mode {
+                *cursor = cursor.saturating_sub(1);
+            }
+        }
+        Action::SelectDropdown => {
+            if let Mode::Dropdown { cursor, filter } = app.mode.clone() {
+                let filtered = filtered_justfile_indices(app, &filter);
+                if let Some(&chosen) = filtered.get(cursor) {
+                    app.active_justfile = chosen;
+                    app.list_cursor = 0;
+                    app.filter.clear();
+                }
+                app.mode = Mode::Normal;
+            }
+        }
+        Action::CancelDropdown => app.mode = Mode::Normal,
+
         // Remaining actions handled in later tasks.
         _ => {}
     }
+}
+
+pub fn filtered_justfile_indices(app: &App, filter: &str) -> Vec<usize> {
+    let paths: Vec<String> = app
+        .justfiles
+        .iter()
+        .map(|j| j.path.display().to_string())
+        .collect();
+    let refs: Vec<&str> = paths.iter().map(|s| s.as_str()).collect();
+    crate::app::filter::fuzzy_match(&refs, filter)
+        .into_iter()
+        .map(|(i, _)| i)
+        .collect()
 }

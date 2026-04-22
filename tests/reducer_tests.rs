@@ -76,3 +76,27 @@ fn split_resize_clamps() {
     reduce(&mut app, Action::ResetSplit);
     assert!((app.split_ratio - 0.30).abs() < 1e-6);
 }
+
+#[test]
+fn dropdown_switches_justfile() {
+    use lazyjust::app::types::{Justfile, Mode};
+
+    let a = Justfile {
+        path: "/a".into(),
+        recipes: vec![],
+        groups: vec![],
+    };
+    let b = Justfile {
+        path: "/b".into(),
+        recipes: vec![],
+        groups: vec![],
+    };
+    let mut app = App::new(vec![a, b], vec![], 0.3);
+
+    reduce(&mut app, Action::OpenDropdown);
+    assert!(matches!(app.mode, Mode::Dropdown { .. }));
+    reduce(&mut app, Action::DropdownCursorDown);
+    reduce(&mut app, Action::SelectDropdown);
+    assert_eq!(app.active_justfile, 1);
+    assert_eq!(app.mode, Mode::Normal);
+}

@@ -1,5 +1,6 @@
 pub mod layout;
 pub mod list;
+pub mod modal;
 pub mod preview;
 pub mod status_bar;
 pub mod top_bar;
@@ -13,4 +14,5 @@ pub fn render(f: &mut Frame, app: &App) {
     list::render(f, panes.list, app);
     preview::render(f, panes.right, app);
     status_bar::render(f, panes.status, app);
+    modal::render(f, app);
 }
