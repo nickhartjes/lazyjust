@@ -1,4 +1,5 @@
 pub mod action;
+pub mod event_loop;
 pub mod reducer;
 pub mod state;
 pub mod types;
