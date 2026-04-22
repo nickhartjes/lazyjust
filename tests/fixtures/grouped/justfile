@@ -1,0 +1,58 @@
+# Default = build
+default: build
+
+# --- build group -------------------------------------------------------------
+
+# Compile in debug mode
+[group('build')]
+build:
+    @echo cargo build
+
+# Compile in release mode
+[group('build')]
+release:
+    @echo cargo build --release
+
+# Clean target dir
+[group('build')]
+clean:
+    @echo cargo clean
+
+# --- test group --------------------------------------------------------------
+
+# Run all unit tests
+[group('test')]
+test:
+    @echo cargo test
+
+# Run a single test by name
+[group('test')]
+test-one name:
+    @echo "cargo test -- {{name}}"
+
+# Watch + rerun tests on save
+[group('test')]
+test-watch:
+    @echo watchexec -e rs -- cargo test
+
+# --- deploy group ------------------------------------------------------------
+
+# Deploy to staging or prod
+[group('deploy')]
+deploy env="staging":
+    @echo "./scripts/deploy.sh {{env}}"
+
+# Roll back the most recent deploy
+[group('deploy')]
+rollback:
+    @echo ./scripts/rollback.sh
+
+# --- ungrouped ---------------------------------------------------------------
+
+# Project setup (first-time clone)
+setup:
+    @echo "setting up…"
+
+# Tail the application log
+logs:
+    @echo tail -f /var/log/app.log
