@@ -66,4 +66,18 @@ impl App {
         self.active_justfile()
             .and_then(|jf| jf.recipes.get(self.list_cursor))
     }
+
+    pub fn session_mut(
+        &mut self,
+        id: crate::app::types::SessionId,
+    ) -> Option<&mut crate::app::types::SessionMeta> {
+        self.sessions.iter_mut().find(|s| s.id == id)
+    }
+
+    pub fn session(
+        &self,
+        id: crate::app::types::SessionId,
+    ) -> Option<&crate::app::types::SessionMeta> {
+        self.sessions.iter().find(|s| s.id == id)
+    }
 }

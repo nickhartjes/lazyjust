@@ -121,6 +121,36 @@ pub fn reduce(app: &mut App, action: Action) {
         }
         Action::CancelDropdown => app.mode = Mode::Normal,
 
+        Action::SessionExited { id, code } => {
+            if let Some(s) = app.session_mut(id) {
+                if matches!(s.status, crate::app::types::Status::Running) {
+                    s.status = crate::app::types::Status::Exited { code };
+                    s.unread = true;
+                } else if let crate::app::types::Status::ShellAfterExit { .. } = s.status {
+                    s.status = crate::app::types::Status::Exited { code };
+                }
+            }
+        }
+        Action::RecipeExited { id, code } => {
+            let is_active = Some(id) == app.active_session;
+            if let Some(s) = app.session_mut(id) {
+                s.status = crate::app::types::Status::ShellAfterExit { code };
+                if !is_active {
+                    s.unread = true;
+                }
+            }
+        }
+        Action::MarkUnread(id) => {
+            if let Some(s) = app.session_mut(id) {
+                s.unread = true;
+            }
+        }
+        Action::MarkRead(id) => {
+            if let Some(s) = app.session_mut(id) {
+                s.unread = false;
+            }
+        }
+
         // Remaining actions handled in later tasks.
         _ => {}
     }

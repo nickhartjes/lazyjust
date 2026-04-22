@@ -1,0 +1,37 @@
+use super::osc::scan_done_marker;
+use crate::app::action::AppEvent;
+use crate::app::types::SessionId;
+use std::io::Read;
+use tokio::sync::mpsc::Sender;
+
+pub fn spawn_reader<R>(mut reader: R, id: SessionId, tx: Sender<AppEvent>)
+where
+    R: Read + Send + 'static,
+{
+    std::thread::spawn(move || {
+        let mut buf = [0u8; 8192];
+        loop {
+            match reader.read(&mut buf) {
+                Ok(0) => break,
+                Ok(n) => {
+                    let (stripped, codes) = scan_done_marker(&buf[..n]);
+                    if !stripped.is_empty() {
+                        let _ = tx.blocking_send(AppEvent::SessionBytes {
+                            id,
+                            bytes: stripped,
+                        });
+                    }
+                    for code in codes {
+                        let _ = tx.blocking_send(AppEvent::RecipeExited { id, code });
+                    }
+                }
+                Err(e) if e.kind() == std::io::ErrorKind::Interrupted => continue,
+                Err(_) => {
+                    let _ = tx.blocking_send(AppEvent::SessionExited { id, code: -1 });
+                    break;
+                }
+            }
+        }
+        let _ = tx.blocking_send(AppEvent::SessionExited { id, code: 0 });
+    });
+}

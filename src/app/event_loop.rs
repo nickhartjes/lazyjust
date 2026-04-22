@@ -3,6 +3,7 @@ use super::reducer::reduce;
 use super::state::App;
 use crate::config::Config;
 use crate::input;
+use crate::session::manager::SessionManager;
 use crate::ui;
 use anyhow::Result;
 use crossterm::event::EventStream;
@@ -13,6 +14,7 @@ use crossterm::terminal::{
 use futures::StreamExt;
 use ratatui::backend::CrosstermBackend;
 use ratatui::Terminal;
+use std::collections::HashMap;
 use std::io::stdout;
 use std::time::Instant;
 use tokio::sync::mpsc;
@@ -54,9 +56,8 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
     let mut tick = tokio::time::interval(cfg.tick_interval);
     let mut last_render = Instant::now();
     let mut dirty = true;
-
-    // event_tx is held for later tasks (PTY readers). Silence unused warning.
-    let _ = &event_tx;
+    let mut mgr = SessionManager::default();
+    let mut screens: HashMap<crate::app::types::SessionId, vt100::Parser> = HashMap::new();
 
     loop {
         if dirty && last_render.elapsed() >= cfg.render_throttle {
@@ -68,12 +69,18 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
         tokio::select! {
             Some(ct) = crossterm_events.next() => {
                 if let Ok(evt) = ct {
-                    if let crossterm::event::Event::Resize(_, _) = evt {
+                    if let crossterm::event::Event::Resize(cols, rows) = evt {
+                        for id in mgr.running_ids() {
+                            let _ = mgr.resize(id, rows, cols);
+                        }
                         dirty = true;
                         continue;
                     }
                     if let Some(action) = input::handle_event(&evt, &app.mode) {
                         if matches!(action, Action::ConfirmQuit) {
+                            for id in mgr.running_ids() {
+                                mgr.kill(id);
+                            }
                             break;
                         }
                         if matches!(action, Action::RequestQuit)
@@ -81,17 +88,25 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         {
                             break;
                         }
-                        reduce(&mut app, action);
+                        if let Action::RunHighlighted { force_new } = action {
+                            spawn_highlighted(&mut app, &mut mgr, &mut screens, &cfg, force_new, event_tx.clone())?;
+                        } else {
+                            reduce(&mut app, action);
+                        }
                         dirty = true;
                     }
                 }
             }
             Some(evt) = event_rx.recv() => {
-                handle_app_event(&mut app, evt);
+                handle_app_event(&mut app, &mut screens, evt);
                 dirty = true;
             }
             _ = tick.tick() => {
-                // session try_wait polling added later
+                for id in mgr.running_ids() {
+                    if let Some(code) = mgr.try_wait(id) {
+                        reduce(&mut app, Action::SessionExited { id, code });
+                    }
+                }
                 dirty |= app.status_message.take().is_some();
             }
         }
@@ -100,6 +115,136 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
     Ok(())
 }
 
-fn handle_app_event(_app: &mut App, _evt: AppEvent) {
-    // session byte / exit handling wired in later tasks
+fn handle_app_event(
+    app: &mut App,
+    screens: &mut HashMap<crate::app::types::SessionId, vt100::Parser>,
+    evt: AppEvent,
+) {
+    match evt {
+        AppEvent::SessionBytes { id, bytes } => {
+            if let Some(screen) = screens.get_mut(&id) {
+                screen.process(&bytes);
+            }
+            if app.active_session != Some(id) {
+                if let Some(s) = app.session_mut(id) {
+                    s.unread = true;
+                }
+            }
+        }
+        AppEvent::SessionExited { id, code } => {
+            reduce(app, Action::SessionExited { id, code });
+        }
+        AppEvent::RecipeExited { id, code } => {
+            reduce(app, Action::RecipeExited { id, code });
+        }
+        AppEvent::Crossterm(_) | AppEvent::Tick => {}
+    }
+}
+
+pub fn spawn_highlighted(
+    app: &mut App,
+    mgr: &mut SessionManager,
+    screens: &mut HashMap<crate::app::types::SessionId, vt100::Parser>,
+    cfg: &Config,
+    force_new: bool,
+    tx: mpsc::Sender<AppEvent>,
+) -> Result<()> {
+    use crate::app::types::{Mode, Status};
+
+    if !force_new {
+        if let Some(r) = app.recipe_at_cursor() {
+            let running = r
+                .runs
+                .iter()
+                .rev()
+                .find(|id| {
+                    app.sessions.iter().any(|s| {
+                        s.id == **id
+                            && matches!(s.status, Status::Running | Status::ShellAfterExit { .. })
+                    })
+                })
+                .copied();
+            if let Some(sid) = running {
+                app.active_session = Some(sid);
+                if let Some(s) = app.session_mut(sid) {
+                    s.unread = false;
+                }
+                return Ok(());
+            }
+        }
+    }
+
+    if let Some(r) = app.recipe_at_cursor() {
+        if !r.params.is_empty() {
+            let values = r
+                .params
+                .iter()
+                .map(|p| p.default.clone().unwrap_or_default())
+                .collect::<Vec<_>>();
+            app.mode = Mode::ParamInput {
+                recipe_idx: app.list_cursor,
+                values,
+                cursor: 0,
+            };
+            return Ok(());
+        }
+    }
+
+    do_spawn(app, mgr, screens, cfg, &[], tx)
+}
+
+pub fn do_spawn(
+    app: &mut App,
+    mgr: &mut SessionManager,
+    screens: &mut HashMap<crate::app::types::SessionId, vt100::Parser>,
+    cfg: &Config,
+    args: &[String],
+    tx: mpsc::Sender<AppEvent>,
+) -> Result<()> {
+    let recipe_name;
+    let justfile_path;
+    let cwd;
+    {
+        let jf = match app.active_justfile() {
+            Some(j) => j,
+            None => return Ok(()),
+        };
+        let r = match jf.recipes.get(app.list_cursor) {
+            Some(r) => r,
+            None => return Ok(()),
+        };
+        recipe_name = r.name.clone();
+        justfile_path = jf.path.clone();
+        cwd = jf
+            .path
+            .parent()
+            .unwrap_or(std::path::Path::new("."))
+            .to_path_buf();
+    }
+
+    let id = app.next_session_id();
+    let log_path = crate::logging::session_log_path(cfg, id, &recipe_name)?;
+    let meta = mgr.spawn_recipe(
+        id,
+        &justfile_path,
+        &recipe_name,
+        args,
+        &cwd,
+        24,
+        80,
+        log_path,
+        tx,
+    )?;
+
+    screens.insert(id, vt100::Parser::new(24, 80, 0));
+    app.sessions.push(meta);
+    app.active_session = Some(id);
+    app.focus = crate::app::types::Focus::Session;
+    let cursor = app.list_cursor;
+    if let Some(jf) = app.active_justfile_mut() {
+        if let Some(r) = jf.recipes.get_mut(cursor) {
+            r.runs.push(id);
+        }
+    }
+    Ok(())
 }
