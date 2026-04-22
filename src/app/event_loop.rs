@@ -146,11 +146,29 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                             break;
                         }
                         if let Action::ParamCommit = action {
-                            if let crate::app::types::Mode::ParamInput { values, .. } = app.mode.clone() {
-                                app.mode = crate::app::types::Mode::Normal;
-                                do_spawn(&mut app, &mut mgr, &mut screens, &cfg, &values, event_tx.clone())?;
-                                dirty = true;
-                                continue;
+                            if matches!(app.mode, crate::app::types::Mode::ParamInput { .. }) {
+                                if let crate::app::types::Mode::ParamInput {
+                                    recipe_idx,
+                                    values,
+                                    ..
+                                } = std::mem::replace(
+                                    &mut app.mode,
+                                    crate::app::types::Mode::Normal,
+                                ) {
+                                    // Pin the cursor to the recipe the modal was opened for so
+                                    // do_spawn's `app.list_cursor` lookup can't drift.
+                                    app.list_cursor = recipe_idx;
+                                    do_spawn(
+                                        &mut app,
+                                        &mut mgr,
+                                        &mut screens,
+                                        &cfg,
+                                        &values,
+                                        event_tx.clone(),
+                                    )?;
+                                    dirty = true;
+                                    continue;
+                                }
                             }
                         }
                         if let Action::RunHighlighted { force_new } = action {
