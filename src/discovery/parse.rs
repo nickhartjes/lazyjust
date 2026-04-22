@@ -85,11 +85,7 @@ fn render_body(body: &[serde_json::Value]) -> String {
                         serde_json::Value::String(s) => buf.push_str(s),
                         serde_json::Value::Array(parts) => {
                             // interpolation like ["variable", "env"] — render as {{name}}
-                            let name = parts
-                                .iter()
-                                .filter_map(|p| p.as_str())
-                                .nth(1)
-                                .unwrap_or("");
+                            let name = parts.iter().filter_map(|p| p.as_str()).nth(1).unwrap_or("");
                             buf.push_str("{{");
                             buf.push_str(name);
                             buf.push_str("}}");
