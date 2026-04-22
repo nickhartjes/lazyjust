@@ -10,9 +10,9 @@ where
 {
     std::thread::spawn(move || {
         let mut buf = [0u8; 8192];
-        loop {
+        let exit_code: i32 = loop {
             match reader.read(&mut buf) {
-                Ok(0) => break,
+                Ok(0) => break 0,
                 Ok(n) => {
                     let (stripped, codes) = scan_done_marker(&buf[..n]);
                     if !stripped.is_empty() {
@@ -26,12 +26,12 @@ where
                     }
                 }
                 Err(e) if e.kind() == std::io::ErrorKind::Interrupted => continue,
-                Err(_) => {
-                    let _ = tx.blocking_send(AppEvent::SessionExited { id, code: -1 });
-                    break;
-                }
+                Err(_) => break -1,
             }
-        }
-        let _ = tx.blocking_send(AppEvent::SessionExited { id, code: 0 });
+        };
+        let _ = tx.blocking_send(AppEvent::SessionExited {
+            id,
+            code: exit_code,
+        });
     });
 }
