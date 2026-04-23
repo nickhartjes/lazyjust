@@ -27,6 +27,8 @@ pub fn run() -> anyhow::Result<()> {
 
 async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
     let disc = discovery::discover(&cli.path)?;
+    let _ =
+        crate::session::retention::prune_sessions(&cfg.sessions_log_dir, cfg.session_log_retention);
     let app = app::App::new(disc.justfiles, disc.errors, cfg.default_split_ratio);
     app::event_loop::run(app, cfg).await
 }

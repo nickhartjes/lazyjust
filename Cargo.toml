@@ -36,6 +36,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 vt100 = "0.15"
 
 [dev-dependencies]
+filetime = "0.2"
 insta = { version = "1", features = ["yaml"] }
 pretty_assertions = "1"
 rstest = "0.19"
