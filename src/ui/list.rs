@@ -69,9 +69,6 @@ fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListIt
 }
 
 fn session_indicators_for<'a>(r: &'a Recipe, app: &App) -> Vec<Span<'a>> {
-    // FIXME(T23): when CloseSession lands, prune removed ids from r.runs or
-    // switch the overflow count to only count still-present sessions.
-    // `r.runs.len() - 3` over-counts if any run's SessionMeta has been removed.
     let mut out = Vec::new();
     let mut emitted = 0usize;
     for &sid in r.runs.iter().rev() {

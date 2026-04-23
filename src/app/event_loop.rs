@@ -134,11 +134,36 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         }
                     }
                     if let Some(action) = input::handle_event(&evt, &app.mode) {
-                        if matches!(action, Action::ConfirmQuit) {
-                            for id in mgr.running_ids() {
-                                mgr.kill(id);
+                        if let Action::ConfirmQuit = action {
+                            let accept = if let crate::app::types::Mode::Confirm { on_accept, .. } =
+                                app.mode.clone()
+                            {
+                                Some(on_accept)
+                            } else {
+                                None
+                            };
+                            app.mode = crate::app::types::Mode::Normal;
+                            match accept {
+                                Some(crate::app::types::ConfirmAction::QuitKillAll) => {
+                                    for id in mgr.running_ids() {
+                                        mgr.kill(id);
+                                    }
+                                    screens.clear();
+                                    break;
+                                }
+                                Some(crate::app::types::ConfirmAction::KillSession(id)) => {
+                                    mgr.kill(id);
+                                    reduce(&mut app, Action::KillSession(id));
+                                }
+                                Some(crate::app::types::ConfirmAction::CloseSession(id)) => {
+                                    mgr.kill(id);
+                                    reduce(&mut app, Action::CloseSession(id));
+                                    screens.remove(&id);
+                                }
+                                None => {}
                             }
-                            break;
+                            dirty = true;
+                            continue;
                         }
                         if matches!(action, Action::RequestQuit)
                             && app.sessions.is_empty()

@@ -216,6 +216,50 @@ pub fn reduce(app: &mut App, action: Action) {
         Action::CycleRecipeHistoryPrev => cycle_history(app, -1),
         Action::CycleRecipeHistoryNext => cycle_history(app, 1),
 
+        Action::RequestKillSession => {
+            if let Some(id) = app.active_session {
+                app.mode = Mode::Confirm {
+                    prompt: format!("Kill session {id}?"),
+                    on_accept: crate::app::types::ConfirmAction::KillSession(id),
+                };
+            }
+        }
+        Action::RequestCloseSession => {
+            if let Some(id) = app.active_session {
+                app.mode = Mode::Confirm {
+                    prompt: format!("Close session {id}?"),
+                    on_accept: crate::app::types::ConfirmAction::CloseSession(id),
+                };
+            }
+        }
+        Action::KillSession(id) => {
+            if let Some(s) = app.session_mut(id) {
+                s.status = crate::app::types::Status::Exited { code: 130 };
+            }
+            // actual PTY kill done in event loop
+        }
+        Action::CloseSession(id) => {
+            app.sessions.retain(|s| s.id != id);
+            if app.active_session == Some(id) {
+                app.active_session = None;
+            }
+            for jf in &mut app.justfiles {
+                for r in &mut jf.recipes {
+                    r.runs.retain(|rid| *rid != id);
+                }
+            }
+        }
+        Action::CopyLogPath => {
+            if let Some(id) = app.active_session {
+                if let Some(s) = app.session(id) {
+                    if let Ok(mut cb) = arboard::Clipboard::new() {
+                        let _ = cb.set_text(s.log_path.display().to_string());
+                        app.status_message = Some(format!("copied {}", s.log_path.display()));
+                    }
+                }
+            }
+        }
+
         // Remaining actions handled in later tasks.
         _ => {}
     }
