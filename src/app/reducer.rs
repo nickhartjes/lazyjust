@@ -213,6 +213,8 @@ pub fn reduce(app: &mut App, action: Action) {
         }
         Action::CancelParam => app.mode = Mode::Normal,
         // ParamCommit handled by event_loop (needs side effects)
+        Action::CycleRecipeHistoryPrev => cycle_history(app, -1),
+        Action::CycleRecipeHistoryNext => cycle_history(app, 1),
 
         // Remaining actions handled in later tasks.
         _ => {}
@@ -230,4 +232,31 @@ pub fn filtered_justfile_indices(app: &App, filter: &str) -> Vec<usize> {
         .into_iter()
         .map(|(i, _)| i)
         .collect()
+}
+
+fn cycle_history(app: &mut App, dir: i32) {
+    let Some(r) = app
+        .active_justfile()
+        .and_then(|jf| jf.recipes.get(app.list_cursor))
+    else {
+        return;
+    };
+    let runs = r.runs.clone();
+    if runs.is_empty() {
+        return;
+    }
+    let current_pos = app
+        .active_session
+        .and_then(|sid| runs.iter().position(|x| *x == sid));
+    let next = match current_pos {
+        Some(i) => {
+            let new_i = (i as i32 + dir).clamp(0, (runs.len() - 1) as i32) as usize;
+            runs[new_i]
+        }
+        None => *runs.last().unwrap(),
+    };
+    app.active_session = Some(next);
+    if let Some(s) = app.session_mut(next) {
+        s.unread = false;
+    }
 }

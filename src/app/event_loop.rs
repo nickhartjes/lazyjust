@@ -181,7 +181,7 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                 }
             }
             Some(evt) = event_rx.recv() => {
-                handle_app_event(&mut app, &mut screens, evt);
+                handle_app_event(&mut app, &mut screens, &mut mgr, evt);
                 dirty = true;
             }
             _ = tick.tick() => {
@@ -201,10 +201,12 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
 fn handle_app_event(
     app: &mut App,
     screens: &mut HashMap<crate::app::types::SessionId, vt100::Parser>,
+    mgr: &mut SessionManager,
     evt: AppEvent,
 ) {
     match evt {
         AppEvent::SessionBytes { id, bytes } => {
+            mgr.write_log(id, &bytes);
             if let Some(screen) = screens.get_mut(&id) {
                 screen.process(&bytes);
             }
@@ -327,6 +329,7 @@ pub fn do_spawn(
         cols,
         log_path,
         tx,
+        cfg.session_log_size_cap,
     )?;
 
     screens.insert(id, vt100::Parser::new(rows, cols, SCROLLBACK_LINES));

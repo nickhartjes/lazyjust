@@ -15,6 +15,9 @@ pub struct SessionHandle {
     pub master: Box<dyn MasterPty + Send>,
     pub child: Box<dyn portable_pty::Child + Send + Sync>,
     pub writer: Box<dyn Write + Send>,
+    pub log_writer: Option<std::fs::File>,
+    pub log_written: u64,
+    pub log_cap: u64,
 }
 
 #[derive(Default)]
@@ -35,6 +38,7 @@ impl SessionManager {
         cols: u16,
         log_path: PathBuf,
         tx: Sender<AppEvent>,
+        log_cap: u64,
     ) -> Result<SessionMeta> {
         let (argv, _) = build_unix_command(justfile, recipe, args);
 
@@ -54,12 +58,21 @@ impl SessionManager {
 
         spawn_reader(reader, id, tx);
 
+        let log_writer = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&log_path)
+            .ok();
+
         self.handles.insert(
             id,
             SessionHandle {
                 master,
                 child,
                 writer,
+                log_writer,
+                log_written: 0,
+                log_cap,
             },
         );
 
@@ -72,6 +85,18 @@ impl SessionManager {
             started_at: Instant::now(),
             log_path,
         })
+    }
+
+    pub fn write_log(&mut self, id: SessionId, bytes: &[u8]) {
+        if let Some(h) = self.handles.get_mut(&id) {
+            if let Some(f) = h.log_writer.as_mut() {
+                if h.log_written.saturating_add(bytes.len() as u64) > h.log_cap {
+                    return;
+                }
+                let _ = f.write_all(bytes);
+                h.log_written += bytes.len() as u64;
+            }
+        }
     }
 
     pub fn write(&mut self, id: SessionId, bytes: &[u8]) -> std::io::Result<()> {
