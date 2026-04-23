@@ -26,7 +26,14 @@ pub fn run() -> anyhow::Result<()> {
 }
 
 async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
-    let disc = discovery::discover(&cli.path)?;
+    let disc = match discovery::discover(&cli.path) {
+        Ok(d) => d,
+        Err(e @ crate::Error::JustNotFound) => {
+            eprintln!("{e}");
+            std::process::exit(2);
+        }
+        Err(e) => return Err(e.into()),
+    };
     let _ =
         crate::session::retention::prune_sessions(&cfg.sessions_log_dir, cfg.session_log_retention);
     let app = app::App::new(disc.justfiles, disc.errors, cfg.default_split_ratio);

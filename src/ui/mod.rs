@@ -13,7 +13,21 @@ use ratatui::Frame;
 pub type SessionScreens = std::collections::HashMap<crate::app::types::SessionId, vt100::Parser>;
 
 pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
-    let panes = layout::compute(f.size(), app);
+    let size = f.size();
+    if size.width < 40 || size.height < 10 {
+        let msg = ratatui::widgets::Paragraph::new("Terminal too small")
+            .alignment(ratatui::layout::Alignment::Center);
+        f.render_widget(msg, size);
+        return;
+    }
+    if app.justfiles.is_empty() {
+        let msg = ratatui::widgets::Paragraph::new("No justfiles found.\nPress q to quit.")
+            .alignment(ratatui::layout::Alignment::Center);
+        f.render_widget(msg, size);
+        return;
+    }
+
+    let panes = layout::compute(size, app);
     top_bar::render(f, panes.top_bar, app);
     list::render(f, panes.list, app);
     if let Some(id) = app.active_session {
