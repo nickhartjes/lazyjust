@@ -2,7 +2,7 @@ use crate::app::types::Mode;
 use crate::app::App;
 use ratatui::layout::{Constraint, Direction, Layout, Rect};
 use ratatui::style::{Color, Modifier, Style};
-use ratatui::text::Line;
+use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph};
 use ratatui::Frame;
 
@@ -15,6 +15,7 @@ pub fn render(f: &mut Frame, app: &App) {
             let area = centered(f.size(), 60, 12);
             super::param_modal::render(f, app, area);
         }
+        Mode::ErrorsList => render_errors(f, app),
         _ => {}
     }
 }
@@ -103,5 +104,35 @@ fn render_confirm(f: &mut Frame, prompt: &str) {
     f.render_widget(Clear, area);
     let p = Paragraph::new(format!("{prompt}\n  [y]es     [n]o"))
         .block(Block::default().borders(Borders::ALL).title("confirm"));
+    f.render_widget(p, area);
+}
+
+fn render_errors(f: &mut Frame, app: &App) {
+    use ratatui::widgets::Wrap;
+    let area = centered(f.size(), 80, 20);
+    f.render_widget(Clear, area);
+    let mut lines: Vec<Line> = Vec::new();
+    lines.push(Line::from(format!(
+        "{} justfile(s) failed to load:",
+        app.startup_errors.len()
+    )));
+    lines.push(Line::from(""));
+    for (path, msg) in &app.startup_errors {
+        lines.push(Line::from(Span::styled(
+            path.display().to_string(),
+            Style::default().fg(Color::Yellow),
+        )));
+        for l in msg.lines() {
+            lines.push(Line::from(format!("  {l}")));
+        }
+        lines.push(Line::from(""));
+    }
+    lines.push(Line::from(Span::styled(
+        "Esc / q / e to close",
+        Style::default().fg(Color::Gray),
+    )));
+    let p = Paragraph::new(lines)
+        .block(Block::default().borders(Borders::ALL).title("load errors"))
+        .wrap(Wrap { trim: false });
     f.render_widget(p, area);
 }

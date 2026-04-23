@@ -14,6 +14,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
         Mode::ParamInput { values, cursor, .. } => {
             format!("Param {}/{} = {}", cursor + 1, values.len().max(1), values.get(*cursor).cloned().unwrap_or_default())
         }
+        Mode::ErrorsList => "Load errors — Esc / q / e to close".into(),
     };
     let msg = app
         .status_message

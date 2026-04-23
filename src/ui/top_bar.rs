@@ -1,6 +1,6 @@
 use crate::app::App;
 use ratatui::layout::Rect;
-use ratatui::style::{Color, Style};
+use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::Paragraph;
 use ratatui::Frame;
@@ -11,7 +11,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
         .map(|j| j.path.display().to_string())
         .unwrap_or_else(|| "<no justfile>".into());
 
-    let spans = vec![
+    let mut spans = vec![
         Span::styled("lazyjust", Style::default().fg(Color::Cyan)),
         Span::raw("  —  justfile: "),
         Span::styled(justfile, Style::default().fg(Color::Yellow)),
@@ -23,6 +23,13 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
         Span::raw(" quit"),
     ];
 
-    let p = Paragraph::new(Line::from(spans));
-    f.render_widget(p, area);
+    if !app.startup_errors.is_empty() {
+        spans.push(Span::raw("  |  "));
+        spans.push(Span::styled(
+            format!("{} load errors — press e", app.startup_errors.len()),
+            Style::default().fg(Color::Red).add_modifier(Modifier::BOLD),
+        ));
+    }
+
+    f.render_widget(Paragraph::new(Line::from(spans)), area);
 }

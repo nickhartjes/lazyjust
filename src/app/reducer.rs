@@ -78,6 +78,9 @@ pub fn reduce(app: &mut App, action: Action) {
         Action::OpenHelp => app.mode = Mode::Help,
         Action::CloseHelp => app.mode = Mode::Normal,
 
+        Action::OpenErrors => app.mode = Mode::ErrorsList,
+        Action::CloseErrors => app.mode = Mode::Normal,
+
         Action::OpenDropdown => {
             app.mode = Mode::Dropdown {
                 filter: String::new(),

@@ -53,6 +53,9 @@ pub enum Action {
     OpenHelp,
     CloseHelp,
 
+    OpenErrors,
+    CloseErrors,
+
     Confirm(ConfirmAction),
 
     // PTY / external events folded into reducer via dispatcher:

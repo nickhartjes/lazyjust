@@ -16,6 +16,7 @@ pub fn handle_event(evt: &Event, mode: &Mode) -> Option<Action> {
         Mode::Confirm { .. } => confirm_mode(key),
         Mode::Dropdown { .. } => dropdown_mode(key),
         Mode::ParamInput { .. } => param_mode(key),
+        Mode::ErrorsList => errors_mode(key),
     }
 }
 
@@ -35,6 +36,7 @@ fn normal_mode(k: &KeyEvent) -> Option<Action> {
         (KeyCode::Char('/'), false, _) => Some(Action::EnterFilter),
         (KeyCode::Char('d'), false, _) => Some(Action::OpenDropdown),
         (KeyCode::Char('?'), false, _) => Some(Action::OpenHelp),
+        (KeyCode::Char('e'), false, _) => Some(Action::OpenErrors),
         (KeyCode::Char('>'), false, _) => Some(Action::GrowLeftPane),
         (KeyCode::Char('<'), false, _) => Some(Action::ShrinkLeftPane),
         (KeyCode::Char('='), false, _) => Some(Action::ResetSplit),
@@ -65,6 +67,13 @@ fn filter_mode(k: &KeyEvent) -> Option<Action> {
 fn help_mode(k: &KeyEvent) -> Option<Action> {
     match k.code {
         KeyCode::Esc | KeyCode::Char('q') | KeyCode::Char('?') => Some(Action::CloseHelp),
+        _ => None,
+    }
+}
+
+fn errors_mode(k: &KeyEvent) -> Option<Action> {
+    match k.code {
+        KeyCode::Esc | KeyCode::Char('q') | KeyCode::Char('e') => Some(Action::CloseErrors),
         _ => None,
     }
 }

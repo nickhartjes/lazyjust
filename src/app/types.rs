@@ -68,6 +68,7 @@ pub enum Mode {
         prompt: String,
         on_accept: ConfirmAction,
     },
+    ErrorsList,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
