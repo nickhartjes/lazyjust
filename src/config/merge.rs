@@ -16,7 +16,11 @@ pub fn merge(file: ConfigFile, base: Config) -> Config {
             if let Some(parsed) = crate::ui::icon_style::IconStyle::parse(icon) {
                 out.icon_style = parsed;
             } else {
-                tracing::warn!(value = %icon, "unknown [ui].icon_style, using default");
+                tracing::warn!(
+                    target: "lazyjust::config",
+                    value = %icon,
+                    "unknown [ui].icon_style, using default",
+                );
             }
         }
     }
@@ -135,8 +139,8 @@ mod tests {
         use crate::ui::icon_style::IconStyle;
         let file = ConfigFile {
             ui: Some(crate::config::file::UiSection {
-                theme: None,
                 icon_style: Some("ascii".into()),
+                ..Default::default()
             }),
             ..Default::default()
         };
@@ -148,8 +152,8 @@ mod tests {
     fn ui_icon_style_unknown_falls_back_to_default() {
         let file = ConfigFile {
             ui: Some(crate::config::file::UiSection {
-                theme: None,
                 icon_style: Some("bogus".into()),
+                ..Default::default()
             }),
             ..Default::default()
         };

@@ -5,6 +5,7 @@ pub enum IconStyle {
     None,
 }
 
+/// Per-style glyph set consumed by the list renderer.
 pub struct Glyphs {
     pub unselected: &'static str,
     pub running: &'static str,
@@ -13,12 +14,10 @@ pub struct Glyphs {
 
 impl IconStyle {
     pub fn parse(s: &str) -> Option<Self> {
-        match s.to_ascii_lowercase().as_str() {
-            "round" => Some(Self::Round),
-            "ascii" => Some(Self::Ascii),
-            "none" => Some(Self::None),
-            _ => None,
-        }
+        if s.eq_ignore_ascii_case("round") { Some(Self::Round) }
+        else if s.eq_ignore_ascii_case("ascii") { Some(Self::Ascii) }
+        else if s.eq_ignore_ascii_case("none") { Some(Self::None) }
+        else { None }
     }
 
     pub fn glyphs(self) -> Glyphs {
