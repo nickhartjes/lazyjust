@@ -61,7 +61,7 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     } else {
         preview::render(f, panes.right, app, &app.theme);
     }
-    status_bar::render(f, panes.status, app);
+    status_bar::render(f, panes.status, app, &app.theme);
     modal::render(f, app, &app.theme);
     if matches!(&app.mode, crate::app::types::Mode::ThemePicker { .. }) {
         theme_picker::render(f, size, app);
