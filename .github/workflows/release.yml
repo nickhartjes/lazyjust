@@ -99,8 +99,7 @@ jobs:
           declare -A SHA
           for key in "${!TARGETS[@]}"; do
             target="${TARGETS[$key]}"
-            archive="lazyjust-${TAG}-${target}.tar.gz"
-            SHA[$key]=$(curl -fsSL "${BASE}/${archive}.sha256" | awk '{print $1}')
+            SHA[$key]=$(curl -fsSL "${BASE}/lazyjust-${TAG}-${target}.sha256" | awk '{print $1}')
             echo "${key} ${target} ${SHA[$key]}"
           done
 
