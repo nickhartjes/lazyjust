@@ -298,9 +298,7 @@ pub fn reduce(app: &mut App, action: Action) {
         }
         Action::PickerMove(delta) => {
             if let Mode::ThemePicker {
-                highlighted,
-                names,
-                ..
+                highlighted, names, ..
             } = &mut app.mode
             {
                 let len = names.len() as isize;
@@ -361,6 +359,33 @@ pub fn filtered_justfile_indices(app: &App, filter: &str) -> Vec<usize> {
         .collect()
 }
 
+fn cycle_history(app: &mut App, dir: i32) {
+    let Some(r) = app
+        .active_justfile()
+        .and_then(|jf| jf.recipes.get(app.list_cursor))
+    else {
+        return;
+    };
+    let runs = r.runs.clone();
+    if runs.is_empty() {
+        return;
+    }
+    let current_pos = app
+        .active_session
+        .and_then(|sid| runs.iter().position(|x| *x == sid));
+    let next = match current_pos {
+        Some(i) => {
+            let new_i = (i as i32 + dir).clamp(0, (runs.len() - 1) as i32) as usize;
+            runs[new_i]
+        }
+        None => *runs.last().unwrap(),
+    };
+    app.active_session = Some(next);
+    if let Some(s) = app.session_mut(next) {
+        s.unread = false;
+    }
+}
+
 #[cfg(test)]
 mod theme_picker_tests {
     use super::*;
@@ -398,7 +423,6 @@ mod theme_picker_tests {
     fn picker_move_wraps_around() {
         let mut app = test_app();
         reduce(&mut app, Action::OpenThemePicker);
-        // Moving up from index 0 wraps to last element.
         reduce(&mut app, Action::PickerMove(-1));
         let last_name = match &app.mode {
             Mode::ThemePicker {
@@ -406,9 +430,7 @@ mod theme_picker_tests {
             } => names[*highlighted].clone(),
             _ => panic!("expected ThemePicker mode"),
         };
-        // theme_name should be updated to whatever wrapped-to entry is.
         assert_eq!(app.theme_name, last_name);
-        // Wrapping from 0 up lands on a different entry than the default.
         assert_ne!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
     }
 
@@ -416,10 +438,8 @@ mod theme_picker_tests {
     fn picker_cancel_restores_original() {
         let mut app = test_app();
         reduce(&mut app, Action::OpenThemePicker);
-        // Move so theme_name drifts away from the original.
         reduce(&mut app, Action::PickerMove(1));
         assert_ne!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
-        // Cancel must restore the original theme.
         reduce(&mut app, Action::PickerCancel);
         assert_eq!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
         assert!(matches!(app.mode, Mode::Normal));
@@ -434,34 +454,6 @@ mod theme_picker_tests {
         assert_ne!(chosen, crate::theme::DEFAULT_THEME_NAME);
         reduce(&mut app, Action::PickerConfirm);
         assert!(matches!(app.mode, Mode::Normal));
-        // After confirm the theme_name remains the chosen one.
         assert_eq!(app.theme_name, chosen);
-    }
-}
-
-fn cycle_history(app: &mut App, dir: i32) {
-    let Some(r) = app
-        .active_justfile()
-        .and_then(|jf| jf.recipes.get(app.list_cursor))
-    else {
-        return;
-    };
-    let runs = r.runs.clone();
-    if runs.is_empty() {
-        return;
-    }
-    let current_pos = app
-        .active_session
-        .and_then(|sid| runs.iter().position(|x| *x == sid));
-    let next = match current_pos {
-        Some(i) => {
-            let new_i = (i as i32 + dir).clamp(0, (runs.len() - 1) as i32) as usize;
-            runs[new_i]
-        }
-        None => *runs.last().unwrap(),
-    };
-    app.active_session = Some(next);
-    if let Some(s) = app.session_mut(next) {
-        s.unread = false;
     }
 }

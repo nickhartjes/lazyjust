@@ -45,7 +45,13 @@ fn centered(parent: Rect, w: u16, h: u16) -> Rect {
     hslices[1]
 }
 
-fn render_dropdown(f: &mut Frame, app: &App, filter: &str, cursor: usize, theme: &crate::theme::Theme) {
+fn render_dropdown(
+    f: &mut Frame,
+    app: &App,
+    filter: &str,
+    cursor: usize,
+    theme: &crate::theme::Theme,
+) {
     let area = centered(f.size(), 60, 14);
     f.render_widget(Clear, area);
     let indices = crate::app::reducer::filtered_justfile_indices(app, filter);
@@ -61,11 +67,7 @@ fn render_dropdown(f: &mut Frame, app: &App, filter: &str, cursor: usize, theme:
                 .borders(Borders::ALL)
                 .title(format!("justfile: /{filter}")),
         )
-        .highlight_style(
-            Style::default()
-                .bg(theme.bg)
-                .add_modifier(Modifier::BOLD),
-        );
+        .highlight_style(Style::default().bg(theme.bg).add_modifier(Modifier::BOLD));
     f.render_stateful_widget(list, area, &mut state);
 }
 

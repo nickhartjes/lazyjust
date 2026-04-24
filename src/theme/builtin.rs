@@ -51,8 +51,7 @@ mod tests {
     #[test]
     fn every_builtin_parses() {
         for (name, toml) in BUILTIN_THEMES {
-            parse_theme(toml)
-                .unwrap_or_else(|e| panic!("built-in {name:?} failed to parse: {e}"));
+            parse_theme(toml).unwrap_or_else(|e| panic!("built-in {name:?} failed to parse: {e}"));
         }
     }
 

@@ -27,7 +27,9 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
         spans.push(Span::raw("  |  "));
         spans.push(Span::styled(
             format!("{} load errors — press e", app.startup_errors.len()),
-            Style::default().fg(theme.error).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme.error)
+                .add_modifier(Modifier::BOLD),
         ));
     }
 

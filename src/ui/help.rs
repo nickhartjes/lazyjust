@@ -253,10 +253,7 @@ fn build_lines(origin: SectionId, theme: &crate::theme::Theme) -> Vec<Line<'stat
         for e in section.entries {
             out.push(Line::from(vec![
                 Span::raw("    "),
-                Span::styled(
-                    format!("{:<20}", e.keys),
-                    Style::default().fg(theme.fg),
-                ),
+                Span::styled(format!("{:<20}", e.keys), Style::default().fg(theme.fg)),
                 Span::raw("  "),
                 Span::raw(e.desc),
             ]));

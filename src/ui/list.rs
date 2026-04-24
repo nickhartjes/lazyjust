@@ -97,10 +97,9 @@ fn session_indicators_for<'a>(
 fn status_span(status: Status, unread: bool, theme: &crate::theme::Theme) -> Span<'static> {
     let (icon, color) = match status {
         Status::Running => ("●", theme.running),
-        Status::ShellAfterExit { code } | Status::Exited { code } if code == 0 => (
-            "✓",
-            if unread { theme.success } else { theme.dim },
-        ),
+        Status::ShellAfterExit { code } | Status::Exited { code } if code == 0 => {
+            ("✓", if unread { theme.success } else { theme.dim })
+        }
         Status::ShellAfterExit { .. } | Status::Exited { .. } => {
             ("✗", if unread { theme.error } else { theme.dim })
         }

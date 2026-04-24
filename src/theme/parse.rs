@@ -76,7 +76,9 @@ fn parse_color(s: &str) -> Result<Color, ThemeError> {
         "light_green" | "lightgreen" | "bright_green" | "brightgreen" => Color::LightGreen,
         "light_yellow" | "lightyellow" | "bright_yellow" | "brightyellow" => Color::LightYellow,
         "light_blue" | "lightblue" | "bright_blue" | "brightblue" => Color::LightBlue,
-        "light_magenta" | "lightmagenta" | "bright_magenta" | "brightmagenta" => Color::LightMagenta,
+        "light_magenta" | "lightmagenta" | "bright_magenta" | "brightmagenta" => {
+            Color::LightMagenta
+        }
         "light_cyan" | "lightcyan" | "bright_cyan" | "brightcyan" => Color::LightCyan,
         "white" => Color::White,
         _ => return Err(ThemeError::Color(s.into())),

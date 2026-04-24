@@ -27,9 +27,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
         .border_style(Style::default().fg(theme.accent))
         .title(Span::styled(
             " Theme ",
-            Style::default()
-                .fg(theme.fg)
-                .add_modifier(Modifier::BOLD),
+            Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
         ))
         .title_alignment(Alignment::Center)
         .style(Style::default().bg(theme.bg).fg(theme.fg));

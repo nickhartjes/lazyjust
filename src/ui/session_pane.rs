@@ -5,7 +5,13 @@ use ratatui::text::{Line, Span};
 use ratatui::widgets::Paragraph;
 use ratatui::Frame;
 
-pub fn render(f: &mut Frame, area: Rect, screen: &vt100::Parser, active: bool, theme: &crate::theme::Theme) {
+pub fn render(
+    f: &mut Frame,
+    area: Rect,
+    screen: &vt100::Parser,
+    active: bool,
+    theme: &crate::theme::Theme,
+) {
     let block = pane_block("session", active, theme);
     let inner = block.inner(area);
     f.render_widget(block, area);
