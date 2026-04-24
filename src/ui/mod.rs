@@ -18,10 +18,25 @@ pub type SessionScreens = std::collections::HashMap<crate::app::types::SessionId
 
 pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     let size = f.size();
-    if size.width < 40 || size.height < 10 {
-        let msg = ratatui::widgets::Paragraph::new("Terminal too small")
+    let cfg_cols: u16 = 40;
+    let cfg_rows: u16 = 10;
+    if size.width < cfg_cols || size.height < cfg_rows {
+        let theme = &app.theme;
+        let filled = ratatui::widgets::Paragraph::new("")
+            .style(ratatui::style::Style::default().bg(theme.bg));
+        f.render_widget(filled, size);
+        let msg_text = format!(
+            "Terminal too small — need at least {cfg_cols}×{cfg_rows}.",
+        );
+        let msg = ratatui::text::Line::from(ratatui::text::Span::styled(
+            msg_text,
+            ratatui::style::Style::default().fg(theme.dim).bg(theme.bg),
+        ));
+        let y = size.height / 2;
+        let area = ratatui::layout::Rect { x: size.x, y: size.y + y, width: size.width, height: 1 };
+        let para = ratatui::widgets::Paragraph::new(msg)
             .alignment(ratatui::layout::Alignment::Center);
-        f.render_widget(msg, size);
+        f.render_widget(para, area);
         return;
     }
     if app.justfiles.is_empty() {
