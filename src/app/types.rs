@@ -82,6 +82,9 @@ pub enum ConfirmAction {
 pub struct SessionMeta {
     pub id: SessionId,
     pub recipe_name: String,
+    /// Human-readable recipe invocation (`just --justfile <p> <recipe> <args>`).
+    /// Informational only — the actual PTY argv is `$SHELL -i` and the recipe
+    /// is delivered via `session::shell::prime_line` on stdin.
     pub command_line: String,
     pub status: Status,
     pub unread: bool,
