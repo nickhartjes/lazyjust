@@ -151,18 +151,18 @@ lazyjust  —  justfile: ./justfile ▾        ? help  q quit
 (10,2) "i" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (23,2) "│" fg=Cyan bg=Reset mod=NONE
 (24,2) "│" fg=DarkGray bg=Reset mod=NONE
-(25,2) "r" fg=Yellow bg=Reset mod=NONE
-(26,2) "e" fg=Yellow bg=Reset mod=NONE
-(27,2) "c" fg=Yellow bg=Reset mod=NONE
-(28,2) "i" fg=Yellow bg=Reset mod=NONE
-(29,2) "p" fg=Yellow bg=Reset mod=NONE
-(30,2) "e" fg=Yellow bg=Reset mod=NONE
-(31,2) ":" fg=Yellow bg=Reset mod=NONE
-(33,2) "b" fg=Yellow bg=Reset mod=NONE
-(34,2) "u" fg=Yellow bg=Reset mod=NONE
-(35,2) "i" fg=Yellow bg=Reset mod=NONE
-(36,2) "l" fg=Yellow bg=Reset mod=NONE
-(37,2) "d" fg=Yellow bg=Reset mod=NONE
+(25,2) "r" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(26,2) "e" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(27,2) "c" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(28,2) "i" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(29,2) "p" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(30,2) "e" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(31,2) ":" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(33,2) "b" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(34,2) "u" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(35,2) "i" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(36,2) "l" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
+(37,2) "d" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (79,2) "│" fg=DarkGray bg=Reset mod=NONE
 (0,3) "│" fg=Cyan bg=Reset mod=NONE
 (4,3) "b" fg=Reset bg=Reset mod=NONE
@@ -172,18 +172,18 @@ lazyjust  —  justfile: ./justfile ▾        ? help  q quit
 (8,3) "d" fg=Reset bg=Reset mod=NONE
 (23,3) "│" fg=Cyan bg=Reset mod=NONE
 (24,3) "│" fg=DarkGray bg=Reset mod=NONE
-(25,3) "B" fg=Gray bg=Reset mod=NONE
-(26,3) "u" fg=Gray bg=Reset mod=NONE
-(27,3) "i" fg=Gray bg=Reset mod=NONE
-(28,3) "l" fg=Gray bg=Reset mod=NONE
-(29,3) "d" fg=Gray bg=Reset mod=NONE
-(31,3) "r" fg=Gray bg=Reset mod=NONE
-(32,3) "e" fg=Gray bg=Reset mod=NONE
-(33,3) "l" fg=Gray bg=Reset mod=NONE
-(34,3) "e" fg=Gray bg=Reset mod=NONE
-(35,3) "a" fg=Gray bg=Reset mod=NONE
-(36,3) "s" fg=Gray bg=Reset mod=NONE
-(37,3) "e" fg=Gray bg=Reset mod=NONE
+(25,3) "B" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(26,3) "u" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(27,3) "i" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(28,3) "l" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(29,3) "d" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(31,3) "r" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(32,3) "e" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(33,3) "l" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(34,3) "e" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(35,3) "a" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(36,3) "s" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
+(37,3) "e" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (79,3) "│" fg=DarkGray bg=Reset mod=NONE
 (0,4) "│" fg=Cyan bg=Reset mod=NONE
 (4,4) "t" fg=Reset bg=Reset mod=NONE
@@ -235,16 +235,16 @@ lazyjust  —  justfile: ./justfile ▾        ? help  q quit
 (0,8) "│" fg=Cyan bg=Reset mod=NONE
 (23,8) "│" fg=Cyan bg=Reset mod=NONE
 (24,8) "│" fg=DarkGray bg=Reset mod=NONE
-(25,8) "E" fg=Cyan bg=Reset mod=NONE
-(26,8) "n" fg=Cyan bg=Reset mod=NONE
-(27,8) "t" fg=Cyan bg=Reset mod=NONE
-(28,8) "e" fg=Cyan bg=Reset mod=NONE
-(29,8) "r" fg=Cyan bg=Reset mod=NONE
-(31,8) "t" fg=Cyan bg=Reset mod=NONE
-(32,8) "o" fg=Cyan bg=Reset mod=NONE
-(34,8) "r" fg=Cyan bg=Reset mod=NONE
-(35,8) "u" fg=Cyan bg=Reset mod=NONE
-(36,8) "n" fg=Cyan bg=Reset mod=NONE
+(25,8) "E" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(26,8) "n" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(27,8) "t" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(28,8) "e" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(29,8) "r" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(31,8) "t" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(32,8) "o" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(34,8) "r" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(35,8) "u" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
+(36,8) "n" fg=Rgb(158, 206, 106) bg=Reset mod=NONE
 (79,8) "│" fg=DarkGray bg=Reset mod=NONE
 (0,9) "│" fg=Cyan bg=Reset mod=NONE
 (23,9) "│" fg=Cyan bg=Reset mod=NONE

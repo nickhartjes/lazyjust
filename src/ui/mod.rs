@@ -37,10 +37,10 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
         if let Some(screen) = screens.get(&id) {
             session_pane::render(f, panes.right, screen, right_active);
         } else {
-            preview::render(f, panes.right, app);
+            preview::render(f, panes.right, app, &app.theme);
         }
     } else {
-        preview::render(f, panes.right, app);
+        preview::render(f, panes.right, app, &app.theme);
     }
     status_bar::render(f, panes.status, app);
     modal::render(f, app);

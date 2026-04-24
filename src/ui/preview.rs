@@ -1,12 +1,12 @@
 use crate::app::App;
 use crate::ui::focus::{is_right_active, pane_block};
 use ratatui::layout::Rect;
-use ratatui::style::{Color, Style};
+use ratatui::style::Style;
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Frame;
 
-pub fn render(f: &mut Frame, area: Rect, app: &App) {
+pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
     let block = pane_block("preview", is_right_active(app.focus));
     let Some(r) = app.recipe_at_cursor() else {
         f.render_widget(block, area);
@@ -16,12 +16,12 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
     let mut lines = Vec::new();
     lines.push(Line::from(Span::styled(
         format!("recipe: {}", r.name),
-        Style::default().fg(Color::Yellow),
+        Style::default().fg(theme.accent),
     )));
     if let Some(doc) = &r.doc {
         lines.push(Line::from(Span::styled(
             doc.clone(),
-            Style::default().fg(Color::Gray),
+            Style::default().fg(theme.dim),
         )));
     }
     if !r.params.is_empty() {
@@ -44,7 +44,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
     lines.push(Line::from(""));
     lines.push(Line::from(Span::styled(
         "Enter to run",
-        Style::default().fg(Color::Cyan),
+        Style::default().fg(theme.success),
     )));
 
     let p = Paragraph::new(lines)
