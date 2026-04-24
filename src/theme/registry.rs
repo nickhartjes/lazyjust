@@ -1,5 +1,5 @@
 //! Resolves a theme name to a `Theme`. User theme files under
-//! `<config_dir>/lazyjust/themes/` shadow built-ins of the same name.
+//! `<config_dir>/lazyrust/themes/` shadow built-ins of the same name.
 //! Missing / invalid name logs a warning and falls back to the default.
 
 use super::{builtin::BUILTIN_THEMES, parse_theme, Theme, DEFAULT_THEME_NAME};
@@ -18,7 +18,7 @@ pub fn resolve(name: &str) -> Theme {
     // 3. Fallback to default.
     if name != DEFAULT_THEME_NAME {
         tracing::warn!(
-            target: "lazyjust::theme",
+            target: "lazyrust::theme",
             requested = %name,
             fallback = %DEFAULT_THEME_NAME,
             "theme not found, using default",
@@ -60,7 +60,7 @@ fn load_user_theme(name: &str) -> Option<Theme> {
         Ok(t) => Some(t),
         Err(e) => {
             tracing::warn!(
-                target: "lazyjust::theme",
+                target: "lazyrust::theme",
                 path = %path.display(),
                 error = %e,
                 "user theme failed to parse; falling through to built-in",

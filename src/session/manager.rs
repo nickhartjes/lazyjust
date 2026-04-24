@@ -49,7 +49,7 @@ impl SessionManager {
                 id, justfile, recipe, args, cwd, rows, cols, log_path, tx, log_cap,
             );
             return Err(crate::error::Error::PtySpawn(
-                "lazyjust: Windows support not yet implemented (tracked as a separate sub-project)"
+                "lazyrust: Windows support not yet implemented (tracked as a separate sub-project)"
                     .into(),
             ));
         }

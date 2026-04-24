@@ -17,7 +17,7 @@ pub fn merge(file: ConfigFile, base: Config) -> Config {
                 out.icon_style = parsed;
             } else {
                 tracing::warn!(
-                    target: "lazyjust::config",
+                    target: "lazyrust::config",
                     value = %icon,
                     "unknown [ui].icon_style, using default",
                 );

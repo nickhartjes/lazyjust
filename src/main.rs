@@ -1,3 +1,3 @@
 fn main() -> anyhow::Result<()> {
-    lazyjust::run()
+    lazyrust::run()
 }

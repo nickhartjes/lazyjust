@@ -6,7 +6,7 @@ pub fn defaults() -> Config {
     let state_dir = dirs::state_dir()
         .or_else(dirs::data_local_dir)
         .unwrap_or_else(|| PathBuf::from("."))
-        .join("lazyjust");
+        .join("lazyrust");
     let sessions_log_dir = state_dir.join("sessions");
 
     Config {

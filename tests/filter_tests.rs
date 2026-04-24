@@ -1,4 +1,4 @@
-use lazyjust::app::filter::fuzzy_match;
+use lazyrust::app::filter::fuzzy_match;
 
 #[test]
 fn empty_query_keeps_all() {

@@ -1,9 +1,9 @@
-use lazyjust::config::Config;
+use lazyrust::config::Config;
 use std::sync::{Mutex, OnceLock};
 use std::time::Duration;
 
 // Serialize these tests: they all mutate the same env var.
-// Default `cargo test` parallelism would race on LAZYJUST_CONFIG_DIR;
+// Default `cargo test` parallelism would race on LAZYRUST_CONFIG_DIR;
 // a module-level mutex avoids that without pulling in serial_test.
 fn guard() -> &'static Mutex<()> {
     static M: OnceLock<Mutex<()>> = OnceLock::new();
@@ -16,9 +16,9 @@ fn with_config_dir<T>(contents: Option<&str>, body: impl FnOnce() -> T) -> T {
     if let Some(c) = contents {
         std::fs::write(tmp.path().join("config.toml"), c).unwrap();
     }
-    std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
+    std::env::set_var("LAZYRUST_CONFIG_DIR", tmp.path());
     let out = body();
-    std::env::remove_var("LAZYJUST_CONFIG_DIR");
+    std::env::remove_var("LAZYRUST_CONFIG_DIR");
     out
 }
 

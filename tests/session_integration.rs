@@ -1,9 +1,9 @@
 #![cfg(not(windows))]
 
-use lazyjust::session::osc::scan_done_marker;
-use lazyjust::session::pty::spawn;
-use lazyjust::session::shell::prime_line;
-use lazyjust::session::wrapper::build_unix_command;
+use lazyrust::session::osc::scan_done_marker;
+use lazyrust::session::pty::spawn;
+use lazyrust::session::shell::prime_line;
+use lazyrust::session::wrapper::build_unix_command;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::sync::Once;
@@ -24,7 +24,7 @@ fn force_posix_shell() {
 
 fn make_justfile(tmp: &tempfile::TempDir) -> PathBuf {
     let path = tmp.path().join("justfile");
-    std::fs::write(&path, "hi:\n\techo lazyjust-hello\n").unwrap();
+    std::fs::write(&path, "hi:\n\techo lazyrust-hello\n").unwrap();
     path
 }
 
@@ -59,7 +59,7 @@ fn spawn_echo_recipe_and_capture_done_marker() {
                     assert_eq!(codes[0], 0);
                     assert!(std::str::from_utf8(&buf)
                         .unwrap()
-                        .contains("lazyjust-hello"));
+                        .contains("lazyrust-hello"));
                     let _ = spawned.child.kill();
                     return;
                 }
@@ -73,8 +73,8 @@ fn spawn_echo_recipe_and_capture_done_marker() {
 
 #[tokio::test]
 async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
-    use lazyjust::app::action::AppEvent;
-    use lazyjust::session::manager::SessionManager;
+    use lazyrust::app::action::AppEvent;
+    use lazyrust::session::manager::SessionManager;
 
     force_posix_shell();
 
@@ -119,7 +119,7 @@ async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
                     assert_eq!(codes[0], 0);
                     assert!(std::str::from_utf8(&collected)
                         .unwrap()
-                        .contains("lazyjust-hello"));
+                        .contains("lazyrust-hello"));
                     mgr.kill(1);
                     return;
                 }
@@ -132,7 +132,7 @@ async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
                 assert_eq!(code, 0);
                 assert!(std::str::from_utf8(&collected)
                     .unwrap()
-                    .contains("lazyjust-hello"));
+                    .contains("lazyrust-hello"));
                 mgr.kill(1);
                 return;
             }

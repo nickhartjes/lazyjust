@@ -318,7 +318,7 @@ pub fn reduce(app: &mut App, action: Action) {
                 let path = crate::config::paths::config_file_path();
                 if let Err(e) = crate::config::writer::set_theme(&path, &stem) {
                     tracing::warn!(
-                        target: "lazyjust::theme",
+                        target: "lazyrust::theme",
                         error = %e,
                         "failed to persist theme",
                     );

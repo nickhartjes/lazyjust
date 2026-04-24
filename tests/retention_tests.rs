@@ -1,4 +1,4 @@
-use lazyjust::session::retention::prune_sessions;
+use lazyrust::session::retention::prune_sessions;
 use std::fs;
 use std::time::{Duration, SystemTime};
 

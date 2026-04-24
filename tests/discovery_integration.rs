@@ -1,4 +1,4 @@
-use lazyjust::discovery::discover;
+use lazyrust::discovery::discover;
 use std::path::PathBuf;
 
 #[test]

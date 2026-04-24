@@ -1,4 +1,4 @@
-use lazyjust::app::types::{Param, ParamKind, Recipe};
+use lazyrust::app::types::{Param, ParamKind, Recipe};
 
 #[test]
 fn recipe_builder_basic() {

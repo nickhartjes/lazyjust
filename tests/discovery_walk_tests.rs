@@ -1,4 +1,4 @@
-use lazyjust::discovery::walk::walk_justfiles;
+use lazyrust::discovery::walk::walk_justfiles;
 use std::path::PathBuf;
 
 #[test]
