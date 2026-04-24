@@ -117,7 +117,9 @@ fn row<'a>(
     }
 
     if let Some(bg) = row_bg {
-        // pad to eol so the highlight bar runs to the edge
+        for s in spans.iter_mut() {
+            s.style = s.style.bg(bg);
+        }
         let used = visible_width(&spans) as u16;
         if used < width {
             spans.push(Span::styled(" ".repeat((width - used) as usize), Style::default().bg(bg)));

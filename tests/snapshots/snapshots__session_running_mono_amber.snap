@@ -92,7 +92,7 @@ expression: "render_to_string(&app, 80, 24)"
 (5,2) "i" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
 (6,2) "l" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
 (7,2) "d" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
-(10,2) "●" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
+(10,2) "●" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=NONE
 (30,2) "B" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (31,2) "u" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (32,2) "i" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
