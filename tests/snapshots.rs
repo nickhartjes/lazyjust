@@ -1,7 +1,7 @@
 use lazyjust::app::help_section::SectionId;
-use lazyjust::app::types::{
-    ConfirmAction, Focus, Justfile, Mode, Param, ParamKind, Recipe, SessionMeta, Status,
-};
+#[cfg(not(windows))]
+use lazyjust::app::types::{ConfirmAction, Focus, SessionMeta, Status};
+use lazyjust::app::types::{Justfile, Mode, Param, ParamKind, Recipe};
 use lazyjust::app::App;
 use lazyjust::theme::registry::resolve;
 use lazyjust::ui;
@@ -9,6 +9,7 @@ use lazyjust::ui::icon_style::IconStyle;
 use ratatui::backend::TestBackend;
 use ratatui::Terminal;
 use std::path::PathBuf;
+#[cfg(not(windows))]
 use std::time::{Duration, Instant};
 
 // ---------------------------------------------------------------------------
@@ -127,13 +128,13 @@ fn fixture_ungrouped(theme_name: &str, icon_style: IconStyle) -> App {
 }
 
 /// Stable started_at: ~1 hour ago, so elapsed bucket is "1h" regardless of test speed.
-/// On Windows the monotonic clock epoch can be close to process start, which would
-/// make `Instant::now() - 3600s` overflow — use `checked_sub` and fall back to `now()`.
+#[cfg(not(windows))]
 fn started_at_stable() -> Instant {
     let now = Instant::now();
     now.checked_sub(Duration::from_secs(3600)).unwrap_or(now)
 }
 
+#[cfg(not(windows))]
 fn fixture_session_running(theme_name: &str, icon_style: IconStyle) -> App {
     let mut app = fixture_default(theme_name, icon_style);
     let sid = app.next_session_id();
@@ -152,6 +153,7 @@ fn fixture_session_running(theme_name: &str, icon_style: IconStyle) -> App {
     app
 }
 
+#[cfg(not(windows))]
 fn fixture_session_exited_fail(theme_name: &str, icon_style: IconStyle) -> App {
     let mut app = fixture_default(theme_name, icon_style);
     let sid = app.next_session_id();
