@@ -40,7 +40,23 @@ pub struct Config {
 }
 
 impl Config {
+    /// Load config from the platform path, merged with defaults.
+    /// Missing file → all defaults. Malformed file → warning logged, all defaults.
     pub fn load() -> Self {
-        defaults::defaults()
+        let base = defaults::defaults();
+        let path = paths::config_file_path();
+        match file::ConfigFile::read(&path) {
+            Ok(Some(cf)) => merge::merge(cf, base),
+            Ok(None) => base,
+            Err(e) => {
+                tracing::warn!(
+                    target: "lazyjust::config",
+                    path = %path.display(),
+                    error = %e,
+                    "failed to load config, using defaults",
+                );
+                base
+            }
+        }
     }
 }
