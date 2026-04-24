@@ -34,6 +34,7 @@ pub struct EngineSection {
 #[derive(Debug, Default, Deserialize)]
 pub struct UiSection {
     pub theme: Option<String>,
+    pub icon_style: Option<String>,
 }
 
 impl ConfigFile {

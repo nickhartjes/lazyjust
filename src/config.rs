@@ -41,6 +41,7 @@ pub struct Config {
     pub tick_interval: Duration,
     /// Resolved theme name — matches a built-in or user theme file.
     pub theme_name: String,
+    pub icon_style: crate::ui::icon_style::IconStyle,
 }
 
 impl Config {

@@ -1,4 +1,5 @@
 pub mod focus;
+pub mod icon_style;
 pub mod help;
 pub mod layout;
 pub mod list;

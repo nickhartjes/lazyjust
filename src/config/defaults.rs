@@ -22,5 +22,6 @@ pub fn defaults() -> Config {
         render_throttle: Duration::from_millis(16),
         tick_interval: Duration::from_millis(250),
         theme_name: crate::theme::DEFAULT_THEME_NAME.to_string(),
+        icon_style: crate::ui::icon_style::IconStyle::Round,
     }
 }
