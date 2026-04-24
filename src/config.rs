@@ -51,7 +51,6 @@ impl Config {
             Ok(None) => base,
             Err(e) => {
                 tracing::warn!(
-                    target: "lazyjust::config",
                     path = %path.display(),
                     error = %e,
                     "failed to load config, using defaults",
@@ -59,5 +58,36 @@ impl Config {
                 base
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::{Mutex, OnceLock};
+
+    fn guard() -> &'static Mutex<()> {
+        static M: OnceLock<Mutex<()>> = OnceLock::new();
+        M.get_or_init(|| Mutex::new(()))
+    }
+
+    #[test]
+    #[tracing_test::traced_test]
+    fn malformed_file_falls_back_to_defaults_with_warning() {
+        let _lock = guard().lock().unwrap_or_else(|e| e.into_inner());
+
+        let tmp = tempfile::tempdir().unwrap();
+        std::fs::write(tmp.path().join("config.toml"), "this = = = not valid toml").unwrap();
+        std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
+
+        let cfg = Config::load();
+
+        std::env::remove_var("LAZYJUST_CONFIG_DIR");
+
+        assert_eq!(cfg.render_throttle, Duration::from_millis(16));
+        assert!(
+            logs_contain("failed to load config, using defaults"),
+            "expected tracing::warn! about config load failure",
+        );
     }
 }

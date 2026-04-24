@@ -36,9 +36,3 @@ fn partial_file_overrides_only_specified_keys() {
     // tick_interval stayed at default
     assert_eq!(cfg.tick_interval, Duration::from_millis(250));
 }
-
-#[test]
-fn malformed_file_falls_back_to_defaults() {
-    let cfg = with_config_dir(Some("this = = = not valid toml"), Config::load);
-    assert_eq!(cfg.render_throttle, Duration::from_millis(16));
-}

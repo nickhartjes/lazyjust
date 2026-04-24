@@ -42,6 +42,7 @@ insta = { version = "1", features = ["yaml"] }
 pretty_assertions = "1"
 rstest = "0.19"
 tempfile = "3"
+tracing-test = "0.2"
 
 [profile.release]
 lto = "thin"
