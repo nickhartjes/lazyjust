@@ -3,7 +3,7 @@ source: tests/snapshots.rs
 expression: "render_to_string(&app, 80, 24)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes    2 load errors                          
-▍ CI ───────────────────────▍ build                                             
+  CI ───────────────────────  build                                             
 ╭ load errors ─────────────────────────────────────────────────────────────────╮
 │2 justfile(s) failed to load:                                                 │
 │                                                                              │
@@ -24,7 +24,7 @@ expression: "render_to_string(&app, 80, 24)"
 │                                                                              │
 │                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
-▍                           ▍                                                   
+                                                                                
 Esc / q / e close                                                               
 
 --- styled cells ---
@@ -68,7 +68,6 @@ Esc / q / e close
 (51,0) "o" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
 (52,0) "r" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
 (53,0) "s" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
-(0,1) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (2,1) "C" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (3,1) "I" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (5,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
@@ -94,7 +93,6 @@ Esc / q / e close
 (25,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (26,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (27,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(28,1) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (30,1) "b" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (31,1) "u" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (32,1) "i" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
@@ -393,8 +391,6 @@ Esc / q / e close
 (77,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (78,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (79,21) "╯" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
-(0,22) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
-(28,22) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (0,23) "E" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (1,23) "s" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (2,23) "c" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE

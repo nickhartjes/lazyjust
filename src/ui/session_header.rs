@@ -36,13 +36,22 @@ pub fn render(
     ];
 
     let pid_text = meta.pid.map(|p| format!("pid {p} · logs ↗")).unwrap_or_else(|| "logs ↗".into());
-    let right = Span::styled(pid_text, Style::default().fg(theme.dim));
-    let used: usize = left.iter().map(|s| s.content.chars().count()).sum::<usize>()
-        + right.content.chars().count();
-    if (used as u16) < area.width {
-        left.push(Span::raw(" ".repeat(area.width as usize - used)));
+    let right_w = pid_text.chars().count();
+    let left_w: usize = left.iter().map(|s| s.content.chars().count()).sum();
+    let width = area.width as usize;
+    let gap_min = 2;
+
+    if left_w + gap_min + right_w <= width {
+        left.push(Span::raw(" ".repeat(width - left_w - right_w)));
+        left.push(Span::styled(pid_text, Style::default().fg(theme.dim)));
+    } else if left_w + gap_min <= width {
+        let room = width - left_w - gap_min;
+        let truncated: String = pid_text.chars().take(room).collect();
+        left.push(Span::raw(" ".repeat(gap_min)));
+        left.push(Span::styled(truncated, Style::default().fg(theme.dim)));
+    } else {
+        // left already too wide; drop the right metadata entirely
     }
-    left.push(right);
 
     f.render_widget(Paragraph::new(Line::from(left)), area);
 }

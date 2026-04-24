@@ -3,28 +3,28 @@ source: tests/snapshots.rs
 expression: "render_to_string(&app, 80, 24)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes                                           
-▍ CI ───────────────────────▍ build                                             
-▍  build                    ▍ Build release                                     
-▍  ○ test   → fmt · lint    ▍                                                   
-▍                           ▍ command                                           
-▍                           ▍   $ cargo build --release                         
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
-▍                           ▍                                                   
+  CI ───────────────────────  build                                             
+   build                      Build release                                     
+   ○ test   → fmt · lint                                                        
+                              command                                           
+                                $ cargo build --release                         
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
 ⏎ run  ·  / filter  ·  t theme  ·  ? help  ·  q                                 
 
 --- styled cells ---
@@ -57,7 +57,6 @@ expression: "render_to_string(&app, 80, 24)"
 (34,0) "p" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (35,0) "e" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (36,0) "s" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,1) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
 (2,1) "C" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
 (3,1) "I" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
 (5,1) "─" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
@@ -83,19 +82,16 @@ expression: "render_to_string(&app, 80, 24)"
 (25,1) "─" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (26,1) "─" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (27,1) "─" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(28,1) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (30,1) "b" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=BOLD
 (31,1) "u" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=BOLD
 (32,1) "i" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=BOLD
 (33,1) "l" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=BOLD
 (34,1) "d" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=BOLD
-(0,2) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=BOLD
 (3,2) "b" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
 (4,2) "u" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
 (5,2) "i" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
 (6,2) "l" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
 (7,2) "d" fg=Rgb(255, 180, 84) bg=Rgb(22, 27, 34) mod=BOLD
-(28,2) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (30,2) "B" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (31,2) "u" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (32,2) "i" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
@@ -108,7 +104,6 @@ expression: "render_to_string(&app, 80, 24)"
 (40,2) "a" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (41,2) "s" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (42,2) "e" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,3) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
 (3,3) "○" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
 (5,3) "t" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
 (6,3) "e" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
@@ -123,9 +118,6 @@ expression: "render_to_string(&app, 80, 24)"
 (21,3) "i" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (22,3) "n" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (23,3) "t" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(28,3) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,4) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,4) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (30,4) "c" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (31,4) "o" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (32,4) "m" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
@@ -133,8 +125,6 @@ expression: "render_to_string(&app, 80, 24)"
 (34,4) "a" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (35,4) "n" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (36,4) "d" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,5) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,5) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (32,5) "$" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
 (34,5) "c" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
 (35,5) "a" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
@@ -155,40 +145,6 @@ expression: "render_to_string(&app, 80, 24)"
 (52,5) "a" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
 (53,5) "s" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
 (54,5) "e" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
-(0,6) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,6) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,7) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,7) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,8) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,8) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,9) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,9) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,10) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,10) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,11) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,11) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,12) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,12) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,13) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,13) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,14) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,14) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,15) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,15) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,16) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,16) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,17) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,17) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,18) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,18) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,19) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,19) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,20) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,20) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,21) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,21) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
-(0,22) "▍" fg=Rgb(255, 180, 84) bg=Rgb(13, 17, 23) mod=NONE
-(28,22) "▍" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (0,23) "⏎" fg=Rgb(201, 209, 217) bg=Rgb(13, 17, 23) mod=NONE
 (2,23) "r" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
 (3,23) "u" fg=Rgb(72, 79, 88) bg=Rgb(13, 17, 23) mod=NONE
