@@ -5,7 +5,7 @@ use ratatui::{
     layout::Rect,
     style::{Modifier, Style},
     text::Span,
-    widgets::{Clear, List, ListItem, ListState},
+    widgets::{List, ListItem, ListState},
     Frame,
 };
 
@@ -20,7 +20,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
     let theme: &Theme = &app.theme;
 
     let outer = centered(area, 40, 60);
-    f.render_widget(Clear, outer);
+    crate::ui::modal_base::clear(f, outer);
 
     let block = crate::ui::modal_base::block("theme", theme);
     let inner = block.inner(outer);

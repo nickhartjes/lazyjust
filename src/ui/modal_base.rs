@@ -4,6 +4,9 @@ use ratatui::text::Span;
 use ratatui::widgets::{Block, BorderType, Borders, Clear};
 use ratatui::Frame;
 
+/// Centers a fixed-size box inside `parent`.
+/// Does NOT clamp `w`/`h` to terminal dimensions — ratatui will clip overflow.
+/// Callers with `min_w`/`min_h` semantics should clamp to terminal bounds before calling.
 pub fn centered(parent: Rect, w: u16, h: u16) -> Rect {
     let v = Layout::default()
         .direction(Direction::Vertical)
