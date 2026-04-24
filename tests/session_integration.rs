@@ -56,3 +56,68 @@ fn spawn_echo_recipe_and_capture_done_marker() {
     }
     panic!("EOF before done marker");
 }
+
+#[tokio::test]
+async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
+    use lazyjust::app::action::AppEvent;
+    use lazyjust::session::manager::SessionManager;
+
+    std::env::set_var("SHELL", "/bin/sh");
+
+    let tmp = tempfile::tempdir().unwrap();
+    let justfile = make_justfile(&tmp);
+    let log_path = tmp.path().join("session.log");
+
+    let (tx, mut rx) = tokio::sync::mpsc::channel::<AppEvent>(256);
+    let mut mgr = SessionManager::default();
+
+    let _meta = mgr
+        .spawn_recipe(
+            1,
+            &justfile,
+            "hi",
+            &[],
+            tmp.path(),
+            24,
+            80,
+            log_path.clone(),
+            tx,
+            1024 * 1024,
+        )
+        .unwrap();
+
+    let deadline = tokio::time::Instant::now() + Duration::from_secs(10);
+    let mut collected: Vec<u8> = Vec::new();
+    loop {
+        let remaining = deadline.saturating_duration_since(tokio::time::Instant::now());
+        if remaining.is_zero() {
+            panic!("timeout waiting for done marker; got {:?}", String::from_utf8_lossy(&collected));
+        }
+        match tokio::time::timeout(remaining, rx.recv()).await {
+            Ok(Some(AppEvent::SessionBytes { id, bytes })) => {
+                assert_eq!(id, 1);
+                collected.extend_from_slice(&bytes);
+                let (_, codes) = scan_done_marker(&collected);
+                if !codes.is_empty() {
+                    assert_eq!(codes[0], 0);
+                    assert!(std::str::from_utf8(&collected).unwrap().contains("lazyjust-hello"));
+                    mgr.kill(1);
+                    return;
+                }
+            }
+            Ok(Some(AppEvent::RecipeExited { id, code })) => {
+                // `spawn_reader` strips the OSC done marker from `SessionBytes` and
+                // surfaces it as a separate `RecipeExited` event; treat it as the
+                // channel-level equivalent of the marker.
+                assert_eq!(id, 1);
+                assert_eq!(code, 0);
+                assert!(std::str::from_utf8(&collected).unwrap().contains("lazyjust-hello"));
+                mgr.kill(1);
+                return;
+            }
+            Ok(Some(_)) => continue,
+            Ok(None) => panic!("channel closed before done marker"),
+            Err(_) => panic!("timeout waiting for done marker"),
+        }
+    }
+}
