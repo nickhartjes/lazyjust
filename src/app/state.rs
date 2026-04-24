@@ -14,11 +14,11 @@ pub struct App {
     pub split_ratio: f32,
     pub theme: crate::theme::Theme,
     pub theme_name: String,
+    pub icon_style: crate::ui::icon_style::IconStyle,
     pub collapsed_groups: std::collections::HashSet<String>,
     pub startup_errors: Vec<(PathBuf, String)>,
     pub next_session_id: SessionId,
     pub status_message: Option<String>,
-    pub icon_style: crate::ui::icon_style::IconStyle,
 }
 
 impl App {
@@ -42,11 +42,11 @@ impl App {
             split_ratio,
             theme,
             theme_name,
+            icon_style,
             collapsed_groups: Default::default(),
             startup_errors,
             next_session_id: 1,
             status_message: None,
-            icon_style,
         }
     }
 
