@@ -1,17 +1,16 @@
 use crate::app::types::{Recipe, Status};
 use crate::app::App;
+use crate::ui::focus::{is_list_active, pane_block};
 use ratatui::layout::Rect;
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
-use ratatui::widgets::{Block, Borders, List, ListItem, ListState};
+use ratatui::widgets::{List, ListItem, ListState};
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, area: Rect, app: &App) {
+    let active = is_list_active(app.focus);
     let Some(jf) = app.active_justfile() else {
-        f.render_widget(
-            Block::default().borders(Borders::ALL).title("recipes"),
-            area,
-        );
+        f.render_widget(pane_block("recipes", active), area);
         return;
     };
 
@@ -21,7 +20,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
     state.select(Some(app.list_cursor.min(items.len().saturating_sub(1))));
 
     let list = List::new(items)
-        .block(Block::default().borders(Borders::ALL).title("recipes"))
+        .block(pane_block("recipes", active))
         .highlight_style(
             Style::default()
                 .bg(Color::DarkGray)

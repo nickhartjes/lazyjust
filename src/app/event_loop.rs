@@ -89,7 +89,15 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         if app.focus == crate::app::types::Focus::Session
                             && app.mode == crate::app::types::Mode::Normal
                         {
-                            if key.code == crossterm::event::KeyCode::F(12) {
+                            let is_exit_key = matches!(
+                                key.code,
+                                crossterm::event::KeyCode::F(12)
+                            ) || (key.code
+                                == crossterm::event::KeyCode::Char('g')
+                                && key.modifiers.contains(
+                                    crossterm::event::KeyModifiers::CONTROL,
+                                ));
+                            if is_exit_key {
                                 crate::app::reducer::reduce(&mut app, Action::FocusList);
                                 dirty = true;
                                 continue;
@@ -276,6 +284,7 @@ pub fn spawn_highlighted(
                 .copied();
             if let Some(sid) = running {
                 app.active_session = Some(sid);
+                app.focus = crate::app::types::Focus::Session;
                 if let Some(s) = app.session_mut(sid) {
                     s.unread = false;
                 }
@@ -360,7 +369,6 @@ pub fn do_spawn(
     screens.insert(id, vt100::Parser::new(rows, cols, SCROLLBACK_LINES));
     app.sessions.push(meta);
     app.active_session = Some(id);
-    app.focus = crate::app::types::Focus::Session;
     let cursor = app.list_cursor;
     if let Some(jf) = app.active_justfile_mut() {
         if let Some(r) = jf.recipes.get_mut(cursor) {

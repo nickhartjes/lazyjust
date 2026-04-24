@@ -87,9 +87,9 @@ fn render_help(f: &mut Frame) {
         "    q           quit",
         "",
         "  Session focus:",
-        "    PgUp/PgDn   scroll output",
-        "    Home/End    top / bottom of scrollback",
-        "    F12         leave session pane",
+        "    PgUp/PgDn    scroll output",
+        "    Home/End     top / bottom of scrollback",
+        "    F12 / Ctrl+g leave session pane",
         "    (all other keys forwarded to the PTY)",
     ]
     .into_iter()

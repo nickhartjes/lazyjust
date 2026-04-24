@@ -1,12 +1,13 @@
 use crate::app::App;
+use crate::ui::focus::{is_right_active, pane_block};
 use ratatui::layout::Rect;
 use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Span};
-use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
+use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, area: Rect, app: &App) {
-    let block = Block::default().borders(Borders::ALL).title("preview");
+    let block = pane_block("preview", is_right_active(app.focus));
     let Some(r) = app.recipe_at_cursor() else {
         f.render_widget(block, area);
         return;

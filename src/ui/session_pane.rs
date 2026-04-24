@@ -1,16 +1,14 @@
+use crate::ui::focus::pane_block;
 use ratatui::layout::Rect;
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
-use ratatui::widgets::{Block, Borders, Paragraph};
+use ratatui::widgets::Paragraph;
 use ratatui::Frame;
 
-pub fn render(f: &mut Frame, area: Rect, screen: &vt100::Parser) {
-    let block = Block::default().borders(Borders::ALL).title("session");
+pub fn render(f: &mut Frame, area: Rect, screen: &vt100::Parser, active: bool) {
+    let block = pane_block("session", active);
     let inner = block.inner(area);
-    f.render_widget(
-        Block::default().borders(Borders::ALL).title("session"),
-        area,
-    );
+    f.render_widget(block, area);
 
     let grid = screen.screen();
     let rows = inner.height as usize;

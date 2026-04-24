@@ -32,7 +32,7 @@ lazyjust --justfile FILE # override root justfile
 | `x` | Close focused session |
 | `L` | Copy session log path |
 | `>` `<` `=` | Resize panes |
-| `F12` | Leave session pane |
+| `F12` / `Ctrl+g` | Leave session pane |
 | `PgUp` / `PgDn` | Scroll session output |
 | `Home` / `End` | Top / bottom of scrollback |
 | `e` | View startup load errors |

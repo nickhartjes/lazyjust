@@ -1,3 +1,4 @@
+pub mod focus;
 pub mod layout;
 pub mod list;
 pub mod modal;
@@ -30,9 +31,10 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     let panes = layout::compute(size, app);
     top_bar::render(f, panes.top_bar, app);
     list::render(f, panes.list, app);
+    let right_active = focus::is_right_active(app.focus);
     if let Some(id) = app.active_session {
         if let Some(screen) = screens.get(&id) {
-            session_pane::render(f, panes.right, screen);
+            session_pane::render(f, panes.right, screen, right_active);
         } else {
             preview::render(f, panes.right, app);
         }

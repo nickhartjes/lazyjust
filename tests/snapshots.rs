@@ -1,4 +1,4 @@
-use lazyjust::app::types::{Justfile, Recipe};
+use lazyjust::app::types::{Focus, Justfile, Recipe};
 use lazyjust::app::App;
 use lazyjust::ui;
 use ratatui::backend::TestBackend;
@@ -45,14 +45,36 @@ fn initial_render_snapshot() {
     insta::assert_snapshot!(buffer_to_string(&buf));
 }
 
+#[test]
+fn session_focus_render_snapshot() {
+    let backend = TestBackend::new(80, 20);
+    let mut terminal = Terminal::new(backend).unwrap();
+    let mut app = fixture_app();
+    app.focus = Focus::Session;
+    let screens = ui::SessionScreens::new();
+    terminal.draw(|f| ui::render(f, &app, &screens)).unwrap();
+    let buf = terminal.backend().buffer().clone();
+    insta::assert_snapshot!(buffer_to_string(&buf));
+}
+
 fn buffer_to_string(buf: &ratatui::buffer::Buffer) -> String {
     let area = buf.area;
-    let mut out = String::new();
+    let mut symbols = String::new();
+    let mut styled = String::new();
     for y in 0..area.height {
         for x in 0..area.width {
-            out.push_str(buf.get(x, y).symbol());
+            let cell = buf.get(x, y);
+            symbols.push_str(cell.symbol());
+            let sym = cell.symbol();
+            let is_ws = sym.chars().all(char::is_whitespace);
+            if !is_ws {
+                styled.push_str(&format!(
+                    "({x},{y}) {:?} fg={:?} bg={:?} mod={:?}\n",
+                    sym, cell.fg, cell.bg, cell.modifier
+                ));
+            }
         }
-        out.push('\n');
+        symbols.push('\n');
     }
-    out
+    format!("{symbols}\n--- styled cells ---\n{styled}")
 }
