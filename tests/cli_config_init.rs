@@ -54,7 +54,9 @@ fn init_then_load_round_trips() {
         .unwrap();
     assert!(out.status.success());
 
-    // Load from inside the test process using the same env override.
+    // Only test in this file that mutates process env. If another test in
+    // this file starts doing the same, we'll need a Mutex guard like
+    // tests/config_loader.rs uses.
     std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
     let cfg = lazyjust::config::Config::load();
     std::env::remove_var("LAZYJUST_CONFIG_DIR");
