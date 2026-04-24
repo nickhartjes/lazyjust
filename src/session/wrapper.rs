@@ -1,15 +1,7 @@
-//! Platform-specific argv builders. On Unix the PTY spawns `$SHELL -i`
-//! directly; the recipe itself is primed via `session::shell::prime_line`.
-//! Windows still uses a wrapper batch script.
-
-pub const WINDOWS_WRAPPER: &str = r#"
-@echo off
-set JUSTFILE=%~1
-shift
-just --justfile "%JUSTFILE%" %*
-echo 1337;LazyjustDone=%ERRORLEVEL%
-%ComSpec%
-"#;
+//! Unix argv builder. The PTY spawns `$SHELL -i` directly; the recipe
+//! itself is primed into the shell's stdin via `session::shell::prime_line`.
+//! Windows support is not yet implemented (see
+//! `session::manager::SessionManager::spawn_recipe` for the runtime stub).
 
 /// Returns the argv for the PTY spawn on Unix: `[$SHELL, "-i"]` (fallback
 /// `/bin/sh`). The recipe itself is not in argv — it is delivered via
