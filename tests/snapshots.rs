@@ -109,10 +109,7 @@ fn fixture_default(theme_name: &str, icon_style: IconStyle) -> App {
 fn fixture_with_errors(theme_name: &str, icon_style: IconStyle) -> App {
     let mut app = fixture_default(theme_name, icon_style);
     app.startup_errors = vec![
-        (
-            PathBuf::from("./justfile"),
-            "syntax error on line 3".into(),
-        ),
+        (PathBuf::from("./justfile"), "syntax error on line 3".into()),
         (
             PathBuf::from("./other.justfile"),
             "unknown recipe: foo".into(),
@@ -196,10 +193,7 @@ fn buffer_to_string(buf: &ratatui::buffer::Buffer) -> String {
             if !is_ws {
                 styled.push_str(&format!(
                     "({x},{y}) {:?} fg={:?} bg={:?} mod={:?}\n",
-                    sym,
-                    cell.fg,
-                    cell.bg,
-                    cell.modifier
+                    sym, cell.fg, cell.bg, cell.modifier
                 ));
             }
         }

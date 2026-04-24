@@ -14,17 +14,34 @@ pub struct Glyphs {
 
 impl IconStyle {
     pub fn parse(s: &str) -> Option<Self> {
-        if s.eq_ignore_ascii_case("round") { Some(Self::Round) }
-        else if s.eq_ignore_ascii_case("ascii") { Some(Self::Ascii) }
-        else if s.eq_ignore_ascii_case("none") { Some(Self::None) }
-        else { None }
+        if s.eq_ignore_ascii_case("round") {
+            Some(Self::Round)
+        } else if s.eq_ignore_ascii_case("ascii") {
+            Some(Self::Ascii)
+        } else if s.eq_ignore_ascii_case("none") {
+            Some(Self::None)
+        } else {
+            None
+        }
     }
 
     pub fn glyphs(self) -> Glyphs {
         match self {
-            Self::Round => Glyphs { unselected: "○", running: "●", cursor: "▶" },
-            Self::Ascii => Glyphs { unselected: "o", running: "*", cursor: ">" },
-            Self::None => Glyphs { unselected: "", running: "", cursor: "" },
+            Self::Round => Glyphs {
+                unselected: "○",
+                running: "●",
+                cursor: "▶",
+            },
+            Self::Ascii => Glyphs {
+                unselected: "o",
+                running: "*",
+                cursor: ">",
+            },
+            Self::None => Glyphs {
+                unselected: "",
+                running: "",
+                cursor: "",
+            },
         }
     }
 }

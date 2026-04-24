@@ -67,7 +67,8 @@ fn picker_confirm_writes_theme_preserving_other_keys() {
     let tmp = tempfile::tempdir().unwrap();
     std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
     let cfg_path = tmp.path().join("config.toml");
-    let original = "# user comment\n[ui]\ntheme = \"tokyo-night\"\n\n[engine]\nrender_throttle_ms = 8\n";
+    let original =
+        "# user comment\n[ui]\ntheme = \"tokyo-night\"\n\n[engine]\nrender_throttle_ms = 8\n";
     std::fs::write(&cfg_path, original).unwrap();
 
     let mut app = minimal_app();
@@ -77,7 +78,10 @@ fn picker_confirm_writes_theme_preserving_other_keys() {
 
     let after = std::fs::read_to_string(&cfg_path).unwrap();
     // user comment preserved
-    assert!(after.contains("# user comment"), "comment dropped: {after:?}");
+    assert!(
+        after.contains("# user comment"),
+        "comment dropped: {after:?}"
+    );
     // other section preserved
     assert!(
         after.contains("render_throttle_ms = 8"),

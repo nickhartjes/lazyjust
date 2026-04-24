@@ -78,7 +78,11 @@ fn row<'a>(
     width: u16,
 ) -> Line<'a> {
     let glyph = if style == IconStyle::None {
-        if is_cursor { "▶" } else { " " }
+        if is_cursor {
+            "▶"
+        } else {
+            " "
+        }
     } else if is_cursor {
         g.cursor
     } else {
@@ -86,11 +90,18 @@ fn row<'a>(
     };
     let leading = format!(" {glyph} ");
     let name_style = if is_cursor {
-        Style::default().fg(theme.selected_fg).bg(theme.highlight).add_modifier(Modifier::BOLD)
+        Style::default()
+            .fg(theme.selected_fg)
+            .bg(theme.highlight)
+            .add_modifier(Modifier::BOLD)
     } else {
         Style::default().fg(theme.fg)
     };
-    let row_bg = if is_cursor { Some(theme.highlight) } else { None };
+    let row_bg = if is_cursor {
+        Some(theme.highlight)
+    } else {
+        None
+    };
 
     let mut spans = vec![Span::styled(leading.clone(), name_style)];
     spans.push(Span::styled(r.name.clone(), name_style));
@@ -104,7 +115,10 @@ fn row<'a>(
                 .saturating_sub(5),
         );
         if !deps.is_empty() {
-            spans.push(Span::styled(format!("   → {deps}"), Style::default().fg(theme.dim)));
+            spans.push(Span::styled(
+                format!("   → {deps}"),
+                Style::default().fg(theme.dim),
+            ));
         }
     }
 
@@ -114,7 +128,10 @@ fn row<'a>(
         }
         let used = visible_width(&spans) as u16;
         if used < width {
-            spans.push(Span::styled(" ".repeat((width - used) as usize), Style::default().bg(bg)));
+            spans.push(Span::styled(
+                " ".repeat((width - used) as usize),
+                Style::default().bg(bg),
+            ));
         }
     }
     Line::from(spans)
@@ -127,7 +144,9 @@ fn dep_line(r: &Recipe, avail: u16) -> String {
     } else {
         let mut acc = String::new();
         for ch in joined.chars() {
-            if acc.chars().count() as u16 + 1 >= avail.saturating_sub(1) { break; }
+            if acc.chars().count() as u16 + 1 >= avail.saturating_sub(1) {
+                break;
+            }
             acc.push(ch);
         }
         acc.push('…');
@@ -173,7 +192,14 @@ fn status_span(
     g: &crate::ui::icon_style::Glyphs,
 ) -> Span<'static> {
     let (icon, color) = match status {
-        Status::Running => (if style == IconStyle::None { "" } else { g.running }, theme.running),
+        Status::Running => (
+            if style == IconStyle::None {
+                ""
+            } else {
+                g.running
+            },
+            theme.running,
+        ),
         Status::ShellAfterExit { code } | Status::Exited { code } if code == 0 => {
             ("✓", if unread { theme.success } else { theme.dim })
         }

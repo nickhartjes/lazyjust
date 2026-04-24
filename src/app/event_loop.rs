@@ -355,7 +355,12 @@ pub fn do_spawn(
 
     let (rows, cols) = match crossterm::terminal::size() {
         Ok((w, h)) => {
-            let size = ratatui::layout::Rect { x: 0, y: 0, width: w, height: h };
+            let size = ratatui::layout::Rect {
+                x: 0,
+                y: 0,
+                width: w,
+                height: h,
+            };
             let panes = crate::ui::layout::compute(size, app);
             (
                 panes.right.height.saturating_sub(4).max(1),

@@ -28,17 +28,20 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
         let filled = ratatui::widgets::Paragraph::new("")
             .style(ratatui::style::Style::default().bg(theme.bg));
         f.render_widget(filled, size);
-        let msg_text = format!(
-            "Terminal too small — need at least {cfg_cols}×{cfg_rows}.",
-        );
+        let msg_text = format!("Terminal too small — need at least {cfg_cols}×{cfg_rows}.",);
         let msg = ratatui::text::Line::from(ratatui::text::Span::styled(
             msg_text,
             ratatui::style::Style::default().fg(theme.dim).bg(theme.bg),
         ));
         let y = size.height / 2;
-        let area = ratatui::layout::Rect { x: size.x, y: size.y + y, width: size.width, height: 1 };
-        let para = ratatui::widgets::Paragraph::new(msg)
-            .alignment(ratatui::layout::Alignment::Center);
+        let area = ratatui::layout::Rect {
+            x: size.x,
+            y: size.y + y,
+            width: size.width,
+            height: 1,
+        };
+        let para =
+            ratatui::widgets::Paragraph::new(msg).alignment(ratatui::layout::Alignment::Center);
         f.render_widget(para, area);
         return;
     }
@@ -63,11 +66,16 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     f.render_widget(list_block, panes.list);
     list::render(f, list_body, app, &app.theme);
 
-    let right_title = if app.active_session.is_some() { "session" } else { "preview" };
+    let display_sid = if matches!(app.focus, crate::app::types::Focus::Session) {
+        app.active_session
+    } else {
+        app.recipe_at_cursor().and_then(|r| r.runs.last().copied())
+    };
+    let right_title = if display_sid.is_some() { "session" } else { "preview" };
     let right_block = focus::pane_block(Some(right_title), right_active, &app.theme);
     let right_body = right_block.inner(panes.right);
     f.render_widget(right_block, panes.right);
-    if let Some(id) = app.active_session {
+    if let Some(id) = display_sid {
         if let (Some(screen), Some(meta)) = (screens.get(&id), app.session(id)) {
             session_pane::render(f, right_body, screen, meta, right_active, &app.theme);
         } else {

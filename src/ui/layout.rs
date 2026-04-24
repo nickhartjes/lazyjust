@@ -42,7 +42,14 @@ mod tests {
     use super::*;
     use ratatui::layout::Rect;
 
-    fn rect(w: u16, h: u16) -> Rect { Rect { x: 0, y: 0, width: w, height: h } }
+    fn rect(w: u16, h: u16) -> Rect {
+        Rect {
+            x: 0,
+            y: 0,
+            width: w,
+            height: h,
+        }
+    }
 
     #[test]
     fn list_pane_respects_min_left_cols() {

@@ -53,7 +53,10 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
             vec![Span::raw("      ")]
         };
         let mut spans = prefix;
-        spans.push(Span::styled(cmd_line.to_string(), Style::default().fg(theme.fg)));
+        spans.push(Span::styled(
+            cmd_line.to_string(),
+            Style::default().fg(theme.fg),
+        ));
         lines.push(Line::from(spans));
     }
 

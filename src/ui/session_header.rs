@@ -17,7 +17,11 @@ pub fn render(
         Status::Running => ("●", theme.running, format!("running · {elapsed}")),
         Status::Exited { code: 0 } => ("✓", theme.success, format!("done · {elapsed}")),
         Status::Exited { code } => ("✗", theme.error, format!("exit {code} · {elapsed}")),
-        Status::ShellAfterExit { code } => ("⌁", theme.info, format!("shell (exited {code}) · press ^D to close")),
+        Status::ShellAfterExit { code } => (
+            "⌁",
+            theme.info,
+            format!("shell (exited {code}) · press ^D to close"),
+        ),
         Status::Broken => ("!", theme.warn, "broken".into()),
     };
 
@@ -32,7 +36,10 @@ pub fn render(
         Span::styled(label, Style::default().fg(theme.dim)),
     ];
 
-    let pid_text = meta.pid.map(|p| format!("pid {p} · logs ↗")).unwrap_or_else(|| "logs ↗".into());
+    let pid_text = meta
+        .pid
+        .map(|p| format!("pid {p} · logs ↗"))
+        .unwrap_or_else(|| "logs ↗".into());
     let right_w = pid_text.chars().count();
     let left_w: usize = left.iter().map(|s| s.content.chars().count()).sum();
     let width = area.width as usize;
@@ -55,7 +62,11 @@ pub fn render(
 
 fn fmt_elapsed(d: std::time::Duration) -> String {
     let secs = d.as_secs();
-    if secs < 60 { format!("{secs}s") }
-    else if secs < 3600 { format!("{}m", secs / 60) }
-    else { format!("{}h", secs / 3600) }
+    if secs < 60 {
+        format!("{secs}s")
+    } else if secs < 3600 {
+        format!("{}m", secs / 60)
+    } else {
+        format!("{}h", secs / 3600)
+    }
 }

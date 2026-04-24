@@ -27,7 +27,10 @@ pub fn render(
     crate::ui::session_header::render(f, header_area, meta, active, theme);
 
     // reserve last column of body for the scroll thumb
-    let grid_area = Rect { width: body_area.width.saturating_sub(1), ..body_area };
+    let grid_area = Rect {
+        width: body_area.width.saturating_sub(1),
+        ..body_area
+    };
     let scroll_area = Rect {
         x: body_area.x + body_area.width.saturating_sub(1),
         y: body_area.y,
@@ -45,13 +48,26 @@ pub fn render(
         for c in 0..cols {
             if let Some(cell) = grid.cell(r as u16, c as u16) {
                 let mut style = Style::default();
-                if let Some(color) = convert_color(cell.fgcolor()) { style = style.fg(color); }
-                if let Some(color) = convert_color(cell.bgcolor()) { style = style.bg(color); }
-                if cell.bold() { style = style.add_modifier(Modifier::BOLD); }
-                if cell.italic() { style = style.add_modifier(Modifier::ITALIC); }
-                if cell.underline() { style = style.add_modifier(Modifier::UNDERLINED); }
+                if let Some(color) = convert_color(cell.fgcolor()) {
+                    style = style.fg(color);
+                }
+                if let Some(color) = convert_color(cell.bgcolor()) {
+                    style = style.bg(color);
+                }
+                if cell.bold() {
+                    style = style.add_modifier(Modifier::BOLD);
+                }
+                if cell.italic() {
+                    style = style.add_modifier(Modifier::ITALIC);
+                }
+                if cell.underline() {
+                    style = style.add_modifier(Modifier::UNDERLINED);
+                }
                 let ch = cell.contents();
-                spans.push(Span::styled(if ch.is_empty() { " ".into() } else { ch }, style));
+                spans.push(Span::styled(
+                    if ch.is_empty() { " ".into() } else { ch },
+                    style,
+                ));
             } else {
                 spans.push(Span::raw(" "));
             }

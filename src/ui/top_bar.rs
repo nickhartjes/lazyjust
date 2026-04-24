@@ -20,7 +20,10 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
     let mut spans: Vec<Span> = vec![
         Span::styled("▌", Style::default().fg(theme.accent)),
         Span::raw(" "),
-        Span::styled("lazyjust", Style::default().fg(theme.fg).add_modifier(Modifier::BOLD)),
+        Span::styled(
+            "lazyjust",
+            Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
+        ),
         Span::styled("  · ", Style::default().fg(theme.dim)),
         Span::styled(path, Style::default().fg(theme.dim)),
         Span::styled("  · ", Style::default().fg(theme.dim)),
@@ -30,7 +33,10 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
         spans.push(Span::raw("   "));
         spans.push(Span::styled(
             format!(" {} load errors ", app.startup_errors.len()),
-            Style::default().fg(theme.error).bg(theme.bg).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme.error)
+                .bg(theme.bg)
+                .add_modifier(Modifier::BOLD),
         ));
     }
     f.render_widget(Paragraph::new(Line::from(spans)), cols[0]);
