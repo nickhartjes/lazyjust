@@ -59,16 +59,33 @@ impl SessionManager {
             args.join(" ")
         );
 
-        spawn_reader(reader, id, tx);
+        let last_output: super::reader::LastOutput = Arc::new(Mutex::new(None));
+        spawn_reader(reader, id, tx, Arc::clone(&last_output));
 
         let writer: SharedWriter = Arc::new(Mutex::new(writer));
         let prime_writer = Arc::clone(&writer);
         let line = super::wrapper::prime_line(justfile, recipe, args);
         std::thread::spawn(move || {
-            // Delay long enough for the user's shell rc files (fastfetch, starship,
-            // plugins) to finish and ZLE/readline to enter raw mode. Writing earlier
-            // risks the shell's startup tcflush discarding the primed bytes.
-            std::thread::sleep(std::time::Duration::from_millis(2000));
+            // Wait for the shell's rc files to finish and the line editor to
+            // enter raw mode. Heuristic: poll the reader's last-output timestamp
+            // until the shell has been quiet for `idle_ms` after producing at
+            // least one chunk. Fall back to a hard cap so we prime even on a
+            // perfectly silent shell.
+            let idle = std::time::Duration::from_millis(400);
+            let cap = std::time::Duration::from_millis(5000);
+            let start = std::time::Instant::now();
+            loop {
+                std::thread::sleep(std::time::Duration::from_millis(50));
+                let last = last_output.lock().ok().and_then(|g| *g);
+                if start.elapsed() >= cap {
+                    break;
+                }
+                if let Some(t) = last {
+                    if t.elapsed() >= idle {
+                        break;
+                    }
+                }
+            }
             if let Ok(mut w) = prime_writer.lock() {
                 let _ = w.write_all(line.as_bytes());
                 let _ = w.write_all(b"\r");
