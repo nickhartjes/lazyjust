@@ -140,15 +140,15 @@ lazyjust  —  justfile: ./justfile ▾        ? help  q quit
 (78,1) "─" fg=Cyan bg=Reset mod=NONE
 (79,1) "┐" fg=Cyan bg=Reset mod=NONE
 (0,2) "│" fg=DarkGray bg=Reset mod=NONE
-(1,2) ">" fg=Reset bg=DarkGray mod=BOLD
-(2,2) "G" fg=Magenta bg=DarkGray mod=BOLD
-(3,2) "R" fg=Magenta bg=DarkGray mod=BOLD
-(4,2) "O" fg=Magenta bg=DarkGray mod=BOLD
-(5,2) "U" fg=Magenta bg=DarkGray mod=BOLD
-(6,2) "P" fg=Magenta bg=DarkGray mod=BOLD
-(7,2) ":" fg=Magenta bg=DarkGray mod=BOLD
-(9,2) "c" fg=Magenta bg=DarkGray mod=BOLD
-(10,2) "i" fg=Magenta bg=DarkGray mod=BOLD
+(1,2) ">" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(2,2) "G" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(3,2) "R" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(4,2) "O" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(5,2) "U" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(6,2) "P" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(7,2) ":" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(9,2) "c" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(10,2) "i" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (23,2) "│" fg=DarkGray bg=Reset mod=NONE
 (24,2) "│" fg=Cyan bg=Reset mod=NONE
 (25,2) "r" fg=Yellow bg=Reset mod=NONE

@@ -31,7 +31,7 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
 
     let panes = layout::compute(size, app);
     top_bar::render(f, panes.top_bar, app, &app.theme);
-    list::render(f, panes.list, app);
+    list::render(f, panes.list, app, &app.theme);
     let right_active = focus::is_right_active(app.focus);
     if let Some(id) = app.active_session {
         if let Some(screen) = screens.get(&id) {
