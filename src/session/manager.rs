@@ -8,13 +8,16 @@ use portable_pty::MasterPty;
 use std::collections::HashMap;
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::sync::{Arc, Mutex};
 use std::time::Instant;
 use tokio::sync::mpsc::Sender;
+
+type SharedWriter = Arc<Mutex<Box<dyn Write + Send>>>;
 
 pub struct SessionHandle {
     pub master: Box<dyn MasterPty + Send>,
     pub child: Box<dyn portable_pty::Child + Send + Sync>,
-    pub writer: Box<dyn Write + Send>,
+    pub writer: SharedWriter,
     pub log_writer: Option<std::fs::File>,
     pub log_written: u64,
     pub log_cap: u64,
@@ -44,8 +47,8 @@ impl SessionManager {
 
         let SpawnedPty {
             master,
-            mut child,
-            mut writer,
+            child,
+            writer,
             reader,
         } = spawn(&argv, cwd, rows, cols)?;
 
@@ -56,20 +59,22 @@ impl SessionManager {
             args.join(" ")
         );
 
-        let line = super::wrapper::prime_line(justfile, recipe, args);
-        let prime_result = writer
-            .write_all(line.as_bytes())
-            .and_then(|_| writer.write_all(b"\n"))
-            .and_then(|_| writer.flush());
-        if let Err(e) = prime_result {
-            let _ = child.kill();
-            let _ = child.wait();
-            return Err(crate::error::Error::PtySpawn(format!(
-                "prime shell stdin: {e}"
-            )));
-        }
-
         spawn_reader(reader, id, tx);
+
+        let writer: SharedWriter = Arc::new(Mutex::new(writer));
+        let prime_writer = Arc::clone(&writer);
+        let line = super::wrapper::prime_line(justfile, recipe, args);
+        std::thread::spawn(move || {
+            // Delay long enough for the user's shell rc files (fastfetch, starship,
+            // plugins) to finish and ZLE/readline to enter raw mode. Writing earlier
+            // risks the shell's startup tcflush discarding the primed bytes.
+            std::thread::sleep(std::time::Duration::from_millis(2000));
+            if let Ok(mut w) = prime_writer.lock() {
+                let _ = w.write_all(line.as_bytes());
+                let _ = w.write_all(b"\r");
+                let _ = w.flush();
+            }
+        });
 
         let log_writer = std::fs::OpenOptions::new()
             .create(true)
@@ -114,8 +119,12 @@ impl SessionManager {
 
     pub fn write(&mut self, id: SessionId, bytes: &[u8]) -> std::io::Result<()> {
         if let Some(h) = self.handles.get_mut(&id) {
-            h.writer.write_all(bytes)?;
-            h.writer.flush()?;
+            let mut w = h
+                .writer
+                .lock()
+                .map_err(|e| std::io::Error::other(format!("writer lock poisoned: {e}")))?;
+            w.write_all(bytes)?;
+            w.flush()?;
         }
         Ok(())
     }
