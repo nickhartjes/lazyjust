@@ -38,6 +38,8 @@ pub struct Config {
     pub render_throttle: Duration,
     /// Interval for the event loop tick that polls child exit status.
     pub tick_interval: Duration,
+    /// Resolved theme name — matches a built-in or user theme file.
+    pub theme_name: String,
 }
 
 impl Config {

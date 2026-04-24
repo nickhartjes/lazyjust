@@ -8,6 +8,12 @@ use std::time::Duration;
 pub fn merge(file: ConfigFile, base: Config) -> Config {
     let mut out = base;
 
+    if let Some(u) = file.ui {
+        if let Some(theme) = u.theme {
+            out.theme_name = theme;
+        }
+    }
+
     if let Some(p) = file.paths {
         if let Some(d) = p.state_dir {
             out.state_dir = PathBuf::from(d);
@@ -96,5 +102,23 @@ mod tests {
         assert_eq!(merged.state_dir, PathBuf::from("/tmp/lj-test"));
         // sessions_log_dir untouched when not specified
         assert_ne!(merged.sessions_log_dir, PathBuf::from("/tmp/lj-test"));
+    }
+
+    #[test]
+    fn ui_theme_override_applies() {
+        let file = ConfigFile {
+            ui: Some(crate::config::file::UiSection {
+                theme: Some("gruvbox-dark".into()),
+            }),
+            ..Default::default()
+        };
+        let merged = merge(file, defaults());
+        assert_eq!(merged.theme_name, "gruvbox-dark");
+    }
+
+    #[test]
+    fn ui_theme_defaults_to_tokyo_night() {
+        let merged = merge(ConfigFile::default(), defaults());
+        assert_eq!(merged.theme_name, "tokyo-night");
     }
 }
