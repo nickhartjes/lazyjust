@@ -11,6 +11,7 @@ pub enum ConfigError {
 
 mod defaults;
 mod file;
+mod merge;
 pub mod paths;
 
 #[derive(Debug, Clone)]
