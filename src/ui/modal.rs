@@ -67,7 +67,12 @@ fn render_dropdown(
                 .borders(Borders::ALL)
                 .title(format!("justfile: /{filter}")),
         )
-        .highlight_style(Style::default().bg(theme.bg).add_modifier(Modifier::BOLD));
+        .highlight_style(
+            Style::default()
+                .bg(theme.highlight)
+                .fg(theme.selected_fg)
+                .add_modifier(Modifier::BOLD),
+        );
     f.render_stateful_widget(list, area, &mut state);
 }
 

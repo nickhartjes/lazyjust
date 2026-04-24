@@ -30,7 +30,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
             Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
         ))
         .title_alignment(Alignment::Center)
-        .style(Style::default().bg(theme.bg).fg(theme.fg));
+        .style(Style::default().fg(theme.fg));
     let inner = block.inner(outer);
     f.render_widget(block, outer);
 
