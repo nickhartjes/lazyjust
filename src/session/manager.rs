@@ -64,7 +64,7 @@ impl SessionManager {
 
         let writer: SharedWriter = Arc::new(Mutex::new(writer));
         let prime_writer = Arc::clone(&writer);
-        let line = super::wrapper::prime_line(justfile, recipe, args);
+        let line = super::shell::prime_line(justfile, recipe, args);
         std::thread::spawn(move || {
             // Wait for the shell's rc files to finish and the line editor to
             // enter raw mode. Heuristic: poll the reader's last-output timestamp

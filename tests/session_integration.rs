@@ -2,7 +2,8 @@
 
 use lazyjust::session::osc::scan_done_marker;
 use lazyjust::session::pty::spawn;
-use lazyjust::session::wrapper::{build_unix_command, prime_line};
+use lazyjust::session::shell::prime_line;
+use lazyjust::session::wrapper::build_unix_command;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
