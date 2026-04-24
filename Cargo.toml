@@ -35,7 +35,7 @@ toml_edit = "0.22"
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-vt100 = "0.15"
+vt100 = "0.16"
 
 [dev-dependencies]
 filetime = "0.2"
