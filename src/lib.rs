@@ -68,6 +68,13 @@ async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
     };
     let _ =
         crate::session::retention::prune_sessions(&cfg.sessions_log_dir, cfg.session_log_retention);
-    let app = app::App::new(disc.justfiles, disc.errors, cfg.default_split_ratio);
+    let theme = theme::registry::resolve(&cfg.theme_name);
+    let app = app::App::new(
+        disc.justfiles,
+        disc.errors,
+        cfg.default_split_ratio,
+        theme,
+        cfg.theme_name.clone(),
+    );
     app::event_loop::run(app, cfg).await
 }

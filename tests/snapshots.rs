@@ -31,7 +31,13 @@ fn fixture_app() -> App {
         recipes,
         groups: vec!["ci".into()],
     };
-    App::new(vec![jf], vec![], 0.3)
+    App::new(
+        vec![jf],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+    )
 }
 
 #[test]

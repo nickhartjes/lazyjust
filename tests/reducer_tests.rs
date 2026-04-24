@@ -29,7 +29,13 @@ fn make_app() -> App {
         recipes,
         groups: vec![],
     };
-    App::new(vec![jf], vec![], 0.3)
+    App::new(
+        vec![jf],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+    )
 }
 
 #[test]
@@ -178,7 +184,13 @@ fn dropdown_switches_justfile() {
         recipes: vec![],
         groups: vec![],
     };
-    let mut app = App::new(vec![a, b], vec![], 0.3);
+    let mut app = App::new(
+        vec![a, b],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+    );
 
     reduce(&mut app, Action::OpenDropdown);
     assert!(matches!(app.mode, Mode::Dropdown { .. }));
