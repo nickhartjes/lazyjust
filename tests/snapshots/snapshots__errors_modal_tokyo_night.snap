@@ -24,7 +24,7 @@ expression: "render_to_string(&app, 80, 24)"
 │                                                                              │
 │                                                                              │
 ╰──────────────────────────────────────────────────────────────────────────────╯
-                                                                                
+▍                           ▍                                                   
 Esc / q / e close                                                               
 
 --- styled cells ---
@@ -393,6 +393,8 @@ Esc / q / e close
 (77,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (78,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (79,21) "╯" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,22) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(28,22) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (0,23) "E" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (1,23) "s" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (2,23) "c" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE

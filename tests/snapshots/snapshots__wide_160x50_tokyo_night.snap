@@ -4,53 +4,53 @@ expression: "render_to_string(&app, 160, 50)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes                                                                                                                           
 ▍ CI ───────────────────────────────────────────▍ build                                                                                                         
-▶  build                                          Build release                                                                                                 
-   ○ test                                                                                                                                                       
-                                                  command                                                                                                       
-                                                    $ cargo build --release                                                                                     
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
-                                                                                                                                                                
+▍  build                                        ▍ Build release                                                                                                 
+▍  ○ test                                       ▍                                                                                                               
+▍                                               ▍ command                                                                                                       
+▍                                               ▍   $ cargo build --release                                                                                     
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
+▍                                               ▍                                                                                                               
 ⏎ run  ·  / filter  ·  t theme  ·  ? help  ·  q quit                                                                                                            
 
 --- styled cells ---
@@ -135,12 +135,13 @@ expression: "render_to_string(&app, 160, 50)"
 (52,1) "i" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (53,1) "l" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (54,1) "d" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(0,2) "▶" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(0,2) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=BOLD
 (3,2) "b" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (4,2) "u" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (5,2) "i" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (6,2) "l" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (7,2) "d" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(48,2) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (50,2) "B" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (51,2) "u" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (52,2) "i" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
@@ -153,11 +154,15 @@ expression: "render_to_string(&app, 160, 50)"
 (60,2) "a" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (61,2) "s" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (62,2) "e" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,3) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (3,3) "○" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (5,3) "t" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (6,3) "e" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (7,3) "s" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (8,3) "t" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
+(48,3) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,4) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,4) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (50,4) "c" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (51,4) "o" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (52,4) "m" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
@@ -165,6 +170,8 @@ expression: "render_to_string(&app, 160, 50)"
 (54,4) "a" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (55,4) "n" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (56,4) "d" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,5) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,5) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (52,5) "$" fg=Rgb(125, 207, 255) bg=Rgb(26, 27, 38) mod=NONE
 (54,5) "c" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (55,5) "a" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
@@ -185,6 +192,92 @@ expression: "render_to_string(&app, 160, 50)"
 (72,5) "a" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (73,5) "s" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (74,5) "e" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
+(0,6) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,6) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,7) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,7) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,8) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,8) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,9) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,9) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,10) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,10) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,11) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,11) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,12) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,12) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,13) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,13) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,14) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,14) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,15) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,15) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,16) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,16) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,17) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,17) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,18) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,18) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,19) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,19) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,20) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,20) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,21) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,21) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,22) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,22) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,23) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,23) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,24) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,24) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,25) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,25) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,26) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,26) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,27) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,27) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,28) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,28) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,29) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,29) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,30) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,30) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,31) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,31) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,32) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,32) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,33) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,33) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,34) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,34) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,35) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,35) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,36) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,36) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,37) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,37) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,38) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,38) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,39) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,39) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,40) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,40) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,41) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,41) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,42) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,42) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,43) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,43) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,44) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,44) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,45) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,45) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,46) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,46) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,47) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,47) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,48) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(48,48) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (0,49) "⏎" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (2,49) "r" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (3,49) "u" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE

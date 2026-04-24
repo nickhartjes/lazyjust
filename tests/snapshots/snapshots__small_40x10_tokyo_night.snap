@@ -4,13 +4,13 @@ expression: "render_to_string(&app, 40, 10)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes   
 ▍ build                                 
-  Build release                         
-                                        
-  command                               
-    $ cargo build --release             
-                                        
-                                        
-                                        
+▍ Build release                         
+▍                                       
+▍ command                               
+▍   $ cargo build --release             
+▍                                       
+▍                                       
+▍                                       
 ⏎ run  ·  / filter  ·  t                
 
 --- styled cells ---
@@ -49,6 +49,7 @@ expression: "render_to_string(&app, 40, 10)"
 (4,1) "i" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (5,1) "l" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (6,1) "d" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
+(0,2) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (2,2) "B" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (3,2) "u" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (4,2) "i" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
@@ -61,6 +62,8 @@ expression: "render_to_string(&app, 40, 10)"
 (12,2) "a" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (13,2) "s" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (14,2) "e" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,3) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,4) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (2,4) "c" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (3,4) "o" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (4,4) "m" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
@@ -68,6 +71,7 @@ expression: "render_to_string(&app, 40, 10)"
 (6,4) "a" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (7,4) "n" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (8,4) "d" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,5) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (4,5) "$" fg=Rgb(125, 207, 255) bg=Rgb(26, 27, 38) mod=NONE
 (6,5) "c" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (7,5) "a" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
@@ -88,6 +92,9 @@ expression: "render_to_string(&app, 40, 10)"
 (24,5) "a" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (25,5) "s" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (26,5) "e" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
+(0,6) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,7) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(0,8) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (0,9) "⏎" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (2,9) "r" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (3,9) "u" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE

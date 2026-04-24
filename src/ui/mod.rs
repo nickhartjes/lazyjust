@@ -54,9 +54,11 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     f.render_widget(bg_fill, size);
 
     let panes = layout::compute(size, app);
+    let list_active = focus::is_list_active(app.focus);
+    let right_active = focus::is_right_active(app.focus);
     top_bar::render(f, panes.top_bar, app, &app.theme);
     list::render(f, panes.list, app, &app.theme);
-    let right_active = focus::is_right_active(app.focus);
+    focus::paint_focus_bar(f, panes.list, list_active, &app.theme);
     if let Some(id) = app.active_session {
         if let (Some(screen), Some(meta)) = (screens.get(&id), app.session(id)) {
             session_pane::render(f, panes.right, screen, meta, right_active, &app.theme);
@@ -66,6 +68,7 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     } else {
         preview::render(f, panes.right, app, &app.theme);
     }
+    focus::paint_focus_bar(f, panes.right, right_active, &app.theme);
     status_bar::render(f, panes.status, app, &app.theme);
     modal::render(f, app, &app.theme);
     if matches!(&app.mode, crate::app::types::Mode::ThemePicker { .. }) {

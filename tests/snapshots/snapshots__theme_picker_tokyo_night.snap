@@ -4,27 +4,27 @@ expression: "render_to_string(&app, 80, 24)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes                                           
 ▍ CI ───────────────────────▍ build                                             
-▶  build            ╭ theme ───────────────────────────────╮                    
-   ○ test           │▸ tokyo-night                         │                    
-                    │  mono-amber                          │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    │                                      │                    
-                    ╰──────────────────────────────────────╯                    
-                                                                                
+▍  build            ╭ theme ───────────────────────────────╮                    
+▍  ○ test           │▸ tokyo-night                         │                    
+▍                   │  mono-amber                          │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   │                                      │                    
+▍                   ╰──────────────────────────────────────╯                    
+▍                           ▍                                                   
 j/k select  ·  ⏎ apply & save  ·  Esc revert                                    
 
 --- styled cells ---
@@ -89,7 +89,7 @@ j/k select  ·  ⏎ apply & save  ·  Esc revert
 (32,1) "i" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (33,1) "l" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (34,1) "d" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(0,2) "▶" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(0,2) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=BOLD
 (3,2) "b" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (4,2) "u" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (5,2) "i" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
@@ -133,6 +133,7 @@ j/k select  ·  ⏎ apply & save  ·  Esc revert
 (57,2) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (58,2) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,2) "╮" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,3) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (3,3) "○" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (5,3) "t" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (6,3) "e" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
@@ -152,6 +153,7 @@ j/k select  ·  ⏎ apply & save  ·  Esc revert
 (32,3) "h" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (33,3) "t" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (59,3) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,4) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,4) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (23,4) "m" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (24,4) "o" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
@@ -164,38 +166,55 @@ j/k select  ·  ⏎ apply & save  ·  Esc revert
 (31,4) "e" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (32,4) "r" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (59,4) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,5) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,5) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,5) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,6) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,6) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,6) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,7) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,7) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,7) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,8) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,8) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,8) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,9) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,9) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,9) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,10) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,10) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,10) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,11) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,11) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,11) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,12) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,12) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,12) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,13) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,13) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,13) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,14) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,14) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,14) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,15) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,15) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,15) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,16) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,16) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,16) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,17) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,17) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,17) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,18) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,18) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,18) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,19) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,19) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,19) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,20) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,20) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,20) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,21) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (20,21) "╰" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (21,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (22,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
@@ -236,6 +255,8 @@ j/k select  ·  ⏎ apply & save  ·  Esc revert
 (57,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (58,21) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (59,21) "╯" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(0,22) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(28,22) "▍" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (0,23) "j" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (1,23) "/" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (2,23) "k" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
