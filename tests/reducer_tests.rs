@@ -37,6 +37,7 @@ fn make_app() -> App {
         0.3,
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
     )
 }
 
@@ -196,6 +197,7 @@ fn dropdown_switches_justfile() {
         0.3,
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
     );
 
     reduce(&mut app, Action::OpenDropdown);

@@ -75,6 +75,7 @@ async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
         cfg.default_split_ratio,
         theme,
         cfg.theme_name.clone(),
+        cfg.icon_style,
     );
     app::event_loop::run(app, cfg).await
 }

@@ -39,6 +39,7 @@ fn fixture_app() -> App {
         0.3,
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
     )
 }
 

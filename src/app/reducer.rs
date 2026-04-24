@@ -399,6 +399,7 @@ mod theme_picker_tests {
             0.3,
             crate::theme::registry::resolve(crate::theme::DEFAULT_THEME_NAME),
             crate::theme::DEFAULT_THEME_NAME.to_string(),
+            crate::ui::icon_style::IconStyle::Round,
         )
     }
 

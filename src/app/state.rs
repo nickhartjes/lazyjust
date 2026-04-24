@@ -18,6 +18,7 @@ pub struct App {
     pub startup_errors: Vec<(PathBuf, String)>,
     pub next_session_id: SessionId,
     pub status_message: Option<String>,
+    pub icon_style: crate::ui::icon_style::IconStyle,
 }
 
 impl App {
@@ -27,6 +28,7 @@ impl App {
         split_ratio: f32,
         theme: crate::theme::Theme,
         theme_name: String,
+        icon_style: crate::ui::icon_style::IconStyle,
     ) -> Self {
         Self {
             justfiles,
@@ -44,6 +46,7 @@ impl App {
             startup_errors,
             next_session_id: 1,
             status_message: None,
+            icon_style,
         }
     }
 
