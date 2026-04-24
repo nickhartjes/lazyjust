@@ -2,35 +2,41 @@ use crate::app::types::{Recipe, Status};
 use crate::app::App;
 use crate::ui::focus::{is_list_active, pane_block};
 use ratatui::layout::Rect;
-use ratatui::style::{Color, Modifier, Style};
+use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{List, ListItem, ListState};
 use ratatui::Frame;
 
-pub fn render(f: &mut Frame, area: Rect, app: &App) {
+pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
     let active = is_list_active(app.focus);
     let Some(jf) = app.active_justfile() else {
-        f.render_widget(pane_block("recipes", active), area);
+        f.render_widget(pane_block("recipes", active, theme), area);
         return;
     };
 
-    let items = build_items(jf.recipes.as_slice(), &app.filter, app);
+    let items = build_items(jf.recipes.as_slice(), &app.filter, app, theme);
 
     let mut state = ListState::default();
     state.select(Some(app.list_cursor.min(items.len().saturating_sub(1))));
 
     let list = List::new(items)
-        .block(pane_block("recipes", active))
+        .block(pane_block("recipes", active, theme))
         .highlight_style(
             Style::default()
-                .bg(Color::DarkGray)
+                .bg(theme.highlight)
+                .fg(theme.selected_fg)
                 .add_modifier(Modifier::BOLD),
         )
         .highlight_symbol(">");
     f.render_stateful_widget(list, area, &mut state);
 }
 
-fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListItem<'a>> {
+fn build_items<'a>(
+    recipes: &'a [Recipe],
+    filter: &str,
+    app: &App,
+    theme: &crate::theme::Theme,
+) -> Vec<ListItem<'a>> {
     let names: Vec<&str> = recipes.iter().map(|r| r.name.as_str()).collect();
     let scored = crate::app::filter::fuzzy_match(&names, filter);
 
@@ -45,18 +51,18 @@ fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListIt
                 items.push(ListItem::new(Line::from(Span::styled(
                     format!("GROUP: {g}"),
                     Style::default()
-                        .fg(Color::Magenta)
+                        .fg(theme.accent)
                         .add_modifier(Modifier::BOLD),
                 ))));
             } else {
                 items.push(ListItem::new(Line::from(Span::styled(
                     "GROUP: (ungrouped)",
-                    Style::default().fg(Color::DarkGray),
+                    Style::default().fg(theme.dim),
                 ))));
             }
             current_group = group_name;
         }
-        let indicators = session_indicators_for(r, app);
+        let indicators = session_indicators_for(r, app, theme);
         let mut spans = vec![Span::raw("  "), Span::raw(r.name.clone())];
         if !indicators.is_empty() {
             spans.push(Span::raw("   "));
@@ -67,7 +73,11 @@ fn build_items<'a>(recipes: &'a [Recipe], filter: &str, app: &App) -> Vec<ListIt
     items
 }
 
-fn session_indicators_for<'a>(r: &'a Recipe, app: &App) -> Vec<Span<'a>> {
+fn session_indicators_for<'a>(
+    r: &'a Recipe,
+    app: &App,
+    theme: &crate::theme::Theme,
+) -> Vec<Span<'a>> {
     let mut out = Vec::new();
     let mut emitted = 0usize;
     for &sid in r.runs.iter().rev() {
@@ -77,28 +87,23 @@ fn session_indicators_for<'a>(r: &'a Recipe, app: &App) -> Vec<Span<'a>> {
         }
         if let Some(s) = app.session(sid) {
             out.push(Span::raw(" "));
-            out.push(status_span(s.status, s.unread));
+            out.push(status_span(s.status, s.unread, theme));
             emitted += 1;
         }
     }
     out
 }
 
-fn status_span(status: Status, unread: bool) -> Span<'static> {
+fn status_span(status: Status, unread: bool, theme: &crate::theme::Theme) -> Span<'static> {
     let (icon, color) = match status {
-        Status::Running => ("●", Color::Blue),
-        Status::ShellAfterExit { code } | Status::Exited { code } if code == 0 => (
-            "✓",
-            if unread {
-                Color::Green
-            } else {
-                Color::DarkGray
-            },
-        ),
-        Status::ShellAfterExit { .. } | Status::Exited { .. } => {
-            ("✗", if unread { Color::Red } else { Color::DarkGray })
+        Status::Running => ("●", theme.running),
+        Status::ShellAfterExit { code } | Status::Exited { code } if code == 0 => {
+            ("✓", if unread { theme.success } else { theme.dim })
         }
-        Status::Broken => ("!", Color::Yellow),
+        Status::ShellAfterExit { .. } | Status::Exited { .. } => {
+            ("✗", if unread { theme.error } else { theme.dim })
+        }
+        Status::Broken => ("!", theme.warn),
     };
     Span::styled(icon, Style::default().fg(color))
 }

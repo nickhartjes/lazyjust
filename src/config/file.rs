@@ -7,6 +7,7 @@ pub struct ConfigFile {
     // Unknown top-level keys are silently ignored (serde default) so
     // users can keep `[ui]` / `[keys]` blocks now; those become active
     // in later milestones without breaking this loader.
+    pub ui: Option<UiSection>,
     pub paths: Option<PathsSection>,
     pub logging: Option<LoggingSection>,
     pub engine: Option<EngineSection>,
@@ -28,6 +29,11 @@ pub struct LoggingSection {
 pub struct EngineSection {
     pub render_throttle_ms: Option<u64>,
     pub tick_interval_ms: Option<u64>,
+}
+
+#[derive(Debug, Default, Deserialize)]
+pub struct UiSection {
+    pub theme: Option<String>,
 }
 
 impl ConfigFile {

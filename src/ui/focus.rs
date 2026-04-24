@@ -1,16 +1,16 @@
 use crate::app::types::Focus;
-use ratatui::style::{Color, Modifier, Style};
+use ratatui::style::{Modifier, Style};
 use ratatui::widgets::{Block, Borders};
 
-pub fn pane_block<'a>(title: &'a str, active: bool) -> Block<'a> {
-    let border_color = if active { Color::Cyan } else { Color::DarkGray };
+pub fn pane_block<'a>(title: &'a str, active: bool, theme: &crate::theme::Theme) -> Block<'a> {
+    let border_color = if active { theme.accent } else { theme.dim };
     let title_style = if active {
         Style::default()
-            .fg(Color::Black)
-            .bg(Color::Cyan)
+            .fg(theme.bg)
+            .bg(theme.accent)
             .add_modifier(Modifier::BOLD)
     } else {
-        Style::default().fg(Color::Gray)
+        Style::default().fg(theme.dim)
     };
     Block::default()
         .borders(Borders::ALL)

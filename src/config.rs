@@ -14,6 +14,7 @@ pub(crate) mod file;
 mod merge;
 pub mod paths;
 pub mod template;
+pub mod writer;
 
 #[derive(Debug, Clone)]
 pub struct Config {
@@ -38,6 +39,8 @@ pub struct Config {
     pub render_throttle: Duration,
     /// Interval for the event loop tick that polls child exit status.
     pub tick_interval: Duration,
+    /// Resolved theme name — matches a built-in or user theme file.
+    pub theme_name: String,
 }
 
 impl Config {

@@ -7,6 +7,7 @@ pub mod param_modal;
 pub mod preview;
 pub mod session_pane;
 pub mod status_bar;
+pub mod theme_picker;
 pub mod top_bar;
 
 use crate::app::App;
@@ -30,18 +31,21 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     }
 
     let panes = layout::compute(size, app);
-    top_bar::render(f, panes.top_bar, app);
-    list::render(f, panes.list, app);
+    top_bar::render(f, panes.top_bar, app, &app.theme);
+    list::render(f, panes.list, app, &app.theme);
     let right_active = focus::is_right_active(app.focus);
     if let Some(id) = app.active_session {
         if let Some(screen) = screens.get(&id) {
-            session_pane::render(f, panes.right, screen, right_active);
+            session_pane::render(f, panes.right, screen, right_active, &app.theme);
         } else {
-            preview::render(f, panes.right, app);
+            preview::render(f, panes.right, app, &app.theme);
         }
     } else {
-        preview::render(f, panes.right, app);
+        preview::render(f, panes.right, app, &app.theme);
     }
     status_bar::render(f, panes.status, app);
-    modal::render(f, app);
+    modal::render(f, app, &app.theme);
+    if matches!(&app.mode, crate::app::types::Mode::ThemePicker { .. }) {
+        theme_picker::render(f, size, app);
+    }
 }

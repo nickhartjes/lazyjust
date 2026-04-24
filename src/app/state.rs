@@ -12,6 +12,8 @@ pub struct App {
     pub focus: Focus,
     pub mode: Mode,
     pub split_ratio: f32,
+    pub theme: crate::theme::Theme,
+    pub theme_name: String,
     pub collapsed_groups: std::collections::HashSet<String>,
     pub startup_errors: Vec<(PathBuf, String)>,
     pub next_session_id: SessionId,
@@ -23,6 +25,8 @@ impl App {
         justfiles: Vec<Justfile>,
         startup_errors: Vec<(PathBuf, String)>,
         split_ratio: f32,
+        theme: crate::theme::Theme,
+        theme_name: String,
     ) -> Self {
         Self {
             justfiles,
@@ -34,6 +38,8 @@ impl App {
             focus: Focus::List,
             mode: Mode::Normal,
             split_ratio,
+            theme,
+            theme_name,
             collapsed_groups: Default::default(),
             startup_errors,
             next_session_id: 1,

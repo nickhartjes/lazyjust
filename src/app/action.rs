@@ -68,6 +68,11 @@ pub enum Action {
     MarkUnread(SessionId),
     MarkRead(SessionId),
 
+    OpenThemePicker,
+    PickerMove(isize),
+    PickerConfirm,
+    PickerCancel,
+
     NoOp,
 }
 

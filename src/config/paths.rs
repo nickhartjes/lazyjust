@@ -15,6 +15,15 @@ fn config_root() -> PathBuf {
     if let Ok(v) = std::env::var(OVERRIDE_ENV) {
         return PathBuf::from(v);
     }
+    // Honor XDG_CONFIG_HOME on every platform (including macOS, where
+    // dirs::config_dir() ignores it and returns ~/Library/Application
+    // Support). Users who prefer the XDG layout on macOS can export
+    // XDG_CONFIG_HOME and get ~/.config/lazyjust/.
+    if let Ok(v) = std::env::var("XDG_CONFIG_HOME") {
+        if !v.is_empty() {
+            return PathBuf::from(v).join("lazyjust");
+        }
+    }
     dirs::config_dir()
         .unwrap_or_else(|| PathBuf::from("."))
         .join("lazyjust")
@@ -42,5 +51,25 @@ mod tests {
         let p = config_file_path();
         assert_eq!(p.file_name().unwrap(), "config.toml");
         assert_eq!(p.parent().unwrap().file_name().unwrap(), "lazyjust");
+    }
+
+    #[test]
+    fn xdg_config_home_wins_over_platform_default() {
+        env::remove_var(OVERRIDE_ENV);
+        let tmp = tempfile::tempdir().unwrap();
+        let prev = env::var("XDG_CONFIG_HOME").ok();
+        env::set_var("XDG_CONFIG_HOME", tmp.path());
+        assert_eq!(
+            config_file_path(),
+            tmp.path().join("lazyjust").join("config.toml")
+        );
+        assert_eq!(
+            user_themes_dir(),
+            tmp.path().join("lazyjust").join("themes")
+        );
+        match prev {
+            Some(v) => env::set_var("XDG_CONFIG_HOME", v),
+            None => env::remove_var("XDG_CONFIG_HOME"),
+        }
     }
 }

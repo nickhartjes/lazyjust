@@ -286,6 +286,61 @@ pub fn reduce(app: &mut App, action: Action) {
             }
         }
 
+        Action::OpenThemePicker => {
+            let names = crate::theme::registry::list();
+            let original_name = app.theme_name.clone();
+            let highlighted = names.iter().position(|n| *n == original_name).unwrap_or(0);
+            app.mode = Mode::ThemePicker {
+                original_name,
+                highlighted,
+                names,
+            };
+        }
+        Action::PickerMove(delta) => {
+            if let Mode::ThemePicker {
+                highlighted, names, ..
+            } = &mut app.mode
+            {
+                let len = names.len() as isize;
+                if len > 0 {
+                    let mut idx = *highlighted as isize + delta;
+                    idx = idx.rem_euclid(len);
+                    *highlighted = idx as usize;
+                    let stem = names[*highlighted].clone();
+                    app.theme = crate::theme::registry::resolve(&stem);
+                    app.theme_name = stem;
+                }
+            }
+        }
+        Action::PickerConfirm => {
+            if let Mode::ThemePicker { .. } = app.mode {
+                let stem = app.theme_name.clone();
+                let path = crate::config::paths::config_file_path();
+                if let Err(e) = crate::config::writer::set_theme(&path, &stem) {
+                    tracing::warn!(
+                        target: "lazyjust::theme",
+                        error = %e,
+                        "failed to persist theme",
+                    );
+                    app.status_message = Some(format!("theme persist failed: {e}"));
+                }
+                app.mode = Mode::Normal;
+            }
+        }
+        Action::PickerCancel => {
+            // Separate scope so we can re-borrow app immutably after restoring.
+            let original = if let Mode::ThemePicker { original_name, .. } = &app.mode {
+                Some(original_name.clone())
+            } else {
+                None
+            };
+            if let Some(original) = original {
+                app.theme = crate::theme::registry::resolve(&original);
+                app.theme_name = original;
+                app.mode = Mode::Normal;
+            }
+        }
+
         // Remaining actions handled in later tasks.
         _ => {}
     }
@@ -328,5 +383,77 @@ fn cycle_history(app: &mut App, dir: i32) {
     app.active_session = Some(next);
     if let Some(s) = app.session_mut(next) {
         s.unread = false;
+    }
+}
+
+#[cfg(test)]
+mod theme_picker_tests {
+    use super::*;
+    use crate::app::action::Action;
+    use crate::app::types::Mode;
+
+    fn test_app() -> App {
+        App::new(
+            vec![],
+            vec![],
+            0.3,
+            crate::theme::registry::resolve(crate::theme::DEFAULT_THEME_NAME),
+            crate::theme::DEFAULT_THEME_NAME.to_string(),
+        )
+    }
+
+    #[test]
+    fn open_picker_enters_mode_with_current_theme_highlighted() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        match &app.mode {
+            Mode::ThemePicker {
+                original_name,
+                highlighted,
+                names,
+            } => {
+                assert_eq!(original_name, crate::theme::DEFAULT_THEME_NAME);
+                assert_eq!(names[*highlighted], crate::theme::DEFAULT_THEME_NAME);
+            }
+            _ => panic!("expected ThemePicker mode"),
+        }
+    }
+
+    #[test]
+    fn picker_move_wraps_around() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        reduce(&mut app, Action::PickerMove(-1));
+        let last_name = match &app.mode {
+            Mode::ThemePicker {
+                names, highlighted, ..
+            } => names[*highlighted].clone(),
+            _ => panic!("expected ThemePicker mode"),
+        };
+        assert_eq!(app.theme_name, last_name);
+        assert_ne!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
+    }
+
+    #[test]
+    fn picker_cancel_restores_original() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        reduce(&mut app, Action::PickerMove(1));
+        assert_ne!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
+        reduce(&mut app, Action::PickerCancel);
+        assert_eq!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
+        assert!(matches!(app.mode, Mode::Normal));
+    }
+
+    #[test]
+    fn picker_confirm_commits_and_returns_to_normal() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        reduce(&mut app, Action::PickerMove(1));
+        let chosen = app.theme_name.clone();
+        assert_ne!(chosen, crate::theme::DEFAULT_THEME_NAME);
+        reduce(&mut app, Action::PickerConfirm);
+        assert!(matches!(app.mode, Mode::Normal));
+        assert_eq!(app.theme_name, chosen);
     }
 }
