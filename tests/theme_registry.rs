@@ -1,5 +1,5 @@
-use lazyrust::config::paths::OVERRIDE_ENV;
-use lazyrust::theme::registry;
+use lazyjust::config::paths::OVERRIDE_ENV;
+use lazyjust::theme::registry;
 use std::sync::{Mutex, OnceLock};
 
 fn guard() -> &'static Mutex<()> {

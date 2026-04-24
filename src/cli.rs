@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
-#[command(name = "lazyrust", about = "Terminal UI for just", version)]
+#[command(name = "lazyjust", about = "Terminal UI for just", version)]
 pub struct Cli {
     /// Project root to scan (defaults to current directory).
     #[arg(value_name = "PATH", default_value = ".")]

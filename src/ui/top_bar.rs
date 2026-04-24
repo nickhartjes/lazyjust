@@ -21,7 +21,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
         Span::styled("▌", Style::default().fg(theme.accent)),
         Span::raw(" "),
         Span::styled(
-            "lazyrust",
+            "lazyjust",
             Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
         ),
         Span::styled("  · ", Style::default().fg(theme.dim)),

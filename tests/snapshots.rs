@@ -1,11 +1,11 @@
-use lazyrust::app::help_section::SectionId;
-use lazyrust::app::types::{
+use lazyjust::app::help_section::SectionId;
+use lazyjust::app::types::{
     ConfirmAction, Focus, Justfile, Mode, Param, ParamKind, Recipe, SessionMeta, Status,
 };
-use lazyrust::app::App;
-use lazyrust::theme::registry::resolve;
-use lazyrust::ui;
-use lazyrust::ui::icon_style::IconStyle;
+use lazyjust::app::App;
+use lazyjust::theme::registry::resolve;
+use lazyjust::ui;
+use lazyjust::ui::icon_style::IconStyle;
 use ratatui::backend::TestBackend;
 use ratatui::Terminal;
 use std::path::PathBuf;
@@ -142,7 +142,7 @@ fn fixture_session_running(theme_name: &str, icon_style: IconStyle) -> App {
         status: Status::Running,
         unread: false,
         started_at: started_at_stable(),
-        log_path: PathBuf::from("/tmp/lazyrust-test.log"),
+        log_path: PathBuf::from("/tmp/lazyjust-test.log"),
         pid: Some(12345),
     });
     app.active_session = Some(sid);
@@ -160,7 +160,7 @@ fn fixture_session_exited_fail(theme_name: &str, icon_style: IconStyle) -> App {
         status: Status::Exited { code: 1 },
         unread: false,
         started_at: started_at_stable(),
-        log_path: PathBuf::from("/tmp/lazyrust-test.log"),
+        log_path: PathBuf::from("/tmp/lazyjust-test.log"),
         pid: Some(12345),
     });
     app.active_session = Some(sid);

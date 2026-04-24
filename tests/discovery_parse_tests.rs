@@ -1,5 +1,5 @@
-use lazyrust::app::types::{ParamKind, Recipe};
-use lazyrust::discovery::parse::parse_dump;
+use lazyjust::app::types::{ParamKind, Recipe};
+use lazyjust::discovery::parse::parse_dump;
 
 fn fixture(name: &str) -> String {
     std::fs::read_to_string(format!("tests/fixtures/dumps/{name}.json")).expect("fixture exists")

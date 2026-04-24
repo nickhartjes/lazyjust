@@ -1,6 +1,6 @@
 //! Color themes. Each theme is a set of 14 semantic color slots used
 //! across the UI. Themes load from TOML — either built-in (compiled in
-//! via `include_str!`) or user files under `<config_dir>/lazyrust/themes/`.
+//! via `include_str!`) or user files under `<config_dir>/lazyjust/themes/`.
 
 pub mod builtin;
 mod parse;

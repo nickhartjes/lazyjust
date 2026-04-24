@@ -60,7 +60,7 @@ mod tests {
 
     #[test]
     fn missing_file_returns_none() {
-        let p = std::path::Path::new("/definitely/does/not/exist/lazyrust.toml");
+        let p = std::path::Path::new("/definitely/does/not/exist/lazyjust.toml");
         assert!(matches!(ConfigFile::read(p), Ok(None)));
     }
 

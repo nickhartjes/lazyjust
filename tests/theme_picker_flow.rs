@@ -1,9 +1,9 @@
-use lazyrust::app::action::Action;
-use lazyrust::app::reducer::reduce;
-use lazyrust::app::types::{Justfile, Recipe};
-use lazyrust::app::App;
-use lazyrust::theme::{registry::resolve, DEFAULT_THEME_NAME};
-use lazyrust::ui::icon_style::IconStyle;
+use lazyjust::app::action::Action;
+use lazyjust::app::reducer::reduce;
+use lazyjust::app::types::{Justfile, Recipe};
+use lazyjust::app::App;
+use lazyjust::theme::{registry::resolve, DEFAULT_THEME_NAME};
+use lazyjust::ui::icon_style::IconStyle;
 use std::path::PathBuf;
 use std::sync::{Mutex, OnceLock};
 
@@ -42,7 +42,7 @@ fn minimal_app() -> App {
 fn picker_cancel_reverts_theme_no_write() {
     let _g = lock().lock().unwrap_or_else(|e| e.into_inner());
     let tmp = tempfile::tempdir().unwrap();
-    std::env::set_var("LAZYRUST_CONFIG_DIR", tmp.path());
+    std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
     let cfg_path = tmp.path().join("config.toml");
     let original = "[ui]\ntheme = \"tokyo-night\"\n";
     std::fs::write(&cfg_path, original).unwrap();
@@ -58,14 +58,14 @@ fn picker_cancel_reverts_theme_no_write() {
     // file untouched
     assert_eq!(std::fs::read_to_string(&cfg_path).unwrap(), original);
 
-    std::env::remove_var("LAZYRUST_CONFIG_DIR");
+    std::env::remove_var("LAZYJUST_CONFIG_DIR");
 }
 
 #[test]
 fn picker_confirm_writes_theme_preserving_other_keys() {
     let _g = lock().lock().unwrap_or_else(|e| e.into_inner());
     let tmp = tempfile::tempdir().unwrap();
-    std::env::set_var("LAZYRUST_CONFIG_DIR", tmp.path());
+    std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
     let cfg_path = tmp.path().join("config.toml");
     let original =
         "# user comment\n[ui]\ntheme = \"tokyo-night\"\n\n[engine]\nrender_throttle_ms = 8\n";
@@ -93,5 +93,5 @@ fn picker_confirm_writes_theme_preserving_other_keys() {
         "old theme kept: {after:?}"
     );
 
-    std::env::remove_var("LAZYRUST_CONFIG_DIR");
+    std::env::remove_var("LAZYJUST_CONFIG_DIR");
 }

@@ -1,4 +1,4 @@
-use lazyrust::session::osc::scan_done_marker;
+use lazyjust::session::osc::scan_done_marker;
 
 #[test]
 fn finds_marker_and_strips_sequence() {

@@ -1,6 +1,6 @@
-use lazyrust::app::reducer::reduce;
-use lazyrust::app::types::{Justfile, Mode, Recipe};
-use lazyrust::app::{Action, App};
+use lazyjust::app::reducer::reduce;
+use lazyjust::app::types::{Justfile, Mode, Recipe};
+use lazyjust::app::{Action, App};
 use std::path::PathBuf;
 
 fn make_app() -> App {
@@ -35,9 +35,9 @@ fn make_app() -> App {
         vec![jf],
         vec![],
         0.3,
-        lazyrust::theme::registry::resolve(lazyrust::theme::DEFAULT_THEME_NAME),
-        lazyrust::theme::DEFAULT_THEME_NAME.to_string(),
-        lazyrust::ui::icon_style::IconStyle::Round,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
     )
 }
 
@@ -88,7 +88,7 @@ fn split_resize_clamps() {
 
 #[test]
 fn session_exited_transitions_running_to_exited() {
-    use lazyrust::app::types::{SessionMeta, Status};
+    use lazyjust::app::types::{SessionMeta, Status};
     use std::time::Instant;
 
     let mut app = make_app();
@@ -111,7 +111,7 @@ fn session_exited_transitions_running_to_exited() {
 
 #[test]
 fn recipe_exited_transitions_running_to_shell_after_exit() {
-    use lazyrust::app::types::{SessionMeta, Status};
+    use lazyjust::app::types::{SessionMeta, Status};
     use std::time::Instant;
 
     let mut app = make_app();
@@ -134,7 +134,7 @@ fn recipe_exited_transitions_running_to_shell_after_exit() {
 
 #[test]
 fn session_exited_idempotent_from_exited_state() {
-    use lazyrust::app::types::{SessionMeta, Status};
+    use lazyjust::app::types::{SessionMeta, Status};
     use std::time::Instant;
 
     let mut app = make_app();
@@ -156,7 +156,7 @@ fn session_exited_idempotent_from_exited_state() {
 
 #[test]
 fn mark_read_unread_flip() {
-    use lazyrust::app::types::{SessionMeta, Status};
+    use lazyjust::app::types::{SessionMeta, Status};
     use std::time::Instant;
 
     let mut app = make_app();
@@ -179,7 +179,7 @@ fn mark_read_unread_flip() {
 
 #[test]
 fn dropdown_switches_justfile() {
-    use lazyrust::app::types::{Justfile, Mode};
+    use lazyjust::app::types::{Justfile, Mode};
 
     let a = Justfile {
         path: "/a".into(),
@@ -195,9 +195,9 @@ fn dropdown_switches_justfile() {
         vec![a, b],
         vec![],
         0.3,
-        lazyrust::theme::registry::resolve(lazyrust::theme::DEFAULT_THEME_NAME),
-        lazyrust::theme::DEFAULT_THEME_NAME.to_string(),
-        lazyrust::ui::icon_style::IconStyle::Round,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
     );
 
     reduce(&mut app, Action::OpenDropdown);
@@ -210,8 +210,8 @@ fn dropdown_switches_justfile() {
 
 #[test]
 fn help_open_from_list_records_origin_list_focus() {
-    use lazyrust::app::help_section::SectionId;
-    use lazyrust::app::types::Focus;
+    use lazyjust::app::help_section::SectionId;
+    use lazyjust::app::types::Focus;
     let mut app = make_app();
     app.focus = Focus::List;
     reduce(&mut app, Action::OpenHelp);
@@ -226,7 +226,7 @@ fn help_open_from_list_records_origin_list_focus() {
 
 #[test]
 fn help_open_from_filter_records_origin_filter() {
-    use lazyrust::app::help_section::SectionId;
+    use lazyjust::app::help_section::SectionId;
     let mut app = make_app();
     app.mode = Mode::FilterInput;
     reduce(&mut app, Action::OpenHelp);
@@ -238,7 +238,7 @@ fn help_open_from_filter_records_origin_filter() {
 
 #[test]
 fn help_scroll_down_monotonic() {
-    use lazyrust::app::help_section::SectionId;
+    use lazyjust::app::help_section::SectionId;
     let mut app = make_app();
     app.mode = Mode::Help {
         scroll: 0,
@@ -255,7 +255,7 @@ fn help_scroll_down_monotonic() {
 
 #[test]
 fn help_scroll_up_floors_zero() {
-    use lazyrust::app::help_section::SectionId;
+    use lazyjust::app::help_section::SectionId;
     let mut app = make_app();
     app.mode = Mode::Help {
         scroll: 2,
@@ -270,7 +270,7 @@ fn help_scroll_up_floors_zero() {
 
 #[test]
 fn help_scroll_home_zeroes() {
-    use lazyrust::app::help_section::SectionId;
+    use lazyjust::app::help_section::SectionId;
     let mut app = make_app();
     app.mode = Mode::Help {
         scroll: 42,
@@ -285,7 +285,7 @@ fn help_scroll_home_zeroes() {
 
 #[test]
 fn help_scroll_end_saturates_max() {
-    use lazyrust::app::help_section::SectionId;
+    use lazyjust::app::help_section::SectionId;
     let mut app = make_app();
     app.mode = Mode::Help {
         scroll: 0,
@@ -300,7 +300,7 @@ fn help_scroll_end_saturates_max() {
 
 #[test]
 fn help_close_returns_to_normal() {
-    use lazyrust::app::help_section::SectionId;
+    use lazyjust::app::help_section::SectionId;
     let mut app = make_app();
     app.mode = Mode::Help {
         scroll: 5,

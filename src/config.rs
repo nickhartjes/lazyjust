@@ -19,8 +19,8 @@ pub mod writer;
 #[derive(Debug, Clone)]
 pub struct Config {
     /// Root directory for persistent state (logs, session output).
-    /// On macOS: `~/Library/Application Support/lazyrust/`. On Linux: `$XDG_STATE_HOME/lazyrust/`.
-    /// The daily-rotated app log lives here as `lazyrust.log.YYYY-MM-DD`.
+    /// On macOS: `~/Library/Application Support/lazyjust/`. On Linux: `$XDG_STATE_HOME/lazyjust/`.
+    /// The daily-rotated app log lives here as `lazyjust.log.YYYY-MM-DD`.
     pub state_dir: PathBuf,
     /// Directory for per-session raw PTY logs. Populated in T18.
     pub sessions_log_dir: PathBuf,
@@ -83,11 +83,11 @@ mod tests {
 
         let tmp = tempfile::tempdir().unwrap();
         std::fs::write(tmp.path().join("config.toml"), "this = = = not valid toml").unwrap();
-        std::env::set_var("LAZYRUST_CONFIG_DIR", tmp.path());
+        std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
 
         let cfg = Config::load();
 
-        std::env::remove_var("LAZYRUST_CONFIG_DIR");
+        std::env::remove_var("LAZYJUST_CONFIG_DIR");
 
         assert_eq!(cfg.render_throttle, Duration::from_millis(16));
         assert!(

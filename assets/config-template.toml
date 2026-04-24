@@ -1,4 +1,4 @@
-# lazyrust config file
+# lazyjust config file
 #
 # Every key is optional. Delete any section or key to use the built-in
 # default. Unknown keys are ignored so you can keep blocks for features
@@ -6,7 +6,7 @@
 
 [ui]
 # Built-in theme name or a filename (without .toml) under
-# <config_dir>/lazyrust/themes/.
+# <config_dir>/lazyjust/themes/.
 theme = "tokyo-night"
 # Fraction of terminal width given to the recipe list.
 split_ratio = 0.30

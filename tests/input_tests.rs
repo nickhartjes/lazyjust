@@ -1,7 +1,7 @@
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
-use lazyrust::app::types::Mode;
-use lazyrust::app::Action;
-use lazyrust::input::handle_event;
+use lazyjust::app::types::Mode;
+use lazyjust::app::Action;
+use lazyjust::input::handle_event;
 
 fn key(c: char) -> Event {
     Event::Key(KeyEvent::new(KeyCode::Char(c), KeyModifiers::NONE))

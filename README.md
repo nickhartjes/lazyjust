@@ -1,4 +1,4 @@
-# lazyrust
+# lazyjust
 
 A fast, themed TUI for the `just` command runner, written in Rust.
 
@@ -16,7 +16,7 @@ A fast, themed TUI for the `just` command runner, written in Rust.
 ## Install
 
 ```bash
-cargo install lazyrust
+cargo install lazyjust
 ```
 
 Requires the [`just`](https://github.com/casey/just) binary on your `PATH`.
@@ -24,9 +24,9 @@ Requires the [`just`](https://github.com/casey/just) binary on your `PATH`.
 ## Usage
 
 ```bash
-lazyrust                  # scan current directory
-lazyrust [path]           # scan a specific directory
-lazyrust --justfile FILE  # use a specific justfile as root
+lazyjust                  # scan current directory
+lazyjust [path]           # scan a specific directory
+lazyjust --justfile FILE  # use a specific justfile as root
 ```
 
 ## Configuration
@@ -35,16 +35,16 @@ Config file location:
 
 | Platform | Default path |
 |---|---|
-| Linux | `$XDG_CONFIG_HOME/lazyrust/config.toml` or `~/.config/lazyrust/config.toml` |
-| macOS | `~/Library/Application Support/lazyrust/config.toml` |
+| Linux | `$XDG_CONFIG_HOME/lazyjust/config.toml` or `~/.config/lazyjust/config.toml` |
+| macOS | `~/Library/Application Support/lazyjust/config.toml` |
 
-Override with `LAZYRUST_CONFIG_DIR=/path/to/dir`.
+Override with `LAZYJUST_CONFIG_DIR=/path/to/dir`.
 
 Generate a commented example config:
 
 ```bash
-lazyrust config init   # writes config.toml if not present
-lazyrust config path   # print the config file path
+lazyjust config init   # writes config.toml if not present
+lazyjust config path   # print the config file path
 ```
 
 ### Key settings
@@ -84,9 +84,9 @@ Built-in themes:
 - `solarized-dark`
 - `mono-amber`
 
-Custom themes go in `<config_dir>/lazyrust/themes/<name>.toml`. A user theme with the same name as a built-in takes precedence.
+Custom themes go in `<config_dir>/lazyjust/themes/<name>.toml`. A user theme with the same name as a built-in takes precedence.
 
-Press `t` inside lazyrust to open the interactive theme picker.
+Press `t` inside lazyjust to open the interactive theme picker.
 
 ## Keybindings
 
@@ -120,4 +120,4 @@ at your option.
 
 ## Contributing
 
-Issues and pull requests are welcome at [github.com/nickhartjes/lazyrust](https://github.com/nickhartjes/lazyrust).
+Issues and pull requests are welcome at [github.com/nickhartjes/lazyjust](https://github.com/nickhartjes/lazyjust).

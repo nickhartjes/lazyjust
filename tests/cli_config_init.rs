@@ -1,14 +1,14 @@
 use std::process::Command;
 
 fn cargo_bin() -> String {
-    env!("CARGO_BIN_EXE_lazyrust").to_string()
+    env!("CARGO_BIN_EXE_lazyjust").to_string()
 }
 
 #[test]
 fn init_writes_template_when_missing() {
     let tmp = tempfile::tempdir().unwrap();
     let out = Command::new(cargo_bin())
-        .env("LAZYRUST_CONFIG_DIR", tmp.path())
+        .env("LAZYJUST_CONFIG_DIR", tmp.path())
         .args(["config", "init"])
         .output()
         .unwrap();
@@ -31,7 +31,7 @@ fn init_refuses_to_overwrite() {
     std::fs::write(tmp.path().join("config.toml"), "existing = true\n").unwrap();
 
     let out = Command::new(cargo_bin())
-        .env("LAZYRUST_CONFIG_DIR", tmp.path())
+        .env("LAZYJUST_CONFIG_DIR", tmp.path())
         .args(["config", "init"])
         .output()
         .unwrap();
@@ -48,7 +48,7 @@ fn init_refuses_to_overwrite() {
 fn init_then_load_round_trips() {
     let tmp = tempfile::tempdir().unwrap();
     let out = Command::new(cargo_bin())
-        .env("LAZYRUST_CONFIG_DIR", tmp.path())
+        .env("LAZYJUST_CONFIG_DIR", tmp.path())
         .args(["config", "init"])
         .output()
         .unwrap();
@@ -57,9 +57,9 @@ fn init_then_load_round_trips() {
     // Only test in this file that mutates process env. If another test in
     // this file starts doing the same, we'll need a Mutex guard like
     // tests/config_loader.rs uses.
-    std::env::set_var("LAZYRUST_CONFIG_DIR", tmp.path());
-    let cfg = lazyrust::config::Config::load();
-    std::env::remove_var("LAZYRUST_CONFIG_DIR");
+    std::env::set_var("LAZYJUST_CONFIG_DIR", tmp.path());
+    let cfg = lazyjust::config::Config::load();
+    std::env::remove_var("LAZYJUST_CONFIG_DIR");
 
     // Template values match defaults, so load succeeds and key values equal defaults.
     assert_eq!(cfg.render_throttle, std::time::Duration::from_millis(16));

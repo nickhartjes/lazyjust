@@ -2,7 +2,7 @@
 source: tests/snapshots.rs
 expression: "render_to_string(&app, 80, 24)"
 ---
-▌ lazyrust  · ./justfile  · 3 recipes                                           
+▌ lazyjust  · ./justfile  · 3 recipes                                           
 ╭ recipes ─────────────────╮╭ preview ─────────────────────────────────────────╮
 │ ▶ build                  ││build                                             │
 │ ○ test                   ││  Build release                                   │
@@ -33,7 +33,7 @@ expression: "render_to_string(&app, 80, 24)"
 (3,0) "a" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (4,0) "z" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (5,0) "y" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(6,0) "r" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
+(6,0) "j" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (7,0) "u" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (8,0) "s" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (9,0) "t" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD

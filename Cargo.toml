@@ -1,18 +1,18 @@
 [package]
-name = "lazyrust"
+name = "lazyjust"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.78"
 description = "Terminal UI for the `just` command runner"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/nickhartjes/lazyrust"
+repository = "https://github.com/nickhartjes/lazyjust"
 
 [[bin]]
-name = "lazyrust"
+name = "lazyjust"
 path = "src/main.rs"
 
 [lib]
-name = "lazyrust"
+name = "lazyjust"
 path = "src/lib.rs"
 
 [dependencies]
