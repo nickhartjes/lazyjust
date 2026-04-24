@@ -45,6 +45,7 @@ fn build_lines<'a>(
 
     let mut out: Vec<Line> = Vec::new();
     let mut current_group: Option<&str> = None;
+    let mut section_count = 0usize;
     let selected = app.list_cursor.min(scored.len().saturating_sub(1));
 
     for (displayed_idx, (idx, _score)) in scored.iter().enumerate() {
@@ -52,7 +53,8 @@ fn build_lines<'a>(
         let group_name = r.group.as_deref();
         if group_name != current_group {
             let label = group_name.unwrap_or("RECIPES").to_ascii_uppercase();
-            out.push(section_header(&label, theme, width, active, displayed_idx == 0));
+            out.push(section_header(&label, theme, width, active, section_count == 0));
+            section_count += 1;
             current_group = group_name;
         }
         let is_cursor = displayed_idx == selected;
@@ -103,7 +105,12 @@ fn row<'a>(
     spans.extend(session_indicators_for(r, app, theme, style, g));
 
     if r.has_deps() {
-        let deps = dep_line(r, width.saturating_sub(visible_width(&spans) as u16));
+        let deps = dep_line(
+            r,
+            width
+                .saturating_sub(visible_width(&spans) as u16)
+                .saturating_sub(5),
+        );
         if !deps.is_empty() {
             spans.push(Span::styled(format!("   → {deps}"), Style::default().fg(theme.dim)));
         }
