@@ -71,7 +71,11 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     } else {
         app.recipe_at_cursor().and_then(|r| r.runs.last().copied())
     };
-    let right_title = if display_sid.is_some() { "session" } else { "preview" };
+    let right_title = if display_sid.is_some() {
+        "session"
+    } else {
+        "preview"
+    };
     let right_block = focus::pane_block(Some(right_title), right_active, &app.theme);
     let right_body = right_block.inner(panes.right);
     f.render_widget(right_block, panes.right);
