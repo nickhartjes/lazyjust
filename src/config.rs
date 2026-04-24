@@ -2,6 +2,7 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 mod defaults;
+pub mod paths;
 
 #[derive(Debug, Clone)]
 pub struct Config {
