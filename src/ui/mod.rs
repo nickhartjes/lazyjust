@@ -49,6 +49,10 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
         return;
     }
 
+    let bg_fill = ratatui::widgets::Paragraph::new("")
+        .style(ratatui::style::Style::default().bg(app.theme.bg));
+    f.render_widget(bg_fill, size);
+
     let panes = layout::compute(size, app);
     top_bar::render(f, panes.top_bar, app, &app.theme);
     list::render(f, panes.list, app, &app.theme);

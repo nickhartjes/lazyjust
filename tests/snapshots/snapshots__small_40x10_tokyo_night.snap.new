@@ -1,5 +1,6 @@
 ---
 source: tests/snapshots.rs
+assertion_line: 408
 expression: "render_to_string(&app, 40, 10)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes   

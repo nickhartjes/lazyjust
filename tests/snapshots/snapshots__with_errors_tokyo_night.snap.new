@@ -1,10 +1,11 @@
 ---
 source: tests/snapshots.rs
+assertion_line: 235
 expression: "render_to_string(&app, 80, 24)"
 ---
-▌ lazyjust  · ./justfile  · 2 recipes                                           
+▌ lazyjust  · ./justfile  · 2 recipes    2 load errors                          
 ▍ CI ───────────────────────▍ build                                             
-▶  build  ●                   Build release                                     
+▶  build                      Build release                                     
    ○ test                                                                       
                               command                                           
                                 $ cargo build --release                         
@@ -57,6 +58,17 @@ expression: "render_to_string(&app, 80, 24)"
 (34,0) "p" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (35,0) "e" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (36,0) "s" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
+(41,0) "2" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(43,0) "l" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(44,0) "o" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(45,0) "a" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(46,0) "d" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(48,0) "e" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(49,0) "r" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(50,0) "r" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(51,0) "o" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(52,0) "r" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
+(53,0) "s" fg=Rgb(247, 118, 142) bg=Rgb(26, 27, 38) mod=BOLD
 (0,1) "▍" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (2,1) "C" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (3,1) "I" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
@@ -95,7 +107,6 @@ expression: "render_to_string(&app, 80, 24)"
 (5,2) "i" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (6,2) "l" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (7,2) "d" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
-(10,2) "●" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (30,2) "B" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (31,2) "u" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (32,2) "i" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE

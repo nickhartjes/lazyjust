@@ -1,11 +1,12 @@
 ---
 source: tests/snapshots.rs
+assertion_line: 390
 expression: "render_to_string(&app, 80, 24)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes                                           
 ▍ CI ───────────────────────▍ build                                             
-▶  build  ●                   Build release                                     
-   ○ test                                                                       
+>  build                      Build release                                     
+   o test                                                                       
                               command                                           
                                 $ cargo build --release                         
                                                                                 
@@ -89,13 +90,12 @@ expression: "render_to_string(&app, 80, 24)"
 (32,1) "i" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (33,1) "l" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (34,1) "d" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(0,2) "▶" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(0,2) ">" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (3,2) "b" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (4,2) "u" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (5,2) "i" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (6,2) "l" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (7,2) "d" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
-(10,2) "●" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (30,2) "B" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (31,2) "u" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (32,2) "i" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
@@ -108,7 +108,7 @@ expression: "render_to_string(&app, 80, 24)"
 (40,2) "a" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (41,2) "s" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (42,2) "e" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(3,3) "○" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
+(3,3) "o" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (5,3) "t" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (6,3) "e" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (7,3) "s" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
