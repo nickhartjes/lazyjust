@@ -31,3 +31,52 @@ pub fn build_unix_command(
     argv.extend(args.iter().cloned());
     (argv, Vec::new())
 }
+
+pub fn shell_quote(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 2);
+    out.push('\'');
+    for c in s.chars() {
+        if c == '\'' {
+            out.push_str("'\\''");
+        } else {
+            out.push(c);
+        }
+    }
+    out.push('\'');
+    out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn shell_quote_plain() {
+        assert_eq!(shell_quote("foo"), "'foo'");
+    }
+
+    #[test]
+    fn shell_quote_with_space() {
+        assert_eq!(shell_quote("foo bar"), "'foo bar'");
+    }
+
+    #[test]
+    fn shell_quote_with_single_quote() {
+        assert_eq!(shell_quote("it's"), "'it'\\''s'");
+    }
+
+    #[test]
+    fn shell_quote_with_dollar_and_paren() {
+        assert_eq!(shell_quote("$(evil)"), "'$(evil)'");
+    }
+
+    #[test]
+    fn shell_quote_empty() {
+        assert_eq!(shell_quote(""), "''");
+    }
+
+    #[test]
+    fn shell_quote_newline_preserved_literal() {
+        assert_eq!(shell_quote("a\nb"), "'a\nb'");
+    }
+}
