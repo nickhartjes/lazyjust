@@ -7,6 +7,7 @@ pub mod param_modal;
 pub mod preview;
 pub mod session_pane;
 pub mod status_bar;
+pub mod theme_picker;
 pub mod top_bar;
 
 use crate::app::App;
@@ -44,4 +45,7 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     }
     status_bar::render(f, panes.status, app);
     modal::render(f, app, &app.theme);
+    if matches!(&app.mode, crate::app::types::Mode::ThemePicker { .. }) {
+        theme_picker::render(f, size, app);
+    }
 }
