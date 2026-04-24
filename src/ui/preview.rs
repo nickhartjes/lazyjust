@@ -7,7 +7,7 @@ use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
-    let block = pane_block("preview", is_right_active(app.focus));
+    let block = pane_block("preview", is_right_active(app.focus), theme);
     let Some(r) = app.recipe_at_cursor() else {
         f.render_widget(block, area);
         return;

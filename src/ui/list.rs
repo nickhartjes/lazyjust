@@ -10,7 +10,7 @@ use ratatui::Frame;
 pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
     let active = is_list_active(app.focus);
     let Some(jf) = app.active_justfile() else {
-        f.render_widget(pane_block("recipes", active), area);
+        f.render_widget(pane_block("recipes", active, theme), area);
         return;
     };
 
@@ -20,7 +20,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
     state.select(Some(app.list_cursor.min(items.len().saturating_sub(1))));
 
     let list = List::new(items)
-        .block(pane_block("recipes", active))
+        .block(pane_block("recipes", active, theme))
         .highlight_style(
             Style::default()
                 .bg(theme.highlight)

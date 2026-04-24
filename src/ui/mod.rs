@@ -35,7 +35,7 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     let right_active = focus::is_right_active(app.focus);
     if let Some(id) = app.active_session {
         if let Some(screen) = screens.get(&id) {
-            session_pane::render(f, panes.right, screen, right_active);
+            session_pane::render(f, panes.right, screen, right_active, &app.theme);
         } else {
             preview::render(f, panes.right, app, &app.theme);
         }
