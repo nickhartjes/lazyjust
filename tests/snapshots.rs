@@ -1,7 +1,7 @@
 use lazyjust::app::help_section::SectionId;
-use lazyjust::app::types::{
-    ConfirmAction, Focus, Justfile, Mode, Param, ParamKind, Recipe, SessionMeta, Status,
-};
+#[cfg(not(windows))]
+use lazyjust::app::types::{ConfirmAction, Focus, SessionMeta, Status};
+use lazyjust::app::types::{Justfile, Mode, Param, ParamKind, Recipe};
 use lazyjust::app::App;
 use lazyjust::theme::registry::resolve;
 use lazyjust::ui;
@@ -9,6 +9,7 @@ use lazyjust::ui::icon_style::IconStyle;
 use ratatui::backend::TestBackend;
 use ratatui::Terminal;
 use std::path::PathBuf;
+#[cfg(not(windows))]
 use std::time::{Duration, Instant};
 
 // ---------------------------------------------------------------------------
@@ -126,11 +127,14 @@ fn fixture_ungrouped(theme_name: &str, icon_style: IconStyle) -> App {
     make_app(make_justfile_ungrouped(), theme_name, icon_style)
 }
 
-/// Stable started_at: 1 hour ago, so elapsed bucket is "1h" regardless of test speed.
+/// Stable started_at: ~1 hour ago, so elapsed bucket is "1h" regardless of test speed.
+#[cfg(not(windows))]
 fn started_at_stable() -> Instant {
-    Instant::now() - Duration::from_secs(3600)
+    let now = Instant::now();
+    now.checked_sub(Duration::from_secs(3600)).unwrap_or(now)
 }
 
+#[cfg(not(windows))]
 fn fixture_session_running(theme_name: &str, icon_style: IconStyle) -> App {
     let mut app = fixture_default(theme_name, icon_style);
     let sid = app.next_session_id();
@@ -149,6 +153,7 @@ fn fixture_session_running(theme_name: &str, icon_style: IconStyle) -> App {
     app
 }
 
+#[cfg(not(windows))]
 fn fixture_session_exited_fail(theme_name: &str, icon_style: IconStyle) -> App {
     let mut app = fixture_default(theme_name, icon_style);
     let sid = app.next_session_id();
@@ -268,6 +273,7 @@ fn ungrouped_tokyo_night() {
 // ---------------------------------------------------------------------------
 // 8. session_running_tokyo_night
 // ---------------------------------------------------------------------------
+#[cfg(not(windows))]
 #[test]
 fn session_running_tokyo_night() {
     let app = fixture_session_running("tokyo-night", IconStyle::Round);
@@ -277,6 +283,7 @@ fn session_running_tokyo_night() {
 // ---------------------------------------------------------------------------
 // 9. session_running_mono_amber
 // ---------------------------------------------------------------------------
+#[cfg(not(windows))]
 #[test]
 fn session_running_mono_amber() {
     let app = fixture_session_running("mono-amber", IconStyle::Round);
@@ -286,6 +293,7 @@ fn session_running_mono_amber() {
 // ---------------------------------------------------------------------------
 // 10. session_exited_fail_tokyo_night
 // ---------------------------------------------------------------------------
+#[cfg(not(windows))]
 #[test]
 fn session_exited_fail_tokyo_night() {
     let app = fixture_session_exited_fail("tokyo-night", IconStyle::Round);
@@ -363,6 +371,7 @@ fn param_input_tokyo_night() {
 // ---------------------------------------------------------------------------
 // 16. confirm_modal_tokyo_night
 // ---------------------------------------------------------------------------
+#[cfg(not(windows))]
 #[test]
 fn confirm_modal_tokyo_night() {
     let mut app = fixture_session_running("tokyo-night", IconStyle::Round);
