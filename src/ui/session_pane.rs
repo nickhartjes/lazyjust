@@ -64,10 +64,8 @@ pub fn render(
                     style = style.add_modifier(Modifier::UNDERLINED);
                 }
                 let ch = cell.contents();
-                spans.push(Span::styled(
-                    if ch.is_empty() { " ".into() } else { ch },
-                    style,
-                ));
+                let text: String = if ch.is_empty() { " ".into() } else { ch.into() };
+                spans.push(Span::styled(text, style));
             } else {
                 spans.push(Span::raw(" "));
             }

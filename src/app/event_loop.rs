@@ -81,7 +81,7 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         let pane_rows = panes.right.height.saturating_sub(4);
                         let pane_cols = panes.right.width.saturating_sub(3);
                         for (id, screen) in screens.iter_mut() {
-                            screen.set_size(pane_rows, pane_cols);
+                            screen.screen_mut().set_size(pane_rows, pane_cols);
                             let _ = mgr.resize(*id, pane_rows, pane_cols);
                         }
                         dirty = true;
@@ -117,23 +117,23 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                                     let cur = screen.screen().scrollback();
                                     match key.code {
                                         crossterm::event::KeyCode::PageUp => {
-                                            screen.set_scrollback(cur.saturating_add(10));
+                                            screen.screen_mut().set_scrollback(cur.saturating_add(10));
                                             dirty = true;
                                             continue;
                                         }
                                         crossterm::event::KeyCode::PageDown => {
-                                            screen.set_scrollback(cur.saturating_sub(10));
+                                            screen.screen_mut().set_scrollback(cur.saturating_sub(10));
                                             dirty = true;
                                             continue;
                                         }
                                         crossterm::event::KeyCode::Home => {
                                             // Top of scrollback = large offset, vt100 clamps to actual size.
-                                            screen.set_scrollback(usize::MAX / 2);
+                                            screen.screen_mut().set_scrollback(usize::MAX / 2);
                                             dirty = true;
                                             continue;
                                         }
                                         crossterm::event::KeyCode::End => {
-                                            screen.set_scrollback(0);
+                                            screen.screen_mut().set_scrollback(0);
                                             dirty = true;
                                             continue;
                                         }

@@ -20,28 +20,28 @@ anyhow = "1"
 arboard = "3"
 clap = { version = "4", features = ["derive"] }
 crossterm = { version = "0.27", features = ["event-stream"] }
-dirs = "5"
+dirs = "6"
 futures = "0.3"
 ignore = "0.4"
 nucleo = "0.5"
-portable-pty = "0.8"
+portable-pty = "0.9"
 ratatui = "0.26"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-thiserror = "1"
+thiserror = "2"
 tokio = { version = "1", features = ["full"] }
 toml = "0.8"
-toml_edit = "0.22"
+toml_edit = "0.25"
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-vt100 = "0.15"
+vt100 = "0.16"
 
 [dev-dependencies]
 filetime = "0.2"
 insta = { version = "1", features = ["yaml"] }
 pretty_assertions = "1"
-rstest = "0.19"
+rstest = "0.26"
 tempfile = "3"
 tracing-test = "0.2"
 
