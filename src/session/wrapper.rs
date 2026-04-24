@@ -11,6 +11,11 @@ echo 1337;LazyjustDone=%ERRORLEVEL%
 %ComSpec%
 "#;
 
+/// Returns the argv for the PTY spawn on Unix: `[$SHELL, "-i"]` (fallback
+/// `/bin/sh`). The recipe itself is not in argv — it is delivered via
+/// `crate::session::shell::prime_line` written to the shell's stdin after
+/// rc-file init. Parameters are kept for signature stability with the
+/// (future) Windows builder.
 pub fn build_unix_command(
     _justfile: &std::path::Path,
     _recipe: &str,
