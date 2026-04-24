@@ -316,9 +316,16 @@ pub fn reduce(app: &mut App, action: Action) {
         }
         Action::PickerConfirm => {
             if let Mode::ThemePicker { .. } = app.mode {
-                // T16 wires the toml_edit writer. For now, just close the modal —
-                // `app.theme_name` is already updated by PickerMove, so next startup
-                // would read the old value. We accept that gap; T16 closes it.
+                let stem = app.theme_name.clone();
+                let path = crate::config::paths::config_file_path();
+                if let Err(e) = crate::config::writer::set_theme(&path, &stem) {
+                    tracing::warn!(
+                        target: "lazyjust::theme",
+                        error = %e,
+                        "failed to persist theme",
+                    );
+                    app.status_message = Some(format!("theme persist failed: {e}"));
+                }
                 app.mode = Mode::Normal;
             }
         }

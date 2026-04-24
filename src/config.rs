@@ -14,6 +14,7 @@ pub(crate) mod file;
 mod merge;
 pub mod paths;
 pub mod template;
+pub mod writer;
 
 #[derive(Debug, Clone)]
 pub struct Config {
