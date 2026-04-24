@@ -66,7 +66,15 @@ fn filter_mode(k: &KeyEvent) -> Option<Action> {
 
 fn help_mode(k: &KeyEvent) -> Option<Action> {
     match k.code {
-        KeyCode::Esc | KeyCode::Char('q') | KeyCode::Char('?') => Some(Action::CloseHelp),
+        KeyCode::Esc | KeyCode::Char('q') | KeyCode::Char('?') | KeyCode::F(1) => {
+            Some(Action::CloseHelp)
+        }
+        KeyCode::Char('j') | KeyCode::Down => Some(Action::HelpScrollDown(1)),
+        KeyCode::Char('k') | KeyCode::Up => Some(Action::HelpScrollUp(1)),
+        KeyCode::PageDown => Some(Action::HelpScrollDown(10)),
+        KeyCode::PageUp => Some(Action::HelpScrollUp(10)),
+        KeyCode::Home => Some(Action::HelpScrollHome),
+        KeyCode::End => Some(Action::HelpScrollEnd),
         _ => None,
     }
 }
