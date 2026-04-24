@@ -16,6 +16,11 @@ use config::Config;
 
 pub fn run() -> anyhow::Result<()> {
     let cli = Cli::parse();
+
+    if let Some(cmd) = cli.command.as_ref() {
+        return handle_subcommand(cmd);
+    }
+
     let cfg = Config::load();
     let _log_guard = logging::init(&cfg, &cli.log_level)?;
 
@@ -23,6 +28,21 @@ pub fn run() -> anyhow::Result<()> {
         .enable_all()
         .build()?;
     rt.block_on(async move { async_main(cli, cfg).await })
+}
+
+fn handle_subcommand(cmd: &cli::Commands) -> anyhow::Result<()> {
+    match cmd {
+        cli::Commands::Config { action } => match action {
+            cli::ConfigAction::Path => {
+                println!("{}", config::paths::config_file_path().display());
+                Ok(())
+            }
+            cli::ConfigAction::Init => {
+                // Implemented in Task 9.
+                anyhow::bail!("not yet implemented");
+            }
+        },
+    }
 }
 
 async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
