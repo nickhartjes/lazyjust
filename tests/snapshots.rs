@@ -57,6 +57,24 @@ fn session_focus_render_snapshot() {
     insta::assert_snapshot!(buffer_to_string(&buf));
 }
 
+#[test]
+fn help_modal_list_focus_render_snapshot() {
+    use lazyjust::app::help_section::SectionId;
+    use lazyjust::app::types::Mode;
+
+    let backend = TestBackend::new(80, 30);
+    let mut terminal = Terminal::new(backend).unwrap();
+    let mut app = fixture_app();
+    app.mode = Mode::Help {
+        scroll: 0,
+        origin: SectionId::ListFocus,
+    };
+    let screens = ui::SessionScreens::new();
+    terminal.draw(|f| ui::render(f, &app, &screens)).unwrap();
+    let buf = terminal.backend().buffer().clone();
+    insta::assert_snapshot!(buffer_to_string(&buf));
+}
+
 fn buffer_to_string(buf: &ratatui::buffer::Buffer) -> String {
     let area = buf.area;
     let mut symbols = String::new();
