@@ -38,8 +38,19 @@ fn handle_subcommand(cmd: &cli::Commands) -> anyhow::Result<()> {
                 Ok(())
             }
             cli::ConfigAction::Init => {
-                // Implemented in Task 9.
-                anyhow::bail!("not yet implemented");
+                let path = config::paths::config_file_path();
+                if path.exists() {
+                    anyhow::bail!(
+                        "config file already exists at {}; refusing to overwrite",
+                        path.display()
+                    );
+                }
+                if let Some(parent) = path.parent() {
+                    std::fs::create_dir_all(parent)?;
+                }
+                std::fs::write(&path, config::template::CONFIG_TEMPLATE)?;
+                println!("wrote {}", path.display());
+                Ok(())
             }
         },
     }

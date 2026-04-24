@@ -13,6 +13,7 @@ mod defaults;
 mod file;
 mod merge;
 pub mod paths;
+pub mod template;
 
 #[derive(Debug, Clone)]
 pub struct Config {
