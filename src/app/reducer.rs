@@ -354,6 +354,84 @@ pub fn filtered_justfile_indices(app: &App, filter: &str) -> Vec<usize> {
         .collect()
 }
 
+#[cfg(test)]
+mod theme_picker_tests {
+    use super::*;
+    use crate::app::action::Action;
+    use crate::app::types::Mode;
+
+    fn test_app() -> App {
+        App::new(
+            vec![],
+            vec![],
+            0.3,
+            crate::theme::registry::resolve(crate::theme::DEFAULT_THEME_NAME),
+            crate::theme::DEFAULT_THEME_NAME.to_string(),
+        )
+    }
+
+    #[test]
+    fn open_picker_enters_mode_with_current_theme_highlighted() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        match &app.mode {
+            Mode::ThemePicker {
+                original_name,
+                highlighted,
+                names,
+            } => {
+                assert_eq!(original_name, crate::theme::DEFAULT_THEME_NAME);
+                assert_eq!(names[*highlighted], crate::theme::DEFAULT_THEME_NAME);
+            }
+            _ => panic!("expected ThemePicker mode"),
+        }
+    }
+
+    #[test]
+    fn picker_move_wraps_around() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        // Moving up from index 0 wraps to last element.
+        reduce(&mut app, Action::PickerMove(-1));
+        let last_name = match &app.mode {
+            Mode::ThemePicker {
+                names, highlighted, ..
+            } => names[*highlighted].clone(),
+            _ => panic!("expected ThemePicker mode"),
+        };
+        // theme_name should be updated to whatever wrapped-to entry is.
+        assert_eq!(app.theme_name, last_name);
+        // Wrapping from 0 up lands on a different entry than the default.
+        assert_ne!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
+    }
+
+    #[test]
+    fn picker_cancel_restores_original() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        // Move so theme_name drifts away from the original.
+        reduce(&mut app, Action::PickerMove(1));
+        assert_ne!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
+        // Cancel must restore the original theme.
+        reduce(&mut app, Action::PickerCancel);
+        assert_eq!(app.theme_name, crate::theme::DEFAULT_THEME_NAME);
+        assert!(matches!(app.mode, Mode::Normal));
+    }
+
+    #[test]
+    fn picker_confirm_commits_and_returns_to_normal() {
+        let mut app = test_app();
+        reduce(&mut app, Action::OpenThemePicker);
+        reduce(&mut app, Action::PickerMove(1));
+        let chosen = app.theme_name.clone();
+        assert_ne!(chosen, crate::theme::DEFAULT_THEME_NAME);
+        reduce(&mut app, Action::PickerConfirm);
+        assert!(matches!(app.mode, Mode::Normal));
+        // After confirm the theme_name remains the chosen one.
+        assert_eq!(app.theme_name, chosen);
+    }
+}
+
 fn cycle_history(app: &mut App, dir: i32) {
     let Some(r) = app
         .active_justfile()

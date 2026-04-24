@@ -51,6 +51,7 @@ fn normal_mode(k: &KeyEvent) -> Option<Action> {
         (KeyCode::Char('o'), true, _) => Some(Action::FocusNextSession),
         (KeyCode::Char('i'), true, _) => Some(Action::FocusPrevSession),
         (KeyCode::F(12), _, _) => Some(Action::FocusList),
+        (KeyCode::Char('t'), false, _) => Some(Action::OpenThemePicker),
         _ => None,
     }
 }
