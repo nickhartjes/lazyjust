@@ -61,8 +61,9 @@ errors_list    = "e"
 # and ctrl-/alt-prefixed chords ("ctrl+c", "alt+t"). Case-insensitive.
 
 [paths]
-state_dir = "~/Library/Application Support/lazyjust"   # optional override
-sessions_log_dir = "~/Library/Application Support/lazyjust/sessions"
+# Absolute paths only — `~` is not expanded. Defaults are platform-specific.
+# state_dir = "/absolute/path"
+# sessions_log_dir = "/absolute/path"
 
 [logging]
 session_log_size_cap_mb = 10
