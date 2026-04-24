@@ -33,8 +33,8 @@ fn hint_for<'a>(mode: &'a Mode, app: &'a App, theme: &crate::theme::Theme) -> Li
     let d = |s: &str| Span::styled(s.to_string(), Style::default().fg(theme.dim));
     match mode {
         Mode::Normal if matches!(app.focus, Focus::Session) => Line::from(vec![
+            k("F12 / Ctrl+g"), Span::raw(" "), d("back to recipes"), sep.clone(),
             k("PgUp/PgDn"), Span::raw(" "), d("scroll"), sep.clone(),
-            k("F12"), Span::raw(" "), d("list"), sep.clone(),
             k("K"), Span::raw(" "), d("kill"), sep.clone(),
             k("x"), Span::raw(" "), d("close"), sep,
             k("?"), Span::raw(" "), d("help"),
