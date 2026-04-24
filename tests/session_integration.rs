@@ -6,7 +6,21 @@ use lazyjust::session::shell::prime_line;
 use lazyjust::session::wrapper::build_unix_command;
 use std::io::{Read, Write};
 use std::path::PathBuf;
+use std::sync::Once;
 use std::time::{Duration, Instant};
+
+// Force every PTY spawn in this test binary to run `/bin/sh` rather than
+// the developer's login shell. `Once` guarantees a single mutation even
+// under `cargo test`'s parallel runner. If a future test needs a non-POSIX
+// shell, drop this helper and adopt a per-test RAII guard that saves and
+// restores the prior value.
+static INIT_SHELL: Once = Once::new();
+
+fn force_posix_shell() {
+    INIT_SHELL.call_once(|| {
+        std::env::set_var("SHELL", "/bin/sh");
+    });
+}
 
 fn make_justfile(tmp: &tempfile::TempDir) -> PathBuf {
     let path = tmp.path().join("justfile");
@@ -16,8 +30,7 @@ fn make_justfile(tmp: &tempfile::TempDir) -> PathBuf {
 
 #[test]
 fn spawn_echo_recipe_and_capture_done_marker() {
-    // Force a minimal shell so rc files cannot eat stdin or reorder output.
-    std::env::set_var("SHELL", "/bin/sh");
+    force_posix_shell();
 
     let tmp = tempfile::tempdir().unwrap();
     let justfile = make_justfile(&tmp);
@@ -63,7 +76,7 @@ async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
     use lazyjust::app::action::AppEvent;
     use lazyjust::session::manager::SessionManager;
 
-    std::env::set_var("SHELL", "/bin/sh");
+    force_posix_shell();
 
     let tmp = tempfile::tempdir().unwrap();
     let justfile = make_justfile(&tmp);
