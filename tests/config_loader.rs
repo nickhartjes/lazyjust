@@ -31,10 +31,7 @@ fn no_file_returns_defaults() {
 
 #[test]
 fn partial_file_overrides_only_specified_keys() {
-    let cfg = with_config_dir(
-        Some("[engine]\nrender_throttle_ms = 8\n"),
-        Config::load,
-    );
+    let cfg = with_config_dir(Some("[engine]\nrender_throttle_ms = 8\n"), Config::load);
     assert_eq!(cfg.render_throttle, Duration::from_millis(8));
     // tick_interval stayed at default
     assert_eq!(cfg.tick_interval, Duration::from_millis(250));

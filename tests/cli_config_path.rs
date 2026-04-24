@@ -12,7 +12,11 @@ fn prints_config_file_path_with_env_override() {
         .args(["config", "path"])
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
     let stdout = String::from_utf8(out.stdout).unwrap();
     let expected = tmp.path().join("config.toml");
     assert_eq!(stdout.trim(), expected.to_string_lossy());

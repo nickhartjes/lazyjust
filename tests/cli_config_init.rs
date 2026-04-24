@@ -12,7 +12,11 @@ fn init_writes_template_when_missing() {
         .args(["config", "init"])
         .output()
         .unwrap();
-    assert!(out.status.success(), "stderr: {}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "stderr: {}",
+        String::from_utf8_lossy(&out.stderr)
+    );
 
     let path = tmp.path().join("config.toml");
     assert!(path.exists());

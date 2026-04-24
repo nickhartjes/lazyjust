@@ -7,8 +7,8 @@ mod tests {
 
     #[test]
     fn template_parses_as_config_file() {
-        let parsed: ConfigFile = toml::from_str(CONFIG_TEMPLATE)
-            .expect("committed template must parse");
+        let parsed: ConfigFile =
+            toml::from_str(CONFIG_TEMPLATE).expect("committed template must parse");
         // We specifically want [engine] to come through so the template stays
         // representative of real overrides.
         let engine = parsed.engine.expect("template should define [engine]");

@@ -77,7 +77,10 @@ mod tests {
         };
         let merged = merge(file, defaults());
         assert_eq!(merged.session_log_size_cap, 5 * 1024 * 1024);
-        assert_eq!(merged.session_log_retention, Duration::from_secs(2 * 24 * 3600));
+        assert_eq!(
+            merged.session_log_retention,
+            Duration::from_secs(2 * 24 * 3600)
+        );
     }
 
     #[test]
