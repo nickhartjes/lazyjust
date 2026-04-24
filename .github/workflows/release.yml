@@ -17,6 +17,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: release-test
+      - uses: extractions/setup-just@v4
       - run: cargo test --all-targets
 
   upload-assets:
