@@ -187,3 +187,105 @@ fn dropdown_switches_justfile() {
     assert_eq!(app.active_justfile, 1);
     assert_eq!(app.mode, Mode::Normal);
 }
+
+#[test]
+fn help_open_from_list_records_origin_list_focus() {
+    use lazyjust::app::help_section::SectionId;
+    use lazyjust::app::types::Focus;
+    let mut app = make_app();
+    app.focus = Focus::List;
+    reduce(&mut app, Action::OpenHelp);
+    match app.mode {
+        Mode::Help { scroll, origin } => {
+            assert_eq!(scroll, 0);
+            assert_eq!(origin, SectionId::ListFocus);
+        }
+        other => panic!("expected Mode::Help, got {other:?}"),
+    }
+}
+
+#[test]
+fn help_open_from_filter_records_origin_filter() {
+    use lazyjust::app::help_section::SectionId;
+    let mut app = make_app();
+    app.mode = Mode::FilterInput;
+    reduce(&mut app, Action::OpenHelp);
+    match app.mode {
+        Mode::Help { origin, .. } => assert_eq!(origin, SectionId::Filter),
+        other => panic!("expected Mode::Help, got {other:?}"),
+    }
+}
+
+#[test]
+fn help_scroll_down_monotonic() {
+    use lazyjust::app::help_section::SectionId;
+    let mut app = make_app();
+    app.mode = Mode::Help {
+        scroll: 0,
+        origin: SectionId::ListFocus,
+    };
+    reduce(&mut app, Action::HelpScrollDown(1));
+    reduce(&mut app, Action::HelpScrollDown(1));
+    reduce(&mut app, Action::HelpScrollDown(1));
+    match app.mode {
+        Mode::Help { scroll, .. } => assert_eq!(scroll, 3),
+        _ => panic!("not Help"),
+    }
+}
+
+#[test]
+fn help_scroll_up_floors_zero() {
+    use lazyjust::app::help_section::SectionId;
+    let mut app = make_app();
+    app.mode = Mode::Help {
+        scroll: 2,
+        origin: SectionId::ListFocus,
+    };
+    reduce(&mut app, Action::HelpScrollUp(5));
+    match app.mode {
+        Mode::Help { scroll, .. } => assert_eq!(scroll, 0),
+        _ => panic!("not Help"),
+    }
+}
+
+#[test]
+fn help_scroll_home_zeroes() {
+    use lazyjust::app::help_section::SectionId;
+    let mut app = make_app();
+    app.mode = Mode::Help {
+        scroll: 42,
+        origin: SectionId::ListFocus,
+    };
+    reduce(&mut app, Action::HelpScrollHome);
+    match app.mode {
+        Mode::Help { scroll, .. } => assert_eq!(scroll, 0),
+        _ => panic!("not Help"),
+    }
+}
+
+#[test]
+fn help_scroll_end_saturates_max() {
+    use lazyjust::app::help_section::SectionId;
+    let mut app = make_app();
+    app.mode = Mode::Help {
+        scroll: 0,
+        origin: SectionId::ListFocus,
+    };
+    reduce(&mut app, Action::HelpScrollEnd);
+    match app.mode {
+        Mode::Help { scroll, .. } => assert_eq!(scroll, u16::MAX),
+        _ => panic!("not Help"),
+    }
+}
+
+#[test]
+fn help_close_returns_to_normal() {
+    use lazyjust::app::help_section::SectionId;
+    let mut app = make_app();
+    app.mode = Mode::Help {
+        scroll: 5,
+        origin: SectionId::ListFocus,
+    };
+    reduce(&mut app, Action::CloseHelp);
+    assert_eq!(app.mode, Mode::Normal);
+}

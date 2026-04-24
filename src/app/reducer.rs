@@ -80,6 +80,26 @@ pub fn reduce(app: &mut App, action: Action) {
             app.mode = Mode::Help { scroll: 0, origin };
         }
         Action::CloseHelp => app.mode = Mode::Normal,
+        Action::HelpScrollDown(n) => {
+            if let Mode::Help { scroll, .. } = &mut app.mode {
+                *scroll = scroll.saturating_add(n);
+            }
+        }
+        Action::HelpScrollUp(n) => {
+            if let Mode::Help { scroll, .. } = &mut app.mode {
+                *scroll = scroll.saturating_sub(n);
+            }
+        }
+        Action::HelpScrollHome => {
+            if let Mode::Help { scroll, .. } = &mut app.mode {
+                *scroll = 0;
+            }
+        }
+        Action::HelpScrollEnd => {
+            if let Mode::Help { scroll, .. } = &mut app.mode {
+                *scroll = u16::MAX;
+            }
+        }
 
         Action::OpenErrors => app.mode = Mode::ErrorsList,
         Action::CloseErrors => app.mode = Mode::Normal,

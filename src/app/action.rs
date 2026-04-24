@@ -52,6 +52,10 @@ pub enum Action {
 
     OpenHelp,
     CloseHelp,
+    HelpScrollUp(u16),
+    HelpScrollDown(u16),
+    HelpScrollHome,
+    HelpScrollEnd,
 
     OpenErrors,
     CloseErrors,
