@@ -58,21 +58,15 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     let right_active = focus::is_right_active(app.focus);
     top_bar::render(f, panes.top_bar, app, &app.theme);
 
-    let list_strip = ratatui::layout::Rect { height: 1, ..panes.list };
-    let list_body = ratatui::layout::Rect {
-        y: panes.list.y + 1,
-        height: panes.list.height.saturating_sub(1),
-        ..panes.list
-    };
+    let list_block = focus::pane_block(Some("recipes"), list_active, &app.theme);
+    let list_body = list_block.inner(panes.list);
+    f.render_widget(list_block, panes.list);
     list::render(f, list_body, app, &app.theme);
-    focus::paint_focus_bar(f, list_strip, list_active, &app.theme);
 
-    let right_strip = ratatui::layout::Rect { height: 1, ..panes.right };
-    let right_body = ratatui::layout::Rect {
-        y: panes.right.y + 1,
-        height: panes.right.height.saturating_sub(1),
-        ..panes.right
-    };
+    let right_title = if app.active_session.is_some() { "session" } else { "preview" };
+    let right_block = focus::pane_block(Some(right_title), right_active, &app.theme);
+    let right_body = right_block.inner(panes.right);
+    f.render_widget(right_block, panes.right);
     if let Some(id) = app.active_session {
         if let (Some(screen), Some(meta)) = (screens.get(&id), app.session(id)) {
             session_pane::render(f, right_body, screen, meta, right_active, &app.theme);
@@ -82,7 +76,6 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     } else {
         preview::render(f, right_body, app, &app.theme);
     }
-    focus::paint_focus_bar(f, right_strip, right_active, &app.theme);
     status_bar::render(f, panes.status, app, &app.theme);
     modal::render(f, app, &app.theme);
     if matches!(&app.mode, crate::app::types::Mode::ThemePicker { .. }) {

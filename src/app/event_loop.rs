@@ -76,10 +76,10 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                     if let crossterm::event::Event::Resize(_, _) = evt {
                         let size = terminal.size()?;
                         let panes = crate::ui::layout::compute(size, &app);
-                        // right pane body = pane.height - focus strip (1) - session header (1) - spacer (1)
-                        // right pane cols  = pane.width - scroll thumb (1)
-                        let pane_rows = panes.right.height.saturating_sub(3);
-                        let pane_cols = panes.right.width.saturating_sub(1);
+                        // right pane body = pane.height - borders (2) - session header (1) - spacer (1)
+                        // right pane cols  = pane.width  - borders (2) - scroll thumb (1)
+                        let pane_rows = panes.right.height.saturating_sub(4);
+                        let pane_cols = panes.right.width.saturating_sub(3);
                         for (id, screen) in screens.iter_mut() {
                             screen.set_size(pane_rows, pane_cols);
                             let _ = mgr.resize(*id, pane_rows, pane_cols);
@@ -358,8 +358,8 @@ pub fn do_spawn(
             let size = ratatui::layout::Rect { x: 0, y: 0, width: w, height: h };
             let panes = crate::ui::layout::compute(size, app);
             (
-                panes.right.height.saturating_sub(3).max(1),
-                panes.right.width.saturating_sub(1).max(1),
+                panes.right.height.saturating_sub(4).max(1),
+                panes.right.width.saturating_sub(3).max(1),
             )
         }
         Err(_) => (24, 80),
