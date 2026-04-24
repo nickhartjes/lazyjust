@@ -41,7 +41,7 @@ vt100 = "0.15"
 filetime = "0.2"
 insta = { version = "1", features = ["yaml"] }
 pretty_assertions = "1"
-rstest = "0.19"
+rstest = "0.26"
 tempfile = "3"
 tracing-test = "0.2"
 
