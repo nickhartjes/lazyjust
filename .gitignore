@@ -1,5 +1,6 @@
 target/
 Cargo.lock.bak
 .superpowers/
+.worktrees/
 .DS_Store
 *.swp
