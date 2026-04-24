@@ -9,7 +9,12 @@ use ratatui::Frame;
 pub fn render(f: &mut Frame, app: &App) {
     match &app.mode {
         Mode::Dropdown { filter, cursor } => render_dropdown(f, app, filter, *cursor),
-        Mode::Help { .. } => render_help(f),
+        Mode::Help { .. } => {
+            let h = f.size().height.saturating_sub(4).min(30);
+            let area = centered(f.size(), 72, h);
+            f.render_widget(Clear, area);
+            super::help::render(f, app, area);
+        }
         Mode::Confirm { prompt, .. } => render_confirm(f, prompt),
         Mode::ParamInput { .. } => {
             let area = centered(f.size(), 60, 12);
@@ -62,41 +67,6 @@ fn render_dropdown(f: &mut Frame, app: &App, filter: &str, cursor: usize) {
                 .add_modifier(Modifier::BOLD),
         );
     f.render_stateful_widget(list, area, &mut state);
-}
-
-fn render_help(f: &mut Frame) {
-    let area = centered(f.size(), 64, 22);
-    f.render_widget(Clear, area);
-    let lines: Vec<Line> = [
-        "lazyjust — keybindings",
-        "",
-        "  List focus:",
-        "    j/k, ↑/↓    move list cursor",
-        "    h/l         cycle recipe run history",
-        "    Enter       run recipe (focus running if exists)",
-        "    Shift+Enter / r   always spawn new run",
-        "    /           fuzzy filter",
-        "    d           switch justfile",
-        "    Tab         cycle focus list/session",
-        "    K           kill focused session",
-        "    x           close focused session",
-        "    Ctrl+o/i    next/prev unread session",
-        "    L           copy log path",
-        "    > < =       resize panes",
-        "    ?           this help",
-        "    q           quit",
-        "",
-        "  Session focus:",
-        "    PgUp/PgDn    scroll output",
-        "    Home/End     top / bottom of scrollback",
-        "    F12 / Ctrl+g leave session pane",
-        "    (all other keys forwarded to the PTY)",
-    ]
-    .into_iter()
-    .map(Line::from)
-    .collect();
-    let p = Paragraph::new(lines).block(Block::default().borders(Borders::ALL).title("help"));
-    f.render_widget(p, area);
 }
 
 fn render_confirm(f: &mut Frame, prompt: &str) {
