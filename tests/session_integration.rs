@@ -2,8 +2,8 @@
 
 use lazyjust::session::osc::scan_done_marker;
 use lazyjust::session::pty::spawn;
-use lazyjust::session::wrapper::build_unix_command;
-use std::io::Read;
+use lazyjust::session::wrapper::{build_unix_command, prime_line};
+use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
@@ -15,10 +15,19 @@ fn make_justfile(tmp: &tempfile::TempDir) -> PathBuf {
 
 #[test]
 fn spawn_echo_recipe_and_capture_done_marker() {
+    // Force a minimal shell so rc files cannot eat stdin or reorder output.
+    std::env::set_var("SHELL", "/bin/sh");
+
     let tmp = tempfile::tempdir().unwrap();
     let justfile = make_justfile(&tmp);
+
     let (argv, _) = build_unix_command(&justfile, "hi", &[]);
     let mut spawned = spawn(&argv, tmp.path(), 24, 80).unwrap();
+
+    let line = prime_line(&justfile, "hi", &[]);
+    spawned.writer.write_all(line.as_bytes()).unwrap();
+    spawned.writer.write_all(b"\n").unwrap();
+    spawned.writer.flush().unwrap();
 
     let mut buf = Vec::new();
     let deadline = Instant::now() + Duration::from_secs(10);
