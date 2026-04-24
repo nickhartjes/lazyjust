@@ -13,6 +13,7 @@ fn make_app() -> App {
             doc: None,
             command_preview: "cargo build".into(),
             runs: vec![],
+            dependencies: Vec::new(),
         },
         Recipe {
             name: "test".into(),
@@ -22,6 +23,7 @@ fn make_app() -> App {
             doc: None,
             command_preview: "cargo test".into(),
             runs: vec![],
+            dependencies: Vec::new(),
         },
     ];
     let jf = Justfile {

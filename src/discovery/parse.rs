@@ -25,6 +25,7 @@ pub fn parse_dump_with_path(json: &str, path: &PathBuf) -> Result<Vec<Recipe>> {
             doc: r.doc.filter(|s| !s.is_empty()),
             command_preview: render_body(&r.body),
             runs: Vec::new(),
+            dependencies: r.dependencies.into_iter().map(|d| d.recipe).collect(),
         })
         .collect();
     recipes.sort_by(|a, b| a.name.cmp(&b.name));
@@ -118,6 +119,13 @@ struct RawRecipe {
     attributes: Vec<serde_json::Value>,
     #[serde(default)]
     private: bool,
+    #[serde(default)]
+    dependencies: Vec<RawDep>,
+}
+
+#[derive(Deserialize)]
+struct RawDep {
+    recipe: String,
 }
 
 #[derive(Deserialize)]

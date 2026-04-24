@@ -19,6 +19,17 @@ pub struct Recipe {
     pub doc: Option<String>,
     pub command_preview: String,
     pub runs: Vec<SessionId>,
+    pub dependencies: Vec<String>,
+}
+
+impl Recipe {
+    pub fn has_deps(&self) -> bool {
+        !self.dependencies.is_empty()
+    }
+
+    pub fn dep_names(&self) -> Vec<&str> {
+        self.dependencies.iter().map(String::as_str).collect()
+    }
 }
 
 #[derive(Debug, Clone)]

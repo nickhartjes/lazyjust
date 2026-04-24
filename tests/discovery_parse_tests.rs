@@ -38,3 +38,29 @@ fn parse_with_groups() {
     let deploy = recipes.iter().find(|r| r.name == "deploy").unwrap();
     assert_eq!(deploy.group.as_deref(), Some("deploy"));
 }
+
+#[test]
+fn parse_extracts_dependencies_in_declaration_order() {
+    let json = r#"{
+        "recipes": {
+            "ci": {
+                "dependencies": [
+                    {"recipe": "fmt"},
+                    {"recipe": "lint"},
+                    {"recipe": "test"}
+                ],
+                "body": []
+            }
+        }
+    }"#;
+    let recipes = parse_dump(json).unwrap();
+    let ci = recipes.iter().find(|r| r.name == "ci").unwrap();
+    assert_eq!(ci.dependencies, vec!["fmt", "lint", "test"]);
+}
+
+#[test]
+fn parse_handles_missing_dependencies_field() {
+    let json = r#"{"recipes": {"solo": {"body": []}}}"#;
+    let recipes = parse_dump(json).unwrap();
+    assert!(recipes[0].dependencies.is_empty());
+}

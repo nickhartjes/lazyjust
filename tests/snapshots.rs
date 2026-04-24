@@ -15,6 +15,7 @@ fn fixture_app() -> App {
             doc: Some("Build release".into()),
             command_preview: "cargo build --release".into(),
             runs: vec![],
+            dependencies: Vec::new(),
         },
         Recipe {
             name: "test".into(),
@@ -24,6 +25,7 @@ fn fixture_app() -> App {
             doc: None,
             command_preview: "cargo test".into(),
             runs: vec![],
+            dependencies: Vec::new(),
         },
     ];
     let jf = Justfile {
