@@ -1,26 +1,26 @@
 use crate::app::types::Mode;
 use crate::app::App;
 use ratatui::layout::{Constraint, Direction, Layout, Rect};
-use ratatui::style::{Color, Modifier, Style};
+use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph};
 use ratatui::Frame;
 
-pub fn render(f: &mut Frame, app: &App) {
+pub fn render(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
     match &app.mode {
-        Mode::Dropdown { filter, cursor } => render_dropdown(f, app, filter, *cursor),
+        Mode::Dropdown { filter, cursor } => render_dropdown(f, app, filter, *cursor, theme),
         Mode::Help { .. } => {
             let h = f.size().height.saturating_sub(4).min(30);
             let area = centered(f.size(), 72, h);
             f.render_widget(Clear, area);
-            super::help::render(f, app, area);
+            super::help::render(f, app, area, theme);
         }
         Mode::Confirm { prompt, .. } => render_confirm(f, prompt),
         Mode::ParamInput { .. } => {
             let area = centered(f.size(), 60, 12);
-            super::param_modal::render(f, app, area);
+            super::param_modal::render(f, app, area, theme);
         }
-        Mode::ErrorsList => render_errors(f, app),
+        Mode::ErrorsList => render_errors(f, app, theme),
         _ => {}
     }
 }
@@ -45,7 +45,7 @@ fn centered(parent: Rect, w: u16, h: u16) -> Rect {
     hslices[1]
 }
 
-fn render_dropdown(f: &mut Frame, app: &App, filter: &str, cursor: usize) {
+fn render_dropdown(f: &mut Frame, app: &App, filter: &str, cursor: usize, theme: &crate::theme::Theme) {
     let area = centered(f.size(), 60, 14);
     f.render_widget(Clear, area);
     let indices = crate::app::reducer::filtered_justfile_indices(app, filter);
@@ -63,7 +63,7 @@ fn render_dropdown(f: &mut Frame, app: &App, filter: &str, cursor: usize) {
         )
         .highlight_style(
             Style::default()
-                .bg(Color::DarkGray)
+                .bg(theme.bg)
                 .add_modifier(Modifier::BOLD),
         );
     f.render_stateful_widget(list, area, &mut state);
@@ -77,7 +77,7 @@ fn render_confirm(f: &mut Frame, prompt: &str) {
     f.render_widget(p, area);
 }
 
-fn render_errors(f: &mut Frame, app: &App) {
+fn render_errors(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
     use ratatui::widgets::Wrap;
     let area = centered(f.size(), 80, 20);
     f.render_widget(Clear, area);
@@ -90,7 +90,7 @@ fn render_errors(f: &mut Frame, app: &App) {
     for (path, msg) in &app.startup_errors {
         lines.push(Line::from(Span::styled(
             path.display().to_string(),
-            Style::default().fg(Color::Yellow),
+            Style::default().fg(theme.accent),
         )));
         for l in msg.lines() {
             lines.push(Line::from(format!("  {l}")));
@@ -99,7 +99,7 @@ fn render_errors(f: &mut Frame, app: &App) {
     }
     lines.push(Line::from(Span::styled(
         "Esc / q / e to close",
-        Style::default().fg(Color::Gray),
+        Style::default().fg(theme.dim),
     )));
     let p = Paragraph::new(lines)
         .block(Block::default().borders(Borders::ALL).title("load errors"))

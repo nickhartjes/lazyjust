@@ -229,26 +229,26 @@ Help — Esc / q to close
 (0,3) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,3) "│" fg=Reset bg=Reset mod=NONE
 (5,3) "▸" fg=Reset bg=Reset mod=NONE
-(7,3) "L" fg=Cyan bg=Reset mod=BOLD
-(8,3) "i" fg=Cyan bg=Reset mod=BOLD
-(9,3) "s" fg=Cyan bg=Reset mod=BOLD
-(10,3) "t" fg=Cyan bg=Reset mod=BOLD
-(12,3) "f" fg=Cyan bg=Reset mod=BOLD
-(13,3) "o" fg=Cyan bg=Reset mod=BOLD
-(14,3) "c" fg=Cyan bg=Reset mod=BOLD
-(15,3) "u" fg=Cyan bg=Reset mod=BOLD
-(16,3) "s" fg=Cyan bg=Reset mod=BOLD
+(7,3) "L" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(8,3) "i" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(9,3) "s" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(10,3) "t" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(12,3) "f" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(13,3) "o" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(14,3) "c" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(15,3) "u" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
+(16,3) "s" fg=Rgb(122, 162, 247) bg=Reset mod=BOLD
 (75,3) "│" fg=Reset bg=Reset mod=NONE
 (79,3) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,4) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,4) "│" fg=Reset bg=Reset mod=NONE
-(9,4) "j" fg=Yellow bg=Reset mod=NONE
-(11,4) "/" fg=Yellow bg=Reset mod=NONE
-(13,4) "k" fg=Yellow bg=Reset mod=NONE
-(14,4) "," fg=Yellow bg=Reset mod=NONE
-(16,4) "↓" fg=Yellow bg=Reset mod=NONE
-(18,4) "/" fg=Yellow bg=Reset mod=NONE
-(20,4) "↑" fg=Yellow bg=Reset mod=NONE
+(9,4) "j" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,4) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(13,4) "k" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(14,4) "," fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(16,4) "↓" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(18,4) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(20,4) "↑" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,4) "m" fg=Reset bg=Reset mod=NONE
 (32,4) "o" fg=Reset bg=Reset mod=NONE
 (33,4) "v" fg=Reset bg=Reset mod=NONE
@@ -280,13 +280,13 @@ Help — Esc / q to close
 (79,4) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,5) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,5) "│" fg=Reset bg=Reset mod=NONE
-(9,5) "h" fg=Yellow bg=Reset mod=NONE
-(11,5) "/" fg=Yellow bg=Reset mod=NONE
-(13,5) "l" fg=Yellow bg=Reset mod=NONE
-(14,5) "," fg=Yellow bg=Reset mod=NONE
-(16,5) "←" fg=Yellow bg=Reset mod=NONE
-(18,5) "/" fg=Yellow bg=Reset mod=NONE
-(20,5) "→" fg=Yellow bg=Reset mod=NONE
+(9,5) "h" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,5) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(13,5) "l" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(14,5) "," fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(16,5) "←" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(18,5) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(20,5) "→" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,5) "c" fg=Reset bg=Reset mod=NONE
 (32,5) "y" fg=Reset bg=Reset mod=NONE
 (33,5) "c" fg=Reset bg=Reset mod=NONE
@@ -337,11 +337,11 @@ Help — Esc / q to close
 (79,6) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,7) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,7) "│" fg=Reset bg=Reset mod=NONE
-(9,7) "E" fg=Yellow bg=Reset mod=NONE
-(10,7) "n" fg=Yellow bg=Reset mod=NONE
-(11,7) "t" fg=Yellow bg=Reset mod=NONE
-(12,7) "e" fg=Yellow bg=Reset mod=NONE
-(13,7) "r" fg=Yellow bg=Reset mod=NONE
+(9,7) "E" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,7) "n" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,7) "t" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(12,7) "e" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(13,7) "r" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,7) "r" fg=Reset bg=Reset mod=NONE
 (32,7) "u" fg=Reset bg=Reset mod=NONE
 (33,7) "n" fg=Reset bg=Reset mod=NONE
@@ -401,19 +401,19 @@ Help — Esc / q to close
 (79,8) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,9) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,9) "│" fg=Reset bg=Reset mod=NONE
-(9,9) "S" fg=Yellow bg=Reset mod=NONE
-(10,9) "h" fg=Yellow bg=Reset mod=NONE
-(11,9) "i" fg=Yellow bg=Reset mod=NONE
-(12,9) "f" fg=Yellow bg=Reset mod=NONE
-(13,9) "t" fg=Yellow bg=Reset mod=NONE
-(14,9) "+" fg=Yellow bg=Reset mod=NONE
-(15,9) "E" fg=Yellow bg=Reset mod=NONE
-(16,9) "n" fg=Yellow bg=Reset mod=NONE
-(17,9) "t" fg=Yellow bg=Reset mod=NONE
-(18,9) "e" fg=Yellow bg=Reset mod=NONE
-(19,9) "r" fg=Yellow bg=Reset mod=NONE
-(21,9) "/" fg=Yellow bg=Reset mod=NONE
-(23,9) "r" fg=Yellow bg=Reset mod=NONE
+(9,9) "S" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,9) "h" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,9) "i" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(12,9) "f" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(13,9) "t" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(14,9) "+" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(15,9) "E" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(16,9) "n" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(17,9) "t" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(18,9) "e" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(19,9) "r" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(21,9) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(23,9) "r" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,9) "a" fg=Reset bg=Reset mod=NONE
 (32,9) "l" fg=Reset bg=Reset mod=NONE
 (33,9) "w" fg=Reset bg=Reset mod=NONE
@@ -452,7 +452,7 @@ Help — Esc / q to close
 (79,9) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,10) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,10) "│" fg=Reset bg=Reset mod=NONE
-(9,10) "/" fg=Yellow bg=Reset mod=NONE
+(9,10) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,10) "e" fg=Reset bg=Reset mod=NONE
 (32,10) "n" fg=Reset bg=Reset mod=NONE
 (33,10) "t" fg=Reset bg=Reset mod=NONE
@@ -478,7 +478,7 @@ Help — Esc / q to close
 (79,10) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,11) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,11) "│" fg=Reset bg=Reset mod=NONE
-(9,11) "d" fg=Yellow bg=Reset mod=NONE
+(9,11) "d" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,11) "o" fg=Reset bg=Reset mod=NONE
 (32,11) "p" fg=Reset bg=Reset mod=NONE
 (33,11) "e" fg=Reset bg=Reset mod=NONE
@@ -512,9 +512,9 @@ Help — Esc / q to close
 (79,11) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,12) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,12) "│" fg=Reset bg=Reset mod=NONE
-(9,12) "T" fg=Yellow bg=Reset mod=NONE
-(10,12) "a" fg=Yellow bg=Reset mod=NONE
-(11,12) "b" fg=Yellow bg=Reset mod=NONE
+(9,12) "T" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,12) "a" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,12) "b" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,12) "c" fg=Reset bg=Reset mod=NONE
 (32,12) "y" fg=Reset bg=Reset mod=NONE
 (33,12) "c" fg=Reset bg=Reset mod=NONE
@@ -554,7 +554,7 @@ Help — Esc / q to close
 (79,12) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,13) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,13) "│" fg=Reset bg=Reset mod=NONE
-(9,13) "K" fg=Yellow bg=Reset mod=NONE
+(9,13) "K" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,13) "k" fg=Reset bg=Reset mod=NONE
 (32,13) "i" fg=Reset bg=Reset mod=NONE
 (33,13) "l" fg=Reset bg=Reset mod=NONE
@@ -590,7 +590,7 @@ Help — Esc / q to close
 (79,13) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,14) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,14) "│" fg=Reset bg=Reset mod=NONE
-(9,14) "x" fg=Yellow bg=Reset mod=NONE
+(9,14) "x" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,14) "c" fg=Reset bg=Reset mod=NONE
 (32,14) "l" fg=Reset bg=Reset mod=NONE
 (33,14) "o" fg=Reset bg=Reset mod=NONE
@@ -627,19 +627,19 @@ Help — Esc / q to close
 (79,14) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,15) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,15) "│" fg=Reset bg=Reset mod=NONE
-(9,15) "C" fg=Yellow bg=Reset mod=NONE
-(10,15) "t" fg=Yellow bg=Reset mod=NONE
-(11,15) "r" fg=Yellow bg=Reset mod=NONE
-(12,15) "l" fg=Yellow bg=Reset mod=NONE
-(13,15) "+" fg=Yellow bg=Reset mod=NONE
-(14,15) "o" fg=Yellow bg=Reset mod=NONE
-(16,15) "/" fg=Yellow bg=Reset mod=NONE
-(18,15) "C" fg=Yellow bg=Reset mod=NONE
-(19,15) "t" fg=Yellow bg=Reset mod=NONE
-(20,15) "r" fg=Yellow bg=Reset mod=NONE
-(21,15) "l" fg=Yellow bg=Reset mod=NONE
-(22,15) "+" fg=Yellow bg=Reset mod=NONE
-(23,15) "i" fg=Yellow bg=Reset mod=NONE
+(9,15) "C" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,15) "t" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,15) "r" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(12,15) "l" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(13,15) "+" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(14,15) "o" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(16,15) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(18,15) "C" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(19,15) "t" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(20,15) "r" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(21,15) "l" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(22,15) "+" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(23,15) "i" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,15) "j" fg=Reset bg=Reset mod=NONE
 (32,15) "u" fg=Reset bg=Reset mod=NONE
 (33,15) "m" fg=Reset bg=Reset mod=NONE
@@ -690,7 +690,7 @@ Help — Esc / q to close
 (79,16) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,17) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,17) "│" fg=Reset bg=Reset mod=NONE
-(9,17) "L" fg=Yellow bg=Reset mod=NONE
+(9,17) "L" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,17) "c" fg=Reset bg=Reset mod=NONE
 (32,17) "o" fg=Reset bg=Reset mod=NONE
 (33,17) "p" fg=Reset bg=Reset mod=NONE
@@ -725,11 +725,11 @@ Help — Esc / q to close
 (79,17) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,18) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,18) "│" fg=Reset bg=Reset mod=NONE
-(9,18) ">" fg=Yellow bg=Reset mod=NONE
-(11,18) "/" fg=Yellow bg=Reset mod=NONE
-(13,18) "<" fg=Yellow bg=Reset mod=NONE
-(15,18) "/" fg=Yellow bg=Reset mod=NONE
-(17,18) "=" fg=Yellow bg=Reset mod=NONE
+(9,18) ">" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,18) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(13,18) "<" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(15,18) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(17,18) "=" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,18) "g" fg=Reset bg=Reset mod=NONE
 (32,18) "r" fg=Reset bg=Reset mod=NONE
 (33,18) "o" fg=Reset bg=Reset mod=NONE
@@ -767,10 +767,10 @@ Help — Esc / q to close
 (79,18) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,19) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,19) "│" fg=Reset bg=Reset mod=NONE
-(9,19) "F" fg=Yellow bg=Reset mod=NONE
-(10,19) "1" fg=Yellow bg=Reset mod=NONE
-(12,19) "/" fg=Yellow bg=Reset mod=NONE
-(14,19) "?" fg=Yellow bg=Reset mod=NONE
+(9,19) "F" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,19) "1" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(12,19) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(14,19) "?" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,19) "o" fg=Reset bg=Reset mod=NONE
 (32,19) "p" fg=Reset bg=Reset mod=NONE
 (33,19) "e" fg=Reset bg=Reset mod=NONE
@@ -787,7 +787,7 @@ Help — Esc / q to close
 (79,19) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,20) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,20) "│" fg=Reset bg=Reset mod=NONE
-(9,20) "e" fg=Yellow bg=Reset mod=NONE
+(9,20) "e" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,20) "o" fg=Reset bg=Reset mod=NONE
 (32,20) "p" fg=Reset bg=Reset mod=NONE
 (33,20) "e" fg=Reset bg=Reset mod=NONE
@@ -818,7 +818,7 @@ Help — Esc / q to close
 (79,20) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,21) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,21) "│" fg=Reset bg=Reset mod=NONE
-(9,21) "q" fg=Yellow bg=Reset mod=NONE
+(9,21) "q" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,21) "q" fg=Reset bg=Reset mod=NONE
 (32,21) "u" fg=Reset bg=Reset mod=NONE
 (33,21) "i" fg=Reset bg=Reset mod=NONE
@@ -876,16 +876,16 @@ Help — Esc / q to close
 (79,23) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,24) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,24) "│" fg=Reset bg=Reset mod=NONE
-(9,24) "F" fg=Yellow bg=Reset mod=NONE
-(10,24) "1" fg=Yellow bg=Reset mod=NONE
-(11,24) "2" fg=Yellow bg=Reset mod=NONE
-(13,24) "/" fg=Yellow bg=Reset mod=NONE
-(15,24) "C" fg=Yellow bg=Reset mod=NONE
-(16,24) "t" fg=Yellow bg=Reset mod=NONE
-(17,24) "r" fg=Yellow bg=Reset mod=NONE
-(18,24) "l" fg=Yellow bg=Reset mod=NONE
-(19,24) "+" fg=Yellow bg=Reset mod=NONE
-(20,24) "g" fg=Yellow bg=Reset mod=NONE
+(9,24) "F" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,24) "1" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,24) "2" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(13,24) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(15,24) "C" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(16,24) "t" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(17,24) "r" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(18,24) "l" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(19,24) "+" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(20,24) "g" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,24) "r" fg=Reset bg=Reset mod=NONE
 (32,24) "e" fg=Reset bg=Reset mod=NONE
 (33,24) "t" fg=Reset bg=Reset mod=NONE
@@ -917,15 +917,15 @@ Help — Esc / q to close
 (79,24) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,25) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,25) "│" fg=Reset bg=Reset mod=NONE
-(9,25) "P" fg=Yellow bg=Reset mod=NONE
-(10,25) "g" fg=Yellow bg=Reset mod=NONE
-(11,25) "U" fg=Yellow bg=Reset mod=NONE
-(12,25) "p" fg=Yellow bg=Reset mod=NONE
-(14,25) "/" fg=Yellow bg=Reset mod=NONE
-(16,25) "P" fg=Yellow bg=Reset mod=NONE
-(17,25) "g" fg=Yellow bg=Reset mod=NONE
-(18,25) "D" fg=Yellow bg=Reset mod=NONE
-(19,25) "n" fg=Yellow bg=Reset mod=NONE
+(9,25) "P" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,25) "g" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,25) "U" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(12,25) "p" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(14,25) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(16,25) "P" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(17,25) "g" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(18,25) "D" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(19,25) "n" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,25) "s" fg=Reset bg=Reset mod=NONE
 (32,25) "c" fg=Reset bg=Reset mod=NONE
 (33,25) "r" fg=Reset bg=Reset mod=NONE
@@ -956,14 +956,14 @@ Help — Esc / q to close
 (79,25) "│" fg=Rgb(86, 95, 137) bg=Reset mod=NONE
 (0,26) "│" fg=Rgb(122, 162, 247) bg=Reset mod=NONE
 (4,26) "│" fg=Reset bg=Reset mod=NONE
-(9,26) "H" fg=Yellow bg=Reset mod=NONE
-(10,26) "o" fg=Yellow bg=Reset mod=NONE
-(11,26) "m" fg=Yellow bg=Reset mod=NONE
-(12,26) "e" fg=Yellow bg=Reset mod=NONE
-(14,26) "/" fg=Yellow bg=Reset mod=NONE
-(16,26) "E" fg=Yellow bg=Reset mod=NONE
-(17,26) "n" fg=Yellow bg=Reset mod=NONE
-(18,26) "d" fg=Yellow bg=Reset mod=NONE
+(9,26) "H" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(10,26) "o" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(11,26) "m" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(12,26) "e" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(14,26) "/" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(16,26) "E" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(17,26) "n" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
+(18,26) "d" fg=Rgb(192, 202, 245) bg=Reset mod=NONE
 (31,26) "j" fg=Reset bg=Reset mod=NONE
 (32,26) "u" fg=Reset bg=Reset mod=NONE
 (33,26) "m" fg=Reset bg=Reset mod=NONE

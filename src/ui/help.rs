@@ -6,7 +6,7 @@ use crate::app::help_section::SectionId;
 use crate::app::types::Mode;
 use crate::app::App;
 use ratatui::layout::Rect;
-use ratatui::style::{Color, Modifier, Style};
+use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
 use ratatui::Frame;
@@ -231,7 +231,7 @@ pub const SECTIONS: &[Section] = &[
     },
 ];
 
-fn build_lines(origin: SectionId) -> Vec<Line<'static>> {
+fn build_lines(origin: SectionId, theme: &crate::theme::Theme) -> Vec<Line<'static>> {
     let mut out: Vec<Line<'static>> = Vec::new();
     for (idx, section) in SECTIONS.iter().enumerate() {
         if idx > 0 {
@@ -241,7 +241,7 @@ fn build_lines(origin: SectionId) -> Vec<Line<'static>> {
         let marker = if is_active { "▸ " } else { "  " };
         let title_style = if is_active {
             Style::default()
-                .fg(Color::Cyan)
+                .fg(theme.accent)
                 .add_modifier(Modifier::BOLD)
         } else {
             Style::default().add_modifier(Modifier::BOLD)
@@ -255,7 +255,7 @@ fn build_lines(origin: SectionId) -> Vec<Line<'static>> {
                 Span::raw("    "),
                 Span::styled(
                     format!("{:<20}", e.keys),
-                    Style::default().fg(Color::Yellow),
+                    Style::default().fg(theme.fg),
                 ),
                 Span::raw("  "),
                 Span::raw(e.desc),
@@ -265,12 +265,12 @@ fn build_lines(origin: SectionId) -> Vec<Line<'static>> {
     out
 }
 
-pub fn render(f: &mut Frame, app: &App, area: Rect) {
+pub fn render(f: &mut Frame, app: &App, area: Rect, theme: &crate::theme::Theme) {
     let (scroll, origin) = match &app.mode {
         Mode::Help { scroll, origin } => (*scroll, *origin),
         _ => return,
     };
-    let lines = build_lines(origin);
+    let lines = build_lines(origin, theme);
     let inner_rows = area.height.saturating_sub(2);
     let max_scroll = (lines.len() as u16).saturating_sub(inner_rows);
     let clamped = scroll.min(max_scroll);
@@ -307,7 +307,8 @@ mod tests {
 
     #[test]
     fn build_lines_marks_only_the_origin_section() {
-        let lines = build_lines(SectionId::Filter);
+        let theme = crate::theme::registry::resolve(crate::theme::DEFAULT_THEME_NAME);
+        let lines = build_lines(SectionId::Filter, &theme);
         let active_count = lines
             .iter()
             .filter(|l| {

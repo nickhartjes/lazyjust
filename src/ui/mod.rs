@@ -43,5 +43,5 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
         preview::render(f, panes.right, app, &app.theme);
     }
     status_bar::render(f, panes.status, app);
-    modal::render(f, app);
+    modal::render(f, app, &app.theme);
 }

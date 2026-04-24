@@ -1,12 +1,12 @@
 use crate::app::types::Mode;
 use crate::app::App;
 use ratatui::layout::Rect;
-use ratatui::style::{Color, Style};
+use ratatui::style::Style;
 use ratatui::text::Line;
 use ratatui::widgets::{Block, Borders, Clear, Paragraph};
 use ratatui::Frame;
 
-pub fn render(f: &mut Frame, app: &App, area: Rect) {
+pub fn render(f: &mut Frame, app: &App, area: Rect, theme: &crate::theme::Theme) {
     let Mode::ParamInput {
         recipe_idx,
         values,
@@ -36,7 +36,7 @@ pub fn render(f: &mut Frame, app: &App, area: Rect) {
     lines.push(Line::from(""));
     lines.push(Line::from(ratatui::text::Span::styled(
         "Tab next, Enter run, Esc cancel",
-        Style::default().fg(Color::Gray),
+        Style::default().fg(theme.dim),
     )));
     let block = Block::default().borders(Borders::ALL).title("params");
     f.render_widget(Paragraph::new(lines).block(block), area);
