@@ -77,14 +77,14 @@ fn row<'a>(
     is_cursor: bool,
     width: u16,
 ) -> Line<'a> {
-    let (marker, bullet) = if is_cursor { (g.cursor, "") } else { ("", g.unselected) };
-    let leading = if style == IconStyle::None {
-        if is_cursor { "▶  ".to_string() } else { "   ".to_string() }
+    let glyph = if style == IconStyle::None {
+        if is_cursor { "▶" } else { " " }
     } else if is_cursor {
-        format!("{marker}  ")
+        g.cursor
     } else {
-        format!("   {bullet} ")
+        g.unselected
     };
+    let leading = format!(" {glyph} ");
     let name_style = if is_cursor {
         Style::default().fg(theme.selected_fg).bg(theme.highlight).add_modifier(Modifier::BOLD)
     } else {

@@ -1,7 +1,7 @@
 use ratatui::layout::{Constraint, Direction, Layout, Rect};
 use ratatui::style::{Modifier, Style};
 use ratatui::text::Span;
-use ratatui::widgets::{Block, BorderType, Borders, Clear};
+use ratatui::widgets::{Block, BorderType, Borders, Clear, Padding};
 use ratatui::Frame;
 
 /// Centers a fixed-size box inside `parent`.
@@ -37,6 +37,7 @@ pub fn block<'a>(title: &'a str, theme: &crate::theme::Theme) -> Block<'a> {
             Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
         ))
         .style(Style::default().fg(theme.fg).bg(theme.bg))
+        .padding(Padding::new(2, 2, 1, 1))
 }
 
 pub fn clear(f: &mut Frame, area: Rect) {

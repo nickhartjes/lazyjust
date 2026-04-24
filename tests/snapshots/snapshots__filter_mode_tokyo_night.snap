@@ -5,7 +5,7 @@ expression: "render_to_string(&app, 80, 24)"
 ▌ lazyjust  · ./justfile  · 2 recipes                                           
 ╭ recipes ─────────────────╮╭ preview ─────────────────────────────────────────╮
 │ CI ──────────────────────││build                                             │
-│▶  build                  ││  Build release                                   │
+│ ▶ build                  ││  Build release                                   │
 │                          ││                                                  │
 │                          ││  command                                         │
 │                          ││    $ cargo build --release                       │
@@ -167,7 +167,7 @@ expression: "render_to_string(&app, 80, 24)"
 (33,2) "d" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (79,2) "│" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (0,3) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
-(1,3) "▶" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(2,3) "▶" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (4,3) "b" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (5,3) "u" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (6,3) "i" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD

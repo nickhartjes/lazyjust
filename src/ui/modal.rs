@@ -53,9 +53,9 @@ fn render_dropdown(
 }
 
 fn render_confirm(f: &mut Frame, prompt: &str, theme: &crate::theme::Theme) {
-    let area = crate::ui::modal_base::centered(f.size(), 48, 5);
+    let area = crate::ui::modal_base::centered(f.size(), 52, 7);
     crate::ui::modal_base::clear(f, area);
-    let p = Paragraph::new(format!("{prompt}\n  [y]es     [n]o"))
+    let p = Paragraph::new(format!("{prompt}\n\n[y]es     [n]o"))
         .block(crate::ui::modal_base::block("confirm", theme));
     f.render_widget(p, area);
 }
