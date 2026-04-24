@@ -86,6 +86,13 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         continue;
                     }
                     if let crossterm::event::Event::Key(key) = evt {
+                        if key.code == crossterm::event::KeyCode::F(1)
+                            && !matches!(app.mode, crate::app::types::Mode::Help { .. })
+                        {
+                            crate::app::reducer::reduce(&mut app, Action::OpenHelp);
+                            dirty = true;
+                            continue;
+                        }
                         if app.focus == crate::app::types::Focus::Session
                             && app.mode == crate::app::types::Mode::Normal
                         {
