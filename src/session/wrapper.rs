@@ -30,11 +30,7 @@ pub fn shell_quote(s: &str) -> String {
     out
 }
 
-pub fn prime_line(
-    justfile: &std::path::Path,
-    recipe: &str,
-    args: &[String],
-) -> String {
+pub fn prime_line(justfile: &std::path::Path, recipe: &str, args: &[String]) -> String {
     let mut line = format!(
         "just --justfile {} {}",
         shell_quote(&justfile.display().to_string()),

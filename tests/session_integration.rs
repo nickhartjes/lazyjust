@@ -91,7 +91,10 @@ async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
     loop {
         let remaining = deadline.saturating_duration_since(tokio::time::Instant::now());
         if remaining.is_zero() {
-            panic!("timeout waiting for done marker; got {:?}", String::from_utf8_lossy(&collected));
+            panic!(
+                "timeout waiting for done marker; got {:?}",
+                String::from_utf8_lossy(&collected)
+            );
         }
         match tokio::time::timeout(remaining, rx.recv()).await {
             Ok(Some(AppEvent::SessionBytes { id, bytes })) => {
@@ -100,7 +103,9 @@ async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
                 let (_, codes) = scan_done_marker(&collected);
                 if !codes.is_empty() {
                     assert_eq!(codes[0], 0);
-                    assert!(std::str::from_utf8(&collected).unwrap().contains("lazyjust-hello"));
+                    assert!(std::str::from_utf8(&collected)
+                        .unwrap()
+                        .contains("lazyjust-hello"));
                     mgr.kill(1);
                     return;
                 }
@@ -111,7 +116,9 @@ async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
                 // channel-level equivalent of the marker.
                 assert_eq!(id, 1);
                 assert_eq!(code, 0);
-                assert!(std::str::from_utf8(&collected).unwrap().contains("lazyjust-hello"));
+                assert!(std::str::from_utf8(&collected)
+                    .unwrap()
+                    .contains("lazyjust-hello"));
                 mgr.kill(1);
                 return;
             }
