@@ -65,6 +65,9 @@ impl SessionManager {
                 reader,
             } = spawn(&argv, cwd, rows, cols)?;
 
+            // Capture pid before child moves into the handle map.
+            let pid = child.process_id();
+
             // Informational string only; see SessionMeta::command_line doc.
             let command_line = format!(
                 "just --justfile {} {} {}",
@@ -133,6 +136,7 @@ impl SessionManager {
                 unread: true,
                 started_at: Instant::now(),
                 log_path,
+                pid,
             })
         }
     }

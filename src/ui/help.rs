@@ -8,7 +8,7 @@ use crate::app::App;
 use ratatui::layout::Rect;
 use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
-use ratatui::widgets::{Block, Borders, Paragraph, Wrap};
+use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Frame;
 
 pub struct Entry {
@@ -272,7 +272,7 @@ pub fn render(f: &mut Frame, app: &App, area: Rect, theme: &crate::theme::Theme)
     let max_scroll = (lines.len() as u16).saturating_sub(inner_rows);
     let clamped = scroll.min(max_scroll);
     let para = Paragraph::new(lines)
-        .block(Block::default().borders(Borders::ALL).title("help"))
+        .block(crate::ui::modal_base::block("help", theme))
         .wrap(Wrap { trim: false })
         .scroll((clamped, 0));
     f.render_widget(para, area);

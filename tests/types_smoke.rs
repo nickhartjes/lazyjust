@@ -14,6 +14,7 @@ fn recipe_builder_basic() {
         doc: Some("Build the project".into()),
         command_preview: "cargo build --release".into(),
         runs: vec![],
+        dependencies: Vec::new(),
     };
     assert_eq!(r.params[0].kind, ParamKind::Positional);
 }

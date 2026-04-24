@@ -6,12 +6,10 @@
 
 [ui]
 # Built-in theme name or a filename (without .toml) under
-# <config_dir>/lazyjust/themes/. Applied in M2 of the UI redesign.
+# <config_dir>/lazyjust/themes/.
 theme = "tokyo-night"
 # Fraction of terminal width given to the recipe list.
 split_ratio = 0.30
-# Render "→ dep1 · dep2" under recipes that have dependencies.
-show_inline_deps = true
 # Glyph set for list indicators. "round" | "ascii" | "none".
 icon_style = "round"
 

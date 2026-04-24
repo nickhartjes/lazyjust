@@ -16,9 +16,20 @@ pub struct Recipe {
     pub module_path: Vec<String>, // e.g. ["api"] for modded recipes
     pub group: Option<String>,
     pub params: Vec<Param>,
+    pub dependencies: Vec<String>,
     pub doc: Option<String>,
     pub command_preview: String,
     pub runs: Vec<SessionId>,
+}
+
+impl Recipe {
+    pub fn has_deps(&self) -> bool {
+        !self.dependencies.is_empty()
+    }
+
+    pub fn dep_names(&self) -> Vec<&str> {
+        self.dependencies.iter().map(String::as_str).collect()
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -98,4 +109,6 @@ pub struct SessionMeta {
     pub unread: bool,
     pub started_at: Instant,
     pub log_path: PathBuf,
+    /// OS process id of the shell child process, if the platform could provide one.
+    pub pid: Option<u32>,
 }

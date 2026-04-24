@@ -3,7 +3,7 @@ use crate::app::App;
 use ratatui::layout::Rect;
 use ratatui::style::Style;
 use ratatui::text::Line;
-use ratatui::widgets::{Block, Borders, Clear, Paragraph};
+use ratatui::widgets::Paragraph;
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, app: &App, area: Rect, theme: &crate::theme::Theme) {
@@ -24,7 +24,7 @@ pub fn render(f: &mut Frame, app: &App, area: Rect, theme: &crate::theme::Theme)
         None => return,
     };
 
-    f.render_widget(Clear, area);
+    crate::ui::modal_base::clear(f, area);
     let mut lines = Vec::new();
     lines.push(Line::from(format!("run {}:", recipe.name)));
     lines.push(Line::from(""));
@@ -38,6 +38,8 @@ pub fn render(f: &mut Frame, app: &App, area: Rect, theme: &crate::theme::Theme)
         "Tab next, Enter run, Esc cancel",
         Style::default().fg(theme.dim),
     )));
-    let block = Block::default().borders(Borders::ALL).title("params");
-    f.render_widget(Paragraph::new(lines).block(block), area);
+    f.render_widget(
+        Paragraph::new(lines).block(crate::ui::modal_base::block("params", theme)),
+        area,
+    );
 }

@@ -1,5 +1,5 @@
-use crate::ui::focus::pane_block;
-use ratatui::layout::Rect;
+use crate::app::types::SessionMeta;
+use ratatui::layout::{Constraint, Direction, Layout, Rect};
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::Paragraph;
@@ -9,29 +9,49 @@ pub fn render(
     f: &mut Frame,
     area: Rect,
     screen: &vt100::Parser,
+    meta: &SessionMeta,
     active: bool,
     theme: &crate::theme::Theme,
 ) {
-    let block = pane_block("session", active, theme);
-    let inner = block.inner(area);
-    f.render_widget(block, area);
+    let rows = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Min(1),
+        ])
+        .split(area);
+    let header_area = rows[0];
+    let body_area = rows[2];
+
+    crate::ui::session_header::render(f, header_area, meta, active, theme);
+
+    // reserve last column of body for the scroll thumb
+    let grid_area = Rect {
+        width: body_area.width.saturating_sub(1),
+        ..body_area
+    };
+    let scroll_area = Rect {
+        x: body_area.x + body_area.width.saturating_sub(1),
+        y: body_area.y,
+        width: 1,
+        height: body_area.height,
+    };
 
     let grid = screen.screen();
-    let rows = inner.height as usize;
-    let cols = inner.width as usize;
+    let rows_count = grid_area.height as usize;
+    let cols = grid_area.width as usize;
 
-    let mut lines = Vec::with_capacity(rows);
-    for r in 0..rows {
+    let mut lines = Vec::with_capacity(rows_count);
+    for r in 0..rows_count {
         let mut spans = Vec::with_capacity(cols);
         for c in 0..cols {
             if let Some(cell) = grid.cell(r as u16, c as u16) {
                 let mut style = Style::default();
-                let fg = cell.fgcolor();
-                let bg = cell.bgcolor();
-                if let Some(color) = convert_color(fg) {
+                if let Some(color) = convert_color(cell.fgcolor()) {
                     style = style.fg(color);
                 }
-                if let Some(color) = convert_color(bg) {
+                if let Some(color) = convert_color(cell.bgcolor()) {
                     style = style.bg(color);
                 }
                 if cell.bold() {
@@ -56,7 +76,19 @@ pub fn render(
     }
 
     let p = Paragraph::new(lines);
-    f.render_widget(p, inner);
+    f.render_widget(p, grid_area);
+
+    // scroll thumb from vt100 scrollback
+    let (total, top) = scrollback_dims(screen, rows_count);
+    let buf = f.buffer_mut();
+    crate::ui::scrollbar::render(buf, scroll_area, total, rows_count, top, theme);
+}
+
+fn scrollback_dims(screen: &vt100::Parser, viewport: usize) -> (usize, usize) {
+    let grid = screen.screen();
+    let total = viewport + grid.scrollback();
+    let top = grid.scrollback();
+    (total, top)
 }
 
 fn convert_color(c: vt100::Color) -> Option<Color> {

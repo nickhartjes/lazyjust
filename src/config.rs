@@ -41,6 +41,8 @@ pub struct Config {
     pub tick_interval: Duration,
     /// Resolved theme name — matches a built-in or user theme file.
     pub theme_name: String,
+    /// Glyph set for list indicators. Values: `round` (default), `ascii`, or `none`.
+    pub icon_style: crate::ui::icon_style::IconStyle,
 }
 
 impl Config {

@@ -34,6 +34,7 @@ pub struct EngineSection {
 #[derive(Debug, Default, Deserialize)]
 pub struct UiSection {
     pub theme: Option<String>,
+    pub icon_style: Option<String>,
 }
 
 impl ConfigFile {
@@ -97,8 +98,7 @@ mod tests {
             quit = "q"
             "#,
         );
-        // ui/keys are not yet defined in ConfigFile; serde silently ignores
-        // unknown keys by default.
+        // [keys] is not yet defined in ConfigFile; serde silently ignores unknown keys by default.
         let cf = ConfigFile::read(f.path()).unwrap().unwrap();
         assert!(cf.paths.is_none());
     }

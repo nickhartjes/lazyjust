@@ -12,6 +12,17 @@ pub fn merge(file: ConfigFile, base: Config) -> Config {
         if let Some(theme) = u.theme {
             out.theme_name = theme;
         }
+        if let Some(icon) = u.icon_style.as_deref() {
+            if let Some(parsed) = crate::ui::icon_style::IconStyle::parse(icon) {
+                out.icon_style = parsed;
+            } else {
+                tracing::warn!(
+                    target: "lazyjust::config",
+                    value = %icon,
+                    "unknown [ui].icon_style, using default",
+                );
+            }
+        }
     }
 
     if let Some(p) = file.paths {
@@ -109,6 +120,7 @@ mod tests {
         let file = ConfigFile {
             ui: Some(crate::config::file::UiSection {
                 theme: Some("gruvbox-dark".into()),
+                ..Default::default()
             }),
             ..Default::default()
         };
@@ -120,5 +132,32 @@ mod tests {
     fn ui_theme_defaults_to_tokyo_night() {
         let merged = merge(ConfigFile::default(), defaults());
         assert_eq!(merged.theme_name, "tokyo-night");
+    }
+
+    #[test]
+    fn ui_icon_style_override_applies() {
+        use crate::ui::icon_style::IconStyle;
+        let file = ConfigFile {
+            ui: Some(crate::config::file::UiSection {
+                icon_style: Some("ascii".into()),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        let merged = merge(file, defaults());
+        assert_eq!(merged.icon_style, IconStyle::Ascii);
+    }
+
+    #[test]
+    fn ui_icon_style_unknown_falls_back_to_default() {
+        let file = ConfigFile {
+            ui: Some(crate::config::file::UiSection {
+                icon_style: Some("bogus".into()),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        let merged = merge(file, defaults());
+        assert_eq!(merged.icon_style, crate::ui::icon_style::IconStyle::Round);
     }
 }

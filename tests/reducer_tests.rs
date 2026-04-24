@@ -13,6 +13,7 @@ fn make_app() -> App {
             doc: None,
             command_preview: "cargo build".into(),
             runs: vec![],
+            dependencies: Vec::new(),
         },
         Recipe {
             name: "test".into(),
@@ -22,6 +23,7 @@ fn make_app() -> App {
             doc: None,
             command_preview: "cargo test".into(),
             runs: vec![],
+            dependencies: Vec::new(),
         },
     ];
     let jf = Justfile {
@@ -35,6 +37,7 @@ fn make_app() -> App {
         0.3,
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
     )
 }
 
@@ -97,6 +100,7 @@ fn session_exited_transitions_running_to_exited() {
         unread: false,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/x.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::SessionExited { id: 1, code: 7 });
@@ -119,6 +123,7 @@ fn recipe_exited_transitions_running_to_shell_after_exit() {
         unread: false,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/y.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::RecipeExited { id: 2, code: 0 });
@@ -141,6 +146,7 @@ fn session_exited_idempotent_from_exited_state() {
         unread: true,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/z.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::SessionExited { id: 3, code: 0 });
@@ -162,6 +168,7 @@ fn mark_read_unread_flip() {
         unread: true,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/w.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::MarkRead(4));
@@ -190,6 +197,7 @@ fn dropdown_switches_justfile() {
         0.3,
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
     );
 
     reduce(&mut app, Action::OpenDropdown);
