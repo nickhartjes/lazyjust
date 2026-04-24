@@ -98,4 +98,6 @@ pub struct SessionMeta {
     pub unread: bool,
     pub started_at: Instant,
     pub log_path: PathBuf,
+    /// OS process id of the shell child process, if the platform could provide one.
+    pub pid: Option<u32>,
 }

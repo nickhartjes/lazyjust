@@ -97,6 +97,7 @@ fn session_exited_transitions_running_to_exited() {
         unread: false,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/x.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::SessionExited { id: 1, code: 7 });
@@ -119,6 +120,7 @@ fn recipe_exited_transitions_running_to_shell_after_exit() {
         unread: false,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/y.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::RecipeExited { id: 2, code: 0 });
@@ -141,6 +143,7 @@ fn session_exited_idempotent_from_exited_state() {
         unread: true,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/z.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::SessionExited { id: 3, code: 0 });
@@ -162,6 +165,7 @@ fn mark_read_unread_flip() {
         unread: true,
         started_at: Instant::now(),
         log_path: PathBuf::from("/tmp/w.log"),
+        pid: None,
     });
 
     reduce(&mut app, Action::MarkRead(4));
