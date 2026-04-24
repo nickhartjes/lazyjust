@@ -1,7 +1,16 @@
 use std::path::PathBuf;
 use std::time::Duration;
 
+#[derive(Debug, thiserror::Error)]
+pub enum ConfigError {
+    #[error("config file IO error: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("config file parse error: {0}")]
+    Parse(#[from] toml::de::Error),
+}
+
 mod defaults;
+mod file;
 pub mod paths;
 
 #[derive(Debug, Clone)]
