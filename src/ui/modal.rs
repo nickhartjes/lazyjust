@@ -1,9 +1,8 @@
 use crate::app::types::Mode;
 use crate::app::App;
-use ratatui::layout::{Constraint, Direction, Layout, Rect};
 use ratatui::style::{Modifier, Style};
-use ratatui::text::{Line, Span};
-use ratatui::widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph};
+use ratatui::text::Line;
+use ratatui::widgets::{List, ListItem, ListState, Paragraph};
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
@@ -11,38 +10,18 @@ pub fn render(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
         Mode::Dropdown { filter, cursor } => render_dropdown(f, app, filter, *cursor, theme),
         Mode::Help { .. } => {
             let h = f.size().height.saturating_sub(4).min(30);
-            let area = centered(f.size(), 72, h);
-            f.render_widget(Clear, area);
+            let area = crate::ui::modal_base::centered(f.size(), 72, h);
+            crate::ui::modal_base::clear(f, area);
             super::help::render(f, app, area, theme);
         }
-        Mode::Confirm { prompt, .. } => render_confirm(f, prompt),
+        Mode::Confirm { prompt, .. } => render_confirm(f, prompt, theme),
         Mode::ParamInput { .. } => {
-            let area = centered(f.size(), 60, 12);
+            let area = crate::ui::modal_base::centered(f.size(), 60, 12);
             super::param_modal::render(f, app, area, theme);
         }
         Mode::ErrorsList => render_errors(f, app, theme),
         _ => {}
     }
-}
-
-fn centered(parent: Rect, w: u16, h: u16) -> Rect {
-    let v = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([
-            Constraint::Length(parent.height.saturating_sub(h) / 2),
-            Constraint::Length(h),
-            Constraint::Min(0),
-        ])
-        .split(parent);
-    let hslices = Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints([
-            Constraint::Length(parent.width.saturating_sub(w) / 2),
-            Constraint::Length(w),
-            Constraint::Min(0),
-        ])
-        .split(v[1]);
-    hslices[1]
 }
 
 fn render_dropdown(
@@ -52,8 +31,8 @@ fn render_dropdown(
     cursor: usize,
     theme: &crate::theme::Theme,
 ) {
-    let area = centered(f.size(), 60, 14);
-    f.render_widget(Clear, area);
+    let area = crate::ui::modal_base::centered(f.size(), 60, 14);
+    crate::ui::modal_base::clear(f, area);
     let indices = crate::app::reducer::filtered_justfile_indices(app, filter);
     let items: Vec<ListItem> = indices
         .iter()
@@ -61,12 +40,9 @@ fn render_dropdown(
         .collect();
     let mut state = ListState::default();
     state.select(Some(cursor.min(items.len().saturating_sub(1))));
+    let title = format!("justfile: /{filter}");
     let list = List::new(items)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .title(format!("justfile: /{filter}")),
-        )
+        .block(crate::ui::modal_base::block(&title, theme))
         .highlight_style(
             Style::default()
                 .bg(theme.highlight)
@@ -76,18 +52,19 @@ fn render_dropdown(
     f.render_stateful_widget(list, area, &mut state);
 }
 
-fn render_confirm(f: &mut Frame, prompt: &str) {
-    let area = centered(f.size(), 48, 5);
-    f.render_widget(Clear, area);
+fn render_confirm(f: &mut Frame, prompt: &str, theme: &crate::theme::Theme) {
+    let area = crate::ui::modal_base::centered(f.size(), 48, 5);
+    crate::ui::modal_base::clear(f, area);
     let p = Paragraph::new(format!("{prompt}\n  [y]es     [n]o"))
-        .block(Block::default().borders(Borders::ALL).title("confirm"));
+        .block(crate::ui::modal_base::block("confirm", theme));
     f.render_widget(p, area);
 }
 
 fn render_errors(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
+    use ratatui::text::Span;
     use ratatui::widgets::Wrap;
-    let area = centered(f.size(), 80, 20);
-    f.render_widget(Clear, area);
+    let area = crate::ui::modal_base::centered(f.size(), 80, 20);
+    crate::ui::modal_base::clear(f, area);
     let mut lines: Vec<Line> = Vec::new();
     lines.push(Line::from(format!(
         "{} justfile(s) failed to load:",
@@ -109,7 +86,7 @@ fn render_errors(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
         Style::default().fg(theme.dim),
     )));
     let p = Paragraph::new(lines)
-        .block(Block::default().borders(Borders::ALL).title("load errors"))
+        .block(crate::ui::modal_base::block("load errors", theme))
         .wrap(Wrap { trim: false });
     f.render_widget(p, area);
 }

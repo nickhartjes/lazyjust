@@ -4,6 +4,7 @@ pub mod icon_style;
 pub mod layout;
 pub mod list;
 pub mod modal;
+pub mod modal_base;
 pub mod param_modal;
 pub mod preview;
 pub mod scrollbar;

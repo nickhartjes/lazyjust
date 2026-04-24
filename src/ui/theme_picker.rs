@@ -2,10 +2,10 @@ use crate::app::state::App;
 use crate::app::types::Mode;
 use crate::theme::Theme;
 use ratatui::{
-    layout::{Alignment, Constraint, Direction, Layout, Rect},
+    layout::Rect,
     style::{Modifier, Style},
     text::Span,
-    widgets::{Block, Borders, Clear, List, ListItem, ListState, Paragraph},
+    widgets::{Clear, List, ListItem, ListState},
     Frame,
 };
 
@@ -22,24 +22,9 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
     let outer = centered(area, 40, 60);
     f.render_widget(Clear, outer);
 
-    let block = Block::default()
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(theme.accent))
-        .title(Span::styled(
-            " Theme ",
-            Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
-        ))
-        .title_alignment(Alignment::Center)
-        .style(Style::default().fg(theme.fg));
+    let block = crate::ui::modal_base::block("theme", theme);
     let inner = block.inner(outer);
     f.render_widget(block, outer);
-
-    let chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([Constraint::Min(1), Constraint::Length(1)])
-        .split(inner);
-    let list_area = chunks[0];
-    let hint_area = chunks[1];
 
     let items: Vec<ListItem> = names
         .iter()
@@ -57,14 +42,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
 
     let mut state = ListState::default();
     state.select(Some(highlighted));
-    f.render_stateful_widget(list, list_area, &mut state);
-
-    let hint = Paragraph::new(Span::styled(
-        "j/k select · Enter apply & save · Esc revert",
-        Style::default().fg(theme.dim),
-    ))
-    .alignment(Alignment::Center);
-    f.render_widget(hint, hint_area);
+    f.render_stateful_widget(list, inner, &mut state);
 }
 
 fn centered(area: Rect, min_w: u16, min_h: u16) -> Rect {
