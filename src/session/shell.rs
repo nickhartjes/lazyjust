@@ -12,10 +12,14 @@
 /// input (recipe name, justfile path, positional args) and a shell `eval`
 /// context. Do not replace with `$'…'` (bash-only) or backslash-escaping
 /// (content-dependent) — POSIX single-quote is the one form where no
-/// interior character has meaning.
+/// interior character has meaning, with the sole exception of `'` itself,
+/// which terminates the word and is emitted here as `'\''`
+/// (close-escape-reopen).
 ///
-/// Caveat: a NUL byte in `s` is preserved in the returned `String` but
-/// most shells truncate at NUL when the word crosses `execve` / PTY stdin.
+/// Caveat: a NUL byte in `s` is preserved in the returned `String`, but
+/// most shells truncate the word at the first NUL on its way through
+/// `execve` / PTY stdin. The symptom is a truncated recipe name or path
+/// handed to `just`, not a quoting failure — the error surfaces downstream.
 pub fn shell_quote(s: &str) -> String {
     let mut out = String::with_capacity(s.len() + 2);
     out.push('\'');
