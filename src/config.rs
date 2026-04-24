@@ -10,7 +10,7 @@ pub enum ConfigError {
 }
 
 mod defaults;
-mod file;
+pub(crate) mod file;
 mod merge;
 pub mod paths;
 pub mod template;
