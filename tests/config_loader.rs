@@ -1,10 +1,17 @@
 use lazyjust::config::Config;
+use std::sync::{Mutex, OnceLock};
 use std::time::Duration;
 
 // Serialize these tests: they all mutate the same env var.
-// Not fancy enough to warrant serial_test crate; each test sets+resets.
+// Default `cargo test` parallelism would race on LAZYJUST_CONFIG_DIR;
+// a module-level mutex avoids that without pulling in serial_test.
+fn guard() -> &'static Mutex<()> {
+    static M: OnceLock<Mutex<()>> = OnceLock::new();
+    M.get_or_init(|| Mutex::new(()))
+}
 
 fn with_config_dir<T>(contents: Option<&str>, body: impl FnOnce() -> T) -> T {
+    let _lock = guard().lock().unwrap_or_else(|e| e.into_inner());
     let tmp = tempfile::tempdir().unwrap();
     if let Some(c) = contents {
         std::fs::write(tmp.path().join("config.toml"), c).unwrap();
@@ -37,7 +44,4 @@ fn partial_file_overrides_only_specified_keys() {
 fn malformed_file_falls_back_to_defaults() {
     let cfg = with_config_dir(Some("this = = = not valid toml"), Config::load);
     assert_eq!(cfg.render_throttle, Duration::from_millis(16));
-    // Note: the warning is emitted via tracing; we don't capture it here.
-    // tests/logging_integration.rs (existing) covers tracing capture patterns
-    // if future tightening is needed.
 }
