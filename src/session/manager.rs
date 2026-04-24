@@ -44,7 +44,7 @@ impl SessionManager {
 
         let SpawnedPty {
             master,
-            child,
+            mut child,
             mut writer,
             reader,
         } = spawn(&argv, cwd, rows, cols)?;
@@ -57,11 +57,17 @@ impl SessionManager {
         );
 
         let line = super::wrapper::prime_line(justfile, recipe, args);
-        writer
+        let prime_result = writer
             .write_all(line.as_bytes())
             .and_then(|_| writer.write_all(b"\n"))
-            .and_then(|_| writer.flush())
-            .map_err(|e| crate::error::Error::PtySpawn(format!("prime shell stdin: {e}")))?;
+            .and_then(|_| writer.flush());
+        if let Err(e) = prime_result {
+            let _ = child.kill();
+            let _ = child.wait();
+            return Err(crate::error::Error::PtySpawn(format!(
+                "prime shell stdin: {e}"
+            )));
+        }
 
         spawn_reader(reader, id, tx);
 
