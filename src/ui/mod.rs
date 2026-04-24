@@ -6,6 +6,8 @@ pub mod list;
 pub mod modal;
 pub mod param_modal;
 pub mod preview;
+pub mod scrollbar;
+pub mod session_header;
 pub mod session_pane;
 pub mod status_bar;
 pub mod theme_picker;
@@ -51,8 +53,8 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     list::render(f, panes.list, app, &app.theme);
     let right_active = focus::is_right_active(app.focus);
     if let Some(id) = app.active_session {
-        if let Some(screen) = screens.get(&id) {
-            session_pane::render(f, panes.right, screen, right_active, &app.theme);
+        if let (Some(screen), Some(meta)) = (screens.get(&id), app.session(id)) {
+            session_pane::render(f, panes.right, screen, meta, right_active, &app.theme);
         } else {
             preview::render(f, panes.right, app, &app.theme);
         }

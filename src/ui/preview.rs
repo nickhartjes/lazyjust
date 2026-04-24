@@ -1,54 +1,90 @@
 use crate::app::App;
-use crate::ui::focus::{is_right_active, pane_block};
+use crate::ui::focus::{focus_bar, is_right_active};
 use ratatui::layout::Rect;
-use ratatui::style::Style;
+use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
-    let block = pane_block("preview", is_right_active(app.focus), theme);
+    let active = is_right_active(app.focus);
     let Some(r) = app.recipe_at_cursor() else {
-        f.render_widget(block, area);
+        let line = Line::from(focus_bar(active, theme));
+        f.render_widget(Paragraph::new(line), area);
         return;
     };
 
-    let mut lines = Vec::new();
-    lines.push(Line::from(Span::styled(
-        format!("recipe: {}", r.name),
-        Style::default().fg(theme.accent),
-    )));
+    let mut lines: Vec<Line> = Vec::new();
+    lines.push(Line::from(vec![
+        focus_bar(active, theme),
+        Span::raw(" "),
+        Span::styled(
+            r.name.clone(),
+            Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
+        ),
+    ]));
     if let Some(doc) = &r.doc {
         lines.push(Line::from(Span::styled(
-            doc.clone(),
+            format!("  {doc}"),
             Style::default().fg(theme.dim),
         )));
     }
-    if !r.params.is_empty() {
+
+    if r.has_deps() {
         lines.push(Line::from(""));
-        lines.push(Line::from("params:"));
-        for p in &r.params {
-            let default = p
-                .default
-                .as_ref()
-                .map(|d| format!("={d}"))
-                .unwrap_or_default();
-            lines.push(Line::from(format!("  {}{}", p.name, default)));
+        lines.push(Line::from(Span::styled(
+            "  depends on",
+            Style::default().fg(theme.dim),
+        )));
+        for dep in r.dep_names() {
+            lines.push(Line::from(vec![
+                Span::raw("    "),
+                Span::styled("▸ ", Style::default().fg(theme.success)),
+                Span::styled(dep.to_string(), Style::default().fg(theme.fg)),
+            ]));
         }
     }
-    lines.push(Line::from(""));
-    lines.push(Line::from("command:"));
-    for cmd_line in r.command_preview.lines() {
-        lines.push(Line::from(format!("  {cmd_line}")));
-    }
+
     lines.push(Line::from(""));
     lines.push(Line::from(Span::styled(
-        "Enter to run",
-        Style::default().fg(theme.success),
+        "  command",
+        Style::default().fg(theme.dim),
     )));
+    for (i, cmd_line) in r.command_preview.lines().enumerate() {
+        let prefix = if i == 0 {
+            vec![
+                Span::raw("    "),
+                Span::styled("$ ", Style::default().fg(theme.info)),
+            ]
+        } else {
+            vec![Span::raw("      ")]
+        };
+        let mut spans = prefix;
+        spans.push(Span::styled(cmd_line.to_string(), Style::default().fg(theme.fg)));
+        lines.push(Line::from(spans));
+    }
 
-    let p = Paragraph::new(lines)
-        .block(block)
-        .wrap(Wrap { trim: false });
+    if !r.params.is_empty() {
+        lines.push(Line::from(""));
+        lines.push(Line::from(Span::styled(
+            "  params",
+            Style::default().fg(theme.dim),
+        )));
+        for p in &r.params {
+            let mut spans = vec![
+                Span::raw("    "),
+                Span::styled(p.name.clone(), Style::default().fg(theme.fg)),
+            ];
+            if let Some(d) = &p.default {
+                spans.push(Span::styled(
+                    format!("  (default: {d})"),
+                    Style::default().fg(theme.dim),
+                ));
+            }
+            lines.push(Line::from(spans));
+        }
+    }
+
+    let p = Paragraph::new(lines).wrap(Wrap { trim: false });
     f.render_widget(p, area);
 }

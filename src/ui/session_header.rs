@@ -1,0 +1,55 @@
+use crate::app::types::{SessionMeta, Status};
+use ratatui::layout::Rect;
+use ratatui::style::{Modifier, Style};
+use ratatui::text::{Line, Span};
+use ratatui::widgets::Paragraph;
+use ratatui::Frame;
+
+pub fn render(
+    f: &mut Frame,
+    area: Rect,
+    meta: &SessionMeta,
+    active: bool,
+    theme: &crate::theme::Theme,
+) {
+    let bar = crate::ui::focus::focus_bar(active, theme);
+    let elapsed = fmt_elapsed(meta.started_at.elapsed());
+    let (glyph, glyph_color, label) = match meta.status {
+        Status::Running => ("●", theme.running, format!("running · {elapsed}")),
+        Status::Exited { code: 0 } => ("✓", theme.success, format!("done · {elapsed}")),
+        Status::Exited { code } => ("✗", theme.error, format!("exit {code} · {elapsed}")),
+        Status::ShellAfterExit { code } => ("⌁", theme.info, format!("shell (exited {code}) · press ^D to close")),
+        Status::Broken => ("!", theme.warn, "broken".into()),
+    };
+
+    let mut left: Vec<Span> = vec![
+        bar,
+        Span::raw(" "),
+        Span::styled(
+            meta.recipe_name.clone(),
+            Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
+        ),
+        Span::raw("  "),
+        Span::styled(glyph, Style::default().fg(glyph_color)),
+        Span::raw(" "),
+        Span::styled(label, Style::default().fg(theme.dim)),
+    ];
+
+    let pid_text = meta.pid.map(|p| format!("pid {p} · logs ↗")).unwrap_or_else(|| "logs ↗".into());
+    let right = Span::styled(pid_text, Style::default().fg(theme.dim));
+    let used: usize = left.iter().map(|s| s.content.chars().count()).sum::<usize>()
+        + right.content.chars().count();
+    if (used as u16) < area.width {
+        left.push(Span::raw(" ".repeat(area.width as usize - used)));
+    }
+    left.push(right);
+
+    f.render_widget(Paragraph::new(Line::from(left)), area);
+}
+
+fn fmt_elapsed(d: std::time::Duration) -> String {
+    let secs = d.as_secs();
+    if secs < 60 { format!("{secs}s") }
+    else if secs < 3600 { format!("{}m", secs / 60) }
+    else { format!("{}h", secs / 3600) }
+}
