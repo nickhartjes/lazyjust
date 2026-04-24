@@ -1,4 +1,4 @@
-use crate::app::types::Mode;
+use crate::app::types::{Focus, Mode};
 use crate::app::App;
 use ratatui::layout::{Alignment, Constraint, Direction, Layout, Rect};
 use ratatui::style::Style;
@@ -32,6 +32,13 @@ fn hint_for<'a>(mode: &'a Mode, app: &'a App, theme: &crate::theme::Theme) -> Li
     let k = |s: &str| Span::styled(s.to_string(), Style::default().fg(theme.fg));
     let d = |s: &str| Span::styled(s.to_string(), Style::default().fg(theme.dim));
     match mode {
+        Mode::Normal if matches!(app.focus, Focus::Session) => Line::from(vec![
+            k("PgUp/PgDn"), Span::raw(" "), d("scroll"), sep.clone(),
+            k("F12"), Span::raw(" "), d("list"), sep.clone(),
+            k("K"), Span::raw(" "), d("kill"), sep.clone(),
+            k("x"), Span::raw(" "), d("close"), sep,
+            k("?"), Span::raw(" "), d("help"),
+        ]),
         Mode::Normal => Line::from(vec![
             k("⏎"), Span::raw(" "), d("run"), sep.clone(),
             k("/"), Span::raw(" "), d("filter"), sep.clone(),

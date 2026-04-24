@@ -15,10 +15,14 @@ pub fn render(
 ) {
     let rows = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Length(1), Constraint::Min(1)])
+        .constraints([
+            Constraint::Length(1),
+            Constraint::Length(1),
+            Constraint::Min(1),
+        ])
         .split(area);
     let header_area = rows[0];
-    let body_area = rows[1];
+    let body_area = rows[2];
 
     crate::ui::session_header::render(f, header_area, meta, active, theme);
 

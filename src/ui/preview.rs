@@ -1,5 +1,4 @@
 use crate::app::App;
-use crate::ui::focus::{focus_bar, is_right_active};
 use ratatui::layout::Rect;
 use ratatui::style::{Modifier, Style};
 use ratatui::text::{Line, Span};
@@ -7,22 +6,16 @@ use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
-    let active = is_right_active(app.focus);
     let Some(r) = app.recipe_at_cursor() else {
-        let line = Line::from(focus_bar(active, theme));
-        f.render_widget(Paragraph::new(line), area);
+        f.render_widget(Paragraph::new(""), area);
         return;
     };
 
     let mut lines: Vec<Line> = Vec::new();
-    lines.push(Line::from(vec![
-        focus_bar(active, theme),
-        Span::raw(" "),
-        Span::styled(
-            r.name.clone(),
-            Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
-        ),
-    ]));
+    lines.push(Line::from(Span::styled(
+        r.name.clone(),
+        Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
+    )));
     if let Some(doc) = &r.doc {
         lines.push(Line::from(Span::styled(
             format!("  {doc}"),

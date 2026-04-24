@@ -3,10 +3,10 @@ source: tests/snapshots.rs
 expression: "render_to_string(&app, 80, 24)"
 ---
 ▌ lazyjust  · ./justfile  · 2 recipes                                           
-  CI ───────────────────────  build                                             
-   b╭ help ────────────────────────────────────────────────────────────────╮    
-   ○│▸ List focus                                                          │    
-    │    j / k, ↓ / ↑          move cursor within recipes list             │    
+                                                                                
+ CI ╭ help ────────────────────────────────────────────────────────────────╮    
+▶  b│▸ List focus                                                          │    
+   ○│    j / k, ↓ / ↑          move cursor within recipes list             │    
     │    h / l, ← / →          cycle through the recipe's previous run     │    
     │sessions                                                              │    
     │    Enter                 run recipe — if a session is already running│    
@@ -57,37 +57,8 @@ Esc / q close
 (34,0) "p" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (35,0) "e" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (36,0) "s" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(2,1) "C" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
-(3,1) "I" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
-(5,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(6,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(7,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(8,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(9,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(10,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(11,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(12,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(13,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(14,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(15,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(16,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(17,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(18,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(19,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(20,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(21,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(22,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(23,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(24,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(25,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(26,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(27,1) "─" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(30,1) "b" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(31,1) "u" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(32,1) "i" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(33,1) "l" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(34,1) "d" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
-(3,2) "b" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(1,2) "C" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(2,2) "I" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (4,2) "╭" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (6,2) "h" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
 (7,2) "e" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=BOLD
@@ -158,7 +129,8 @@ Esc / q close
 (73,2) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (74,2) "─" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (75,2) "╮" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
-(3,3) "○" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
+(0,3) "▶" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
+(3,3) "b" fg=Rgb(255, 255, 255) bg=Rgb(40, 52, 87) mod=BOLD
 (4,3) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (5,3) "▸" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (7,3) "L" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=BOLD
@@ -171,6 +143,7 @@ Esc / q close
 (15,3) "u" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=BOLD
 (16,3) "s" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=BOLD
 (75,3) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
+(3,4) "○" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (4,4) "│" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (9,4) "j" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
 (11,4) "/" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE

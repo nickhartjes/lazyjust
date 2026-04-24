@@ -9,10 +9,9 @@ pub fn render(
     f: &mut Frame,
     area: Rect,
     meta: &SessionMeta,
-    active: bool,
+    _active: bool,
     theme: &crate::theme::Theme,
 ) {
-    let bar = crate::ui::focus::focus_bar(active, theme);
     let elapsed = fmt_elapsed(meta.started_at.elapsed());
     let (glyph, glyph_color, label) = match meta.status {
         Status::Running => ("●", theme.running, format!("running · {elapsed}")),
@@ -23,8 +22,6 @@ pub fn render(
     };
 
     let mut left: Vec<Span> = vec![
-        bar,
-        Span::raw(" "),
         Span::styled(
             meta.recipe_name.clone(),
             Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),

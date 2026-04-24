@@ -57,18 +57,32 @@ pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
     let list_active = focus::is_list_active(app.focus);
     let right_active = focus::is_right_active(app.focus);
     top_bar::render(f, panes.top_bar, app, &app.theme);
-    list::render(f, panes.list, app, &app.theme);
-    focus::paint_focus_bar(f, panes.list, list_active, &app.theme);
+
+    let list_strip = ratatui::layout::Rect { height: 1, ..panes.list };
+    let list_body = ratatui::layout::Rect {
+        y: panes.list.y + 1,
+        height: panes.list.height.saturating_sub(1),
+        ..panes.list
+    };
+    list::render(f, list_body, app, &app.theme);
+    focus::paint_focus_bar(f, list_strip, list_active, &app.theme);
+
+    let right_strip = ratatui::layout::Rect { height: 1, ..panes.right };
+    let right_body = ratatui::layout::Rect {
+        y: panes.right.y + 1,
+        height: panes.right.height.saturating_sub(1),
+        ..panes.right
+    };
     if let Some(id) = app.active_session {
         if let (Some(screen), Some(meta)) = (screens.get(&id), app.session(id)) {
-            session_pane::render(f, panes.right, screen, meta, right_active, &app.theme);
+            session_pane::render(f, right_body, screen, meta, right_active, &app.theme);
         } else {
-            preview::render(f, panes.right, app, &app.theme);
+            preview::render(f, right_body, app, &app.theme);
         }
     } else {
-        preview::render(f, panes.right, app, &app.theme);
+        preview::render(f, right_body, app, &app.theme);
     }
-    focus::paint_focus_bar(f, panes.right, right_active, &app.theme);
+    focus::paint_focus_bar(f, right_strip, right_active, &app.theme);
     status_bar::render(f, panes.status, app, &app.theme);
     modal::render(f, app, &app.theme);
     if matches!(&app.mode, crate::app::types::Mode::ThemePicker { .. }) {

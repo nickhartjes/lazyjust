@@ -1,6 +1,6 @@
 use crate::app::types::{Recipe, Status};
 use crate::app::App;
-use crate::ui::focus::{focus_bar, is_list_active};
+use crate::ui::focus::is_list_active;
 use crate::ui::icon_style::IconStyle;
 use ratatui::layout::Rect;
 use ratatui::style::{Modifier, Style};
@@ -9,9 +9,9 @@ use ratatui::widgets::Paragraph;
 use ratatui::Frame;
 
 pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
-    let active = is_list_active(app.focus);
+    let _ = is_list_active(app.focus);
     let Some(jf) = app.active_justfile() else {
-        f.render_widget(Paragraph::new(Line::from(focus_bar(active, theme))), area);
+        f.render_widget(Paragraph::new(""), area);
         return;
     };
 
@@ -23,13 +23,11 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
         theme,
         app.icon_style,
         &glyphs,
-        active,
         area.width,
     );
     f.render_widget(Paragraph::new(lines), area);
 }
 
-#[allow(clippy::too_many_arguments)]
 fn build_lines<'a>(
     recipes: &'a [Recipe],
     filter: &str,
@@ -37,7 +35,6 @@ fn build_lines<'a>(
     theme: &crate::theme::Theme,
     style: IconStyle,
     g: &crate::ui::icon_style::Glyphs,
-    active: bool,
     width: u16,
 ) -> Vec<Line<'a>> {
     let names: Vec<&str> = recipes.iter().map(|r| r.name.as_str()).collect();
@@ -45,7 +42,6 @@ fn build_lines<'a>(
 
     let mut out: Vec<Line> = Vec::new();
     let mut current_group: Option<&str> = None;
-    let mut section_count = 0usize;
     let selected = app.list_cursor.min(scored.len().saturating_sub(1));
 
     for (displayed_idx, (idx, _score)) in scored.iter().enumerate() {
@@ -53,8 +49,7 @@ fn build_lines<'a>(
         let group_name = r.group.as_deref();
         if group_name != current_group {
             let label = group_name.unwrap_or("RECIPES").to_ascii_uppercase();
-            out.push(section_header(&label, theme, width, active, section_count == 0));
-            section_count += 1;
+            out.push(section_header(&label, theme, width));
             current_group = group_name;
         }
         let is_cursor = displayed_idx == selected;
@@ -63,14 +58,11 @@ fn build_lines<'a>(
     out
 }
 
-fn section_header<'a>(label: &str, theme: &crate::theme::Theme, width: u16, active: bool, first: bool) -> Line<'a> {
-    let bar = crate::ui::focus::focus_bar(active && first, theme);
+fn section_header<'a>(label: &str, theme: &crate::theme::Theme, width: u16) -> Line<'a> {
     let title = format!(" {label} ");
-    let used = 1 + title.chars().count() as u16;
-    let rule_len = width.saturating_sub(used);
+    let rule_len = width.saturating_sub(title.chars().count() as u16);
     let rule: String = "─".repeat(rule_len as usize);
     Line::from(vec![
-        bar,
         Span::styled(title, Style::default().fg(theme.accent)),
         Span::styled(rule, Style::default().fg(theme.dim)),
     ])
