@@ -16,10 +16,10 @@ pub struct Recipe {
     pub module_path: Vec<String>, // e.g. ["api"] for modded recipes
     pub group: Option<String>,
     pub params: Vec<Param>,
+    pub dependencies: Vec<String>,
     pub doc: Option<String>,
     pub command_preview: String,
     pub runs: Vec<SessionId>,
-    pub dependencies: Vec<String>,
 }
 
 impl Recipe {
