@@ -16,6 +16,11 @@ use config::Config;
 
 pub fn run() -> anyhow::Result<()> {
     let cli = Cli::parse();
+
+    if let Some(cmd) = cli.command.as_ref() {
+        return handle_subcommand(cmd);
+    }
+
     let cfg = Config::load();
     let _log_guard = logging::init(&cfg, &cli.log_level)?;
 
@@ -23,6 +28,32 @@ pub fn run() -> anyhow::Result<()> {
         .enable_all()
         .build()?;
     rt.block_on(async move { async_main(cli, cfg).await })
+}
+
+fn handle_subcommand(cmd: &cli::Commands) -> anyhow::Result<()> {
+    match cmd {
+        cli::Commands::Config { action } => match action {
+            cli::ConfigAction::Path => {
+                println!("{}", config::paths::config_file_path().display());
+                Ok(())
+            }
+            cli::ConfigAction::Init => {
+                let path = config::paths::config_file_path();
+                if path.exists() {
+                    anyhow::bail!(
+                        "config file already exists at {}; refusing to overwrite",
+                        path.display()
+                    );
+                }
+                if let Some(parent) = path.parent() {
+                    std::fs::create_dir_all(parent)?;
+                }
+                std::fs::write(&path, config::template::CONFIG_TEMPLATE)?;
+                println!("wrote {}", path.display());
+                Ok(())
+            }
+        },
+    }
 }
 
 async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
