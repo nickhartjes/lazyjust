@@ -15,6 +15,10 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
             format!("Param {}/{} = {}", cursor + 1, values.len().max(1), values.get(*cursor).cloned().unwrap_or_default())
         }
         Mode::ErrorsList => "Load errors — Esc / q / e to close".into(),
+        Mode::ThemePicker { highlighted, names, .. } => {
+            let name = names.get(*highlighted).map(|s| s.as_str()).unwrap_or("");
+            format!("Theme: {}   ↑↓ j/k move   Enter confirm   Esc cancel", name)
+        }
     };
     let msg = app
         .status_message

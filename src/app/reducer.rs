@@ -286,6 +286,56 @@ pub fn reduce(app: &mut App, action: Action) {
             }
         }
 
+        Action::OpenThemePicker => {
+            let names = crate::theme::registry::list();
+            let original_name = app.theme_name.clone();
+            let highlighted = names.iter().position(|n| *n == original_name).unwrap_or(0);
+            app.mode = Mode::ThemePicker {
+                original_name,
+                highlighted,
+                names,
+            };
+        }
+        Action::PickerMove(delta) => {
+            if let Mode::ThemePicker {
+                highlighted,
+                names,
+                ..
+            } = &mut app.mode
+            {
+                let len = names.len() as isize;
+                if len > 0 {
+                    let mut idx = *highlighted as isize + delta;
+                    idx = idx.rem_euclid(len);
+                    *highlighted = idx as usize;
+                    let stem = names[*highlighted].clone();
+                    app.theme = crate::theme::registry::resolve(&stem);
+                    app.theme_name = stem;
+                }
+            }
+        }
+        Action::PickerConfirm => {
+            if let Mode::ThemePicker { .. } = app.mode {
+                // T16 wires the toml_edit writer. For now, just close the modal —
+                // `app.theme_name` is already updated by PickerMove, so next startup
+                // would read the old value. We accept that gap; T16 closes it.
+                app.mode = Mode::Normal;
+            }
+        }
+        Action::PickerCancel => {
+            // Separate scope so we can re-borrow app immutably after restoring.
+            let original = if let Mode::ThemePicker { original_name, .. } = &app.mode {
+                Some(original_name.clone())
+            } else {
+                None
+            };
+            if let Some(original) = original {
+                app.theme = crate::theme::registry::resolve(&original);
+                app.theme_name = original;
+                app.mode = Mode::Normal;
+            }
+        }
+
         // Remaining actions handled in later tasks.
         _ => {}
     }

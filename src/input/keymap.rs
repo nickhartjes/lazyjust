@@ -17,6 +17,7 @@ pub fn handle_event(evt: &Event, mode: &Mode) -> Option<Action> {
         Mode::Dropdown { .. } => dropdown_mode(key),
         Mode::ParamInput { .. } => param_mode(key),
         Mode::ErrorsList => errors_mode(key),
+        Mode::ThemePicker { .. } => picker_mode(key),
     }
 }
 
@@ -102,6 +103,17 @@ fn dropdown_mode(k: &KeyEvent) -> Option<Action> {
         KeyCode::Up | KeyCode::Char('k') => Some(Action::DropdownCursorUp),
         KeyCode::Backspace => Some(Action::DropdownBackspace),
         KeyCode::Char(c) => Some(Action::DropdownChar(c)),
+        _ => None,
+    }
+}
+
+fn picker_mode(k: &KeyEvent) -> Option<Action> {
+    // Full bindings wired in T15.
+    match k.code {
+        KeyCode::Esc => Some(Action::PickerCancel),
+        KeyCode::Enter => Some(Action::PickerConfirm),
+        KeyCode::Down | KeyCode::Char('j') => Some(Action::PickerMove(1)),
+        KeyCode::Up | KeyCode::Char('k') => Some(Action::PickerMove(-1)),
         _ => None,
     }
 }

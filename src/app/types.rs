@@ -72,6 +72,11 @@ pub enum Mode {
         on_accept: ConfirmAction,
     },
     ErrorsList,
+    ThemePicker {
+        original_name: String,
+        highlighted: usize,
+        names: Vec<String>,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

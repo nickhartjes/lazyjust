@@ -21,6 +21,7 @@ pub fn active_section(app: &App) -> SectionId {
         Mode::ParamInput { .. } => SectionId::Param,
         Mode::Confirm { .. } => SectionId::Confirm,
         Mode::ErrorsList => SectionId::Errors,
+        Mode::ThemePicker { .. } => SectionId::ListFocus,
         Mode::Normal => match app.focus {
             Focus::Session => SectionId::SessionFocus,
             _ => SectionId::ListFocus,
