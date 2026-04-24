@@ -63,7 +63,10 @@ pub enum Mode {
         filter: String,
         cursor: usize,
     },
-    Help,
+    Help {
+        scroll: u16,
+        origin: crate::app::help_section::SectionId,
+    },
     Confirm {
         prompt: String,
         on_accept: ConfirmAction,

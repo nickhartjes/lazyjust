@@ -15,7 +15,7 @@ pub enum SectionId {
 
 pub fn active_section(app: &App) -> SectionId {
     match &app.mode {
-        Mode::Help => SectionId::HelpItself,
+        Mode::Help { .. } => SectionId::HelpItself,
         Mode::FilterInput => SectionId::Filter,
         Mode::Dropdown { .. } => SectionId::Dropdown,
         Mode::ParamInput { .. } => SectionId::Param,

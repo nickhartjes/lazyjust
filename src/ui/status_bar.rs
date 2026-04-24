@@ -8,7 +8,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App) {
     let text = match &app.mode {
         Mode::Normal => "↑↓ j/k move   / filter   Enter run   Shift+Enter/r new   K kill   x close   ? help   q quit".to_string(),
         Mode::FilterInput => format!("Filter: {}_   (Enter commit, Esc clear)", app.filter),
-        Mode::Help => "Help — Esc / q to close".into(),
+        Mode::Help { .. } => "Help — Esc / q to close".into(),
         Mode::Confirm { prompt, .. } => format!("{}  [y]es / [n]o", prompt),
         Mode::Dropdown { filter, .. } => format!("Justfile: {}_   (Enter pick, Esc cancel)", filter),
         Mode::ParamInput { values, cursor, .. } => {

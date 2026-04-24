@@ -75,7 +75,10 @@ pub fn reduce(app: &mut App, action: Action) {
             // handled by event loop — reducer leaves it as signal
         }
 
-        Action::OpenHelp => app.mode = Mode::Help,
+        Action::OpenHelp => {
+            let origin = crate::app::help_section::active_section(app);
+            app.mode = Mode::Help { scroll: 0, origin };
+        }
         Action::CloseHelp => app.mode = Mode::Normal,
 
         Action::OpenErrors => app.mode = Mode::ErrorsList,

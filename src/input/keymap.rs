@@ -12,7 +12,7 @@ pub fn handle_event(evt: &Event, mode: &Mode) -> Option<Action> {
     match mode {
         Mode::Normal => normal_mode(key),
         Mode::FilterInput => filter_mode(key),
-        Mode::Help => help_mode(key),
+        Mode::Help { .. } => help_mode(key),
         Mode::Confirm { .. } => confirm_mode(key),
         Mode::Dropdown { .. } => dropdown_mode(key),
         Mode::ParamInput { .. } => param_mode(key),
