@@ -33,9 +33,16 @@ fn config_root() -> PathBuf {
 mod tests {
     use super::*;
     use std::env;
+    use std::sync::{Mutex, OnceLock};
+
+    fn env_lock() -> &'static Mutex<()> {
+        static M: OnceLock<Mutex<()>> = OnceLock::new();
+        M.get_or_init(|| Mutex::new(()))
+    }
 
     #[test]
     fn env_override_wins() {
+        let _g = env_lock().lock().unwrap_or_else(|e| e.into_inner());
         let tmp = tempfile::tempdir().unwrap();
         env::set_var(OVERRIDE_ENV, tmp.path());
         assert_eq!(config_file_path(), tmp.path().join("config.toml"));
@@ -45,16 +52,21 @@ mod tests {
 
     #[test]
     fn falls_back_when_dirs_unavailable() {
-        // dirs::config_dir() returns Some on every supported platform in CI,
-        // so this test just exercises the default path ending in "lazyjust".
+        let _g = env_lock().lock().unwrap_or_else(|e| e.into_inner());
         env::remove_var(OVERRIDE_ENV);
+        let prev_xdg = env::var("XDG_CONFIG_HOME").ok();
+        env::remove_var("XDG_CONFIG_HOME");
         let p = config_file_path();
         assert_eq!(p.file_name().unwrap(), "config.toml");
         assert_eq!(p.parent().unwrap().file_name().unwrap(), "lazyjust");
+        if let Some(v) = prev_xdg {
+            env::set_var("XDG_CONFIG_HOME", v);
+        }
     }
 
     #[test]
     fn xdg_config_home_wins_over_platform_default() {
+        let _g = env_lock().lock().unwrap_or_else(|e| e.into_inner());
         env::remove_var(OVERRIDE_ENV);
         let tmp = tempfile::tempdir().unwrap();
         let prev = env::var("XDG_CONFIG_HOME").ok();

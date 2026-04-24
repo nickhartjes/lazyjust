@@ -1,14 +1,20 @@
+#[cfg(unix)]
 use super::pty::{spawn, SpawnedPty};
+#[cfg(unix)]
 use super::reader::spawn_reader;
+#[cfg(unix)]
 use super::wrapper::build_unix_command;
 use crate::app::action::AppEvent;
-use crate::app::types::{SessionId, SessionMeta, Status};
+#[cfg(unix)]
+use crate::app::types::Status;
+use crate::app::types::{SessionId, SessionMeta};
 use crate::error::Result;
 use portable_pty::MasterPty;
 use std::collections::HashMap;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
+#[cfg(unix)]
 use std::time::Instant;
 use tokio::sync::mpsc::Sender;
 
@@ -48,10 +54,10 @@ impl SessionManager {
             let _ = (
                 id, justfile, recipe, args, cwd, rows, cols, log_path, tx, log_cap,
             );
-            return Err(crate::error::Error::PtySpawn(
+            Err(crate::error::Error::PtySpawn(
                 "lazyjust: Windows support not yet implemented (tracked as a separate sub-project)"
                     .into(),
-            ));
+            ))
         }
 
         #[cfg(unix)]
