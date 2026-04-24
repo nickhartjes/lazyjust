@@ -46,15 +46,91 @@ jobs:
   homebrew:
     needs: upload-assets
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.ref_name }}
+      REPO: nickhartjes/lazyjust
+      TAP: nickhartjes/homebrew-tap
     steps:
-      - uses: mislav/bump-homebrew-formula-action@v3
+      - name: Checkout tap
+        uses: actions/checkout@v4
         with:
-          formula-name: lazyjust
-          homebrew-tap: nickhartjes/homebrew-tap
-          download-url: https://github.com/nickhartjes/lazyjust/releases/download/${{ github.ref_name }}/lazyjust-${{ github.ref_name }}-x86_64-apple-darwin.tar.gz
-          commit-message: |
-            {{formulaName}} {{version}}
+          repository: ${{ env.TAP }}
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          path: tap
 
-            Created by https://github.com/mislav/bump-homebrew-formula-action
-        env:
-          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      - name: Render formula
+        run: |
+          set -euo pipefail
+          VERSION="${TAG#v}"
+          BASE="https://github.com/${REPO}/releases/download/${TAG}"
+
+          declare -A TARGETS=(
+            [darwin_intel]=x86_64-apple-darwin
+            [darwin_arm]=aarch64-apple-darwin
+            [linux_intel]=x86_64-unknown-linux-gnu
+            [linux_arm]=aarch64-unknown-linux-gnu
+          )
+
+          declare -A SHA
+          for key in "${!TARGETS[@]}"; do
+            target="${TARGETS[$key]}"
+            archive="lazyjust-${TAG}-${target}.tar.gz"
+            SHA[$key]=$(curl -fsSL "${BASE}/${archive}.sha256" | awk '{print $1}')
+            echo "${key} ${target} ${SHA[$key]}"
+          done
+
+          cat > tap/Formula/lazyjust.rb <<EOF
+          # typed: false
+          # frozen_string_literal: true
+
+          class Lazyjust < Formula
+            desc "Lazy TUI for just — browse, search, and run recipes without memorizing commands"
+            homepage "https://github.com/${REPO}"
+            version "${VERSION}"
+            license "MIT"
+
+            on_macos do
+              on_intel do
+                url "${BASE}/lazyjust-${TAG}-${TARGETS[darwin_intel]}.tar.gz"
+                sha256 "${SHA[darwin_intel]}"
+              end
+              on_arm do
+                url "${BASE}/lazyjust-${TAG}-${TARGETS[darwin_arm]}.tar.gz"
+                sha256 "${SHA[darwin_arm]}"
+              end
+            end
+
+            on_linux do
+              on_intel do
+                url "${BASE}/lazyjust-${TAG}-${TARGETS[linux_intel]}.tar.gz"
+                sha256 "${SHA[linux_intel]}"
+              end
+              on_arm do
+                url "${BASE}/lazyjust-${TAG}-${TARGETS[linux_arm]}.tar.gz"
+                sha256 "${SHA[linux_arm]}"
+              end
+            end
+
+            def install
+              bin.install "lazyjust"
+            end
+
+            test do
+              assert_match version.to_s, shell_output("#{bin}/lazyjust --version")
+            end
+          end
+          EOF
+
+      - name: Commit and push
+        working-directory: tap
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/lazyjust.rb
+          if git diff --cached --quiet; then
+            echo "No formula changes"
+            exit 0
+          fi
+          git commit -m "lazyjust ${TAG#v}"
+          git push
