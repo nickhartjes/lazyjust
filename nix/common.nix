@@ -7,7 +7,6 @@
 , libxkbcommon
 , xorg
 , wayland
-, darwin
 }:
 
 let
@@ -19,18 +18,13 @@ let
 
     nativeBuildInputs = [ pkg-config makeWrapper ];
 
-    buildInputs =
-      lib.optionals stdenv.isLinux [
-        libxcb
-        libxkbcommon
-        wayland
-        xorg.libX11
-        xorg.libXcursor
-      ]
-      ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
-        AppKit
-        Cocoa
-      ]);
+    buildInputs = lib.optionals stdenv.isLinux [
+      libxcb
+      libxkbcommon
+      wayland
+      xorg.libX11
+      xorg.libXcursor
+    ];
   };
 
   cargoArtifacts = craneLib.buildDepsOnly commonArgs;
