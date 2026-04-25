@@ -35,5 +35,17 @@
         apps.default      = flake-utils.lib.mkApp { drv = package; };
         devShells.default = devShell;
         checks            = checks // { inherit package; };
-      });
+      })
+    // {
+      overlays.default = final: prev:
+        let
+          craneLib = (crane.mkLib final).overrideToolchain
+            final.rust-bin.stable."1.78.0".default;
+          common = final.callPackage ./nix/common.nix { inherit craneLib; };
+        in {
+          lazyjust = final.callPackage ./nix/package.nix {
+            inherit craneLib common;
+          };
+        };
+    };
 }
