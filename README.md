@@ -39,6 +39,54 @@ brew install nickhartjes/tap/lazyjust
 
 Grab a tarball for your platform from [Releases](https://github.com/nickhartjes/lazyjust/releases). Checksums (`.sha256`) ship alongside every archive.
 
+### NixOS / Nix
+
+Requires Nix with flakes enabled.
+
+Run without installing:
+
+```sh
+nix run github:nickhartjes/lazyjust
+```
+
+Install to your user profile:
+
+```sh
+nix profile install github:nickhartjes/lazyjust
+```
+
+Use as a flake input on NixOS / home-manager. The overlay relies on `rust-overlay` for the pinned Rust toolchain, so apply both overlays in order:
+
+```nix
+# flake.nix
+{
+  inputs = {
+    lazyjust.url = "github:nickhartjes/lazyjust";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+  };
+
+  outputs = { self, nixpkgs, lazyjust, rust-overlay, ... }: {
+    # ...
+  };
+}
+
+# configuration.nix or home.nix
+{ pkgs, inputs, ... }:
+{
+  nixpkgs.overlays = [
+    (import inputs.rust-overlay)
+    inputs.lazyjust.overlays.default
+  ];
+  environment.systemPackages = [ pkgs.lazyjust ];
+}
+```
+
+Enter a development shell with the pinned Rust toolchain and project tooling:
+
+```sh
+nix develop
+```
+
 ### Cargo
 
 ```bash
