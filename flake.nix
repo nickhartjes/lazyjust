@@ -30,5 +30,6 @@
       in {
         packages.default  = package;
         packages.lazyjust = package;
+        apps.default      = flake-utils.lib.mkApp { drv = package; };
       });
 }
