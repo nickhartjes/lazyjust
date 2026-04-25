@@ -19,7 +19,7 @@
           overlays = [ (import rust-overlay) ];
         };
 
-        rustToolchain = pkgs.rust-bin.stable."1.78.0".default.override {
+        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
           extensions = [ "rust-src" "clippy" "rustfmt" ];
         };
 
@@ -40,7 +40,7 @@
       overlays.default = final: prev:
         let
           craneLib = (crane.mkLib final).overrideToolchain
-            final.rust-bin.stable."1.78.0".default;
+            final.rust-bin.stable.latest.default;
           common = final.callPackage ./nix/common.nix { inherit craneLib; };
         in {
           lazyjust = final.callPackage ./nix/package.nix {

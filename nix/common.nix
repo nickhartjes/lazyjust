@@ -5,7 +5,8 @@
 , makeWrapper
 , libxcb
 , libxkbcommon
-, xorg
+, libx11
+, libxcursor
 , wayland
 }:
 
@@ -22,8 +23,8 @@ let
       libxcb
       libxkbcommon
       wayland
-      xorg.libX11
-      xorg.libXcursor
+      libx11
+      libxcursor
     ];
   };
 

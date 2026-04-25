@@ -7,7 +7,7 @@
 , pkg-config
 , libxcb
 , libxkbcommon
-, xorg
+, libx11
 , wayland
 , rustToolchain
 }:
@@ -23,7 +23,7 @@ mkShell {
     libxcb
     libxkbcommon
     wayland
-    xorg.libX11
+    libx11
   ];
 
   RUST_SRC_PATH = "${rustToolchain}/lib/rustlib/src/rust/library";
