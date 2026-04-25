@@ -27,9 +27,11 @@
 
         common  = pkgs.callPackage ./nix/common.nix  { inherit craneLib; };
         package = pkgs.callPackage ./nix/package.nix { inherit craneLib common; };
+        checks  = import ./nix/checks.nix             { inherit craneLib common; };
       in {
         packages.default  = package;
         packages.lazyjust = package;
         apps.default      = flake-utils.lib.mkApp { drv = package; };
+        checks            = checks // { inherit package; };
       });
 }
