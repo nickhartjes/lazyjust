@@ -25,13 +25,15 @@
 
         craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
-        common  = pkgs.callPackage ./nix/common.nix  { inherit craneLib; };
-        package = pkgs.callPackage ./nix/package.nix { inherit craneLib common; };
-        checks  = import ./nix/checks.nix             { inherit craneLib common; };
+        common   = pkgs.callPackage ./nix/common.nix   { inherit craneLib; };
+        package  = pkgs.callPackage ./nix/package.nix  { inherit craneLib common; };
+        checks   = import ./nix/checks.nix             { inherit craneLib common; };
+        devShell = pkgs.callPackage ./nix/devshell.nix { inherit rustToolchain; };
       in {
         packages.default  = package;
         packages.lazyjust = package;
         apps.default      = flake-utils.lib.mkApp { drv = package; };
+        devShells.default = devShell;
         checks            = checks // { inherit package; };
       });
 }
