@@ -12,7 +12,15 @@
 }:
 
 let
-  src = craneLib.cleanCargoSource ../.;
+  # cleanCargoSource only keeps Rust-recognized files; the integration
+  # tests under tests/fixtures/ need their justfiles + .gitignore at
+  # build time, so we widen the filter to include anything under tests/.
+  src = lib.cleanSourceWith {
+    src = ../.;
+    filter = path: type:
+      (craneLib.filterCargoSources path type)
+      || (builtins.match ".*/tests/.*" path != null);
+  };
 
   commonArgs = {
     inherit src;
