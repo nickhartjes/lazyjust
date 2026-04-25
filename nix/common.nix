@@ -1,6 +1,7 @@
 { lib
 , stdenv
 , craneLib
+, just
 , pkg-config
 , makeWrapper
 , libxcb
@@ -17,7 +18,7 @@ let
     inherit src;
     strictDeps = true;
 
-    nativeBuildInputs = [ pkg-config makeWrapper ];
+    nativeBuildInputs = [ pkg-config makeWrapper just ];
 
     buildInputs = lib.optionals stdenv.isLinux [
       libxcb
