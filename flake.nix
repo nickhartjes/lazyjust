@@ -11,5 +11,24 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, crane, rust-overlay }: { };
+  outputs = { self, nixpkgs, flake-utils, crane, rust-overlay }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import rust-overlay) ];
+        };
+
+        rustToolchain = pkgs.rust-bin.stable."1.78.0".default.override {
+          extensions = [ "rust-src" "clippy" "rustfmt" ];
+        };
+
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
+
+        common  = pkgs.callPackage ./nix/common.nix  { inherit craneLib; };
+        package = pkgs.callPackage ./nix/package.nix { inherit craneLib common; };
+      in {
+        packages.default  = package;
+        packages.lazyjust = package;
+      });
 }
