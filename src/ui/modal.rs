@@ -9,14 +9,14 @@ pub fn render(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
     match &app.mode {
         Mode::Dropdown { filter, cursor } => render_dropdown(f, app, filter, *cursor, theme),
         Mode::Help { .. } => {
-            let h = f.size().height.saturating_sub(4).min(30);
-            let area = crate::ui::modal_base::centered(f.size(), 72, h);
+            let h = f.area().height.saturating_sub(4).min(30);
+            let area = crate::ui::modal_base::centered(f.area(), 72, h);
             crate::ui::modal_base::clear(f, area);
             super::help::render(f, app, area, theme);
         }
         Mode::Confirm { prompt, .. } => render_confirm(f, prompt, theme),
         Mode::ParamInput { .. } => {
-            let area = crate::ui::modal_base::centered(f.size(), 60, 12);
+            let area = crate::ui::modal_base::centered(f.area(), 60, 12);
             super::param_modal::render(f, app, area, theme);
         }
         Mode::ErrorsList => render_errors(f, app, theme),
@@ -31,7 +31,7 @@ fn render_dropdown(
     cursor: usize,
     theme: &crate::theme::Theme,
 ) {
-    let area = crate::ui::modal_base::centered(f.size(), 60, 14);
+    let area = crate::ui::modal_base::centered(f.area(), 60, 14);
     crate::ui::modal_base::clear(f, area);
     let indices = crate::app::reducer::filtered_justfile_indices(app, filter);
     let items: Vec<ListItem> = indices
@@ -53,7 +53,7 @@ fn render_dropdown(
 }
 
 fn render_confirm(f: &mut Frame, prompt: &str, theme: &crate::theme::Theme) {
-    let area = crate::ui::modal_base::centered(f.size(), 52, 7);
+    let area = crate::ui::modal_base::centered(f.area(), 52, 7);
     crate::ui::modal_base::clear(f, area);
     let p = Paragraph::new(format!("{prompt}\n\n[y]es     [n]o"))
         .block(crate::ui::modal_base::block("confirm", theme));
@@ -63,7 +63,7 @@ fn render_confirm(f: &mut Frame, prompt: &str, theme: &crate::theme::Theme) {
 fn render_errors(f: &mut Frame, app: &App, theme: &crate::theme::Theme) {
     use ratatui::text::Span;
     use ratatui::widgets::Wrap;
-    let area = crate::ui::modal_base::centered(f.size(), 80, 20);
+    let area = crate::ui::modal_base::centered(f.area(), 80, 20);
     crate::ui::modal_base::clear(f, area);
     let mut lines: Vec<Line> = Vec::new();
     lines.push(Line::from(format!(

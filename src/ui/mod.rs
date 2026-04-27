@@ -20,7 +20,7 @@ use ratatui::Frame;
 pub type SessionScreens = std::collections::HashMap<crate::app::types::SessionId, vt100::Parser>;
 
 pub fn render(f: &mut Frame, app: &App, screens: &SessionScreens) {
-    let size = f.size();
+    let size = f.area();
     let cfg_cols: u16 = 40;
     let cfg_rows: u16 = 10;
     if size.width < cfg_cols || size.height < cfg_rows {
