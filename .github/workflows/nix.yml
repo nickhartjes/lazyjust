@@ -1,0 +1,23 @@
+name: Nix
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  flake-check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: flake check
+        run: nix flake check --print-build-logs --accept-flake-config
+      - name: build package
+        run: nix build .#lazyjust --print-build-logs --accept-flake-config
+      - name: smoke test
+        run: ./result/bin/lazyjust --version

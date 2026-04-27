@@ -4,3 +4,7 @@ Cargo.lock.bak
 .worktrees/
 .DS_Store
 *.swp
+
+# Nix build outputs
+result
+result-*
