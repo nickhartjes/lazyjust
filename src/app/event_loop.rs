@@ -75,7 +75,7 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                 if let Ok(evt) = ct {
                     if let crossterm::event::Event::Resize(_, _) = evt {
                         let size = terminal.size()?;
-                        let panes = crate::ui::layout::compute(size, &app);
+                        let panes = crate::ui::layout::compute(size.into(), &app);
                         // right pane body = pane.height - borders (2) - session header (1) - spacer (1)
                         // right pane cols  = pane.width  - borders (2) - scroll thumb (1)
                         let pane_rows = panes.right.height.saturating_sub(4);

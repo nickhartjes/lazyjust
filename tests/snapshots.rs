@@ -191,7 +191,7 @@ fn buffer_to_string(buf: &ratatui::buffer::Buffer) -> String {
     let mut styled = String::new();
     for y in 0..area.height {
         for x in 0..area.width {
-            let cell = buf.get(x, y);
+            let cell = &buf[(x, y)];
             symbols.push_str(cell.symbol());
             let sym = cell.symbol();
             let is_ws = sym.chars().all(char::is_whitespace);
