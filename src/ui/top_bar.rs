@@ -25,10 +25,9 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
         ),
         Span::styled("  · ", Style::default().fg(theme.dim)),
     ];
-    let recipes_text = format!("{count} recipes");
     let trailing: Vec<Span> = vec![
         Span::styled("  · ", Style::default().fg(theme.dim)),
-        Span::styled(recipes_text.clone(), Style::default().fg(theme.dim)),
+        Span::styled(format!("{count} recipes"), Style::default().fg(theme.dim)),
     ];
     let errors_span: Option<Span> = (!app.startup_errors.is_empty()).then(|| {
         Span::styled(
