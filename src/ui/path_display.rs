@@ -130,13 +130,19 @@ mod tests {
     #[test]
     fn middle_truncates_long_absolute_path() {
         std::env::set_var("HOME", "/Users/nick");
-        let p =
-            PathBuf::from("/Users/nick/projects/entrnce/trader/services/api/justfile");
+        let p = PathBuf::from("/Users/nick/projects/entrnce/trader/services/api/justfile");
         let out = shorten(&p, 28);
         assert!(out.starts_with("~/"), "expected leading ~/, got {out:?}");
         assert!(out.contains('…'), "expected ellipsis, got {out:?}");
-        assert!(out.ends_with("/justfile"), "expected /justfile tail, got {out:?}");
-        assert!(out.chars().count() <= 28, "expected ≤28 cols, got {} ({out:?})", out.chars().count());
+        assert!(
+            out.ends_with("/justfile"),
+            "expected /justfile tail, got {out:?}"
+        );
+        assert!(
+            out.chars().count() <= 28,
+            "expected ≤28 cols, got {} ({out:?})",
+            out.chars().count()
+        );
     }
 
     #[test]
@@ -144,9 +150,19 @@ mod tests {
         std::env::remove_var("HOME");
         let p = PathBuf::from("/var/very/deeply/nested/repo/sub/dir/justfile");
         let out = shorten(&p, 24);
-        assert!(out.starts_with("/…/"), "expected /…/ root anchor, got {out:?}");
-        assert!(out.ends_with("/justfile"), "expected /justfile tail, got {out:?}");
-        assert!(out.chars().count() <= 24, "got {} ({out:?})", out.chars().count());
+        assert!(
+            out.starts_with("/…/"),
+            "expected /…/ root anchor, got {out:?}"
+        );
+        assert!(
+            out.ends_with("/justfile"),
+            "expected /justfile tail, got {out:?}"
+        );
+        assert!(
+            out.chars().count() <= 24,
+            "got {} ({out:?})",
+            out.chars().count()
+        );
     }
 
     #[test]
@@ -172,6 +188,10 @@ mod tests {
         assert!(out.starts_with("a/"), "got {out:?}");
         assert!(out.contains('…'));
         assert!(out.ends_with("/justfile"));
-        assert!(out.chars().count() <= 14, "got {} ({out:?})", out.chars().count());
+        assert!(
+            out.chars().count() <= 14,
+            "got {} ({out:?})",
+            out.chars().count()
+        );
     }
 }
