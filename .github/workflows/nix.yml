@@ -21,9 +21,17 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+      - uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock', '**/*.nix', 'Cargo.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          gc-max-store-size-linux: 5G
+          gc-max-store-size-macos: 5G
+          purge: true
+          purge-prefixes: nix-${{ runner.os }}-
+          purge-created: 0
+          purge-primary-key: never
       - name: flake check
         run: nix flake check --print-build-logs --accept-flake-config
-      - name: build package
-        run: nix build .#lazyjust --print-build-logs --accept-flake-config
       - name: smoke test
-        run: ./result/bin/lazyjust --version
+        run: nix run . --accept-flake-config -- --version
