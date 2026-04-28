@@ -29,11 +29,19 @@ pub fn walk_justfiles(root: &Path) -> Result<Vec<PathBuf>> {
         }
         let name = entry.file_name().to_string_lossy();
         if is_justfile_name(&name) {
-            out.push(entry.into_path());
+            out.push(absolutize(entry.into_path()));
         }
     }
     out.sort();
     Ok(out)
+}
+
+/// Lexically absolutize a path so downstream consumers (e.g. `just --justfile`
+/// invoked from a PTY shell whose CWD differs from this process) resolve it
+/// against a fixed root, not whatever the caller's CWD happens to be. Falls
+/// back to the input path if absolutization fails.
+pub(crate) fn absolutize(path: PathBuf) -> PathBuf {
+    std::path::absolute(&path).unwrap_or(path)
 }
 
 fn is_justfile_name(name: &str) -> bool {

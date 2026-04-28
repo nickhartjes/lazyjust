@@ -13,8 +13,22 @@ pub struct DiscoveryResult {
 }
 
 pub fn discover(root: &Path) -> Result<DiscoveryResult> {
+    discover_inner(root, None)
+}
+
+/// Like `discover`, but pin the discovery to a single explicit justfile,
+/// bypassing the walk. The path is lexically absolutized so the spawned
+/// `just --justfile` resolves it from any PTY CWD.
+pub fn discover_explicit(justfile: &Path) -> Result<DiscoveryResult> {
+    discover_inner(Path::new(""), Some(justfile))
+}
+
+fn discover_inner(root: &Path, explicit: Option<&Path>) -> Result<DiscoveryResult> {
     ensure_just_on_path()?;
-    let paths = walk::walk_justfiles(root)?;
+    let paths = match explicit {
+        Some(p) => vec![walk::absolutize(p.to_path_buf())],
+        None => walk::walk_justfiles(root)?,
+    };
 
     let mut justfiles = Vec::new();
     let mut errors = Vec::new();
