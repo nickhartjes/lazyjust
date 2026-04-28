@@ -48,11 +48,41 @@ fn display_width(s: &str) -> usize {
 }
 
 fn middle_truncate(s: &str, max_width: usize) -> String {
-    // Implementation arrives in a later step. Returning `s` here would make
-    // the next test pass for the wrong reason, so return the minimal
-    // safe placeholder: the input itself is never wider than the input.
-    let _ = max_width;
-    s.to_string()
+    let segments: Vec<&str> = s.split('/').collect();
+
+    if segments.len() < 2 {
+        return s.to_string();
+    }
+
+    let root = segments[0];
+    let filename = segments[segments.len() - 1];
+    let middle: &[&str] = &segments[1..segments.len() - 1];
+
+    // No middle segments to drop — cannot shorten further.
+    if middle.is_empty() {
+        return s.to_string();
+    }
+
+    let minimum = format!("{root}/…/{filename}");
+
+    let mut kept_from_right: usize = 0;
+    let mut current = minimum.clone();
+    while kept_from_right < middle.len() {
+        let take = kept_from_right + 1;
+        let tail_segments = &middle[middle.len() - take..];
+        let candidate = format!("{root}/…/{}/{filename}", tail_segments.join("/"));
+        if display_width(&candidate) > max_width {
+            break;
+        }
+        current = candidate;
+        kept_from_right = take;
+    }
+
+    if kept_from_right == 0 {
+        return minimum;
+    }
+
+    current
 }
 
 #[cfg(test)]
@@ -85,5 +115,53 @@ mod tests {
         std::env::set_var("HOME", "/Users/nick");
         let p = PathBuf::from("/var/log/justfile");
         assert_eq!(shorten(&p, 80), "/var/log/justfile");
+    }
+
+    #[test]
+    fn middle_truncates_long_absolute_path() {
+        std::env::set_var("HOME", "/Users/nick");
+        let p =
+            PathBuf::from("/Users/nick/projects/entrnce/trader/services/api/justfile");
+        let out = shorten(&p, 28);
+        assert!(out.starts_with("~/"), "expected leading ~/, got {out:?}");
+        assert!(out.contains('…'), "expected ellipsis, got {out:?}");
+        assert!(out.ends_with("/justfile"), "expected /justfile tail, got {out:?}");
+        assert!(out.chars().count() <= 28, "expected ≤28 cols, got {} ({out:?})", out.chars().count());
+    }
+
+    #[test]
+    fn middle_truncates_non_home_path() {
+        std::env::remove_var("HOME");
+        let p = PathBuf::from("/var/very/deeply/nested/repo/sub/dir/justfile");
+        let out = shorten(&p, 24);
+        assert!(out.starts_with("/…/"), "expected /…/ root anchor, got {out:?}");
+        assert!(out.ends_with("/justfile"), "expected /justfile tail, got {out:?}");
+        assert!(out.chars().count() <= 24, "got {} ({out:?})", out.chars().count());
+    }
+
+    #[test]
+    fn very_tight_budget_returns_root_ellipsis_filename_even_if_over_budget() {
+        std::env::remove_var("HOME");
+        let p = PathBuf::from("/var/x/y/z/justfile");
+        let out = shorten(&p, 5);
+        assert_eq!(out, "/…/justfile");
+    }
+
+    #[test]
+    fn root_only_path_unchanged() {
+        std::env::remove_var("HOME");
+        let p = PathBuf::from("/justfile");
+        assert_eq!(shorten(&p, 5), "/justfile");
+    }
+
+    #[test]
+    fn relative_path_with_no_root_segment() {
+        std::env::remove_var("HOME");
+        let p = PathBuf::from("a/b/c/d/e/justfile");
+        let out = shorten(&p, 14);
+        assert!(out.starts_with("a/"), "got {out:?}");
+        assert!(out.contains('…'));
+        assert!(out.ends_with("/justfile"));
+        assert!(out.chars().count() <= 14, "got {} ({out:?})", out.chars().count());
     }
 }
