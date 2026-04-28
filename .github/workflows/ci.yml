@@ -16,8 +16,8 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: jdx/mise-action@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
         with:
           # Bumped from default mise-v1: the previous cache was warmed
           # before mise.toml declared the rustfmt/clippy components, so
@@ -25,7 +25,7 @@ jobs:
           cache_key_prefix: mise-v2
       - name: ensure rust components
         run: rustup component add rustfmt clippy
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2.9.1
         with:
           shared-key: ci-${{ matrix.os }}
       - name: fmt
