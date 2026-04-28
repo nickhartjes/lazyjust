@@ -104,7 +104,7 @@ jobs:
           declare -A SHA
           for key in "${!TARGETS[@]}"; do
             target="${TARGETS[$key]}"
-            SHA[$key]=$(curl -fsSL --proto-redir =https "${BASE}/lazyjust-${TAG}-${target}.sha256" | awk '{print $1}')
+            SHA[$key]=$(curl -fsSL --proto '=https' --proto-redir '=https' "${BASE}/lazyjust-${TAG}-${target}.sha256" | awk '{print $1}')
             echo "${key} ${target} ${SHA[$key]}"
           done
 
