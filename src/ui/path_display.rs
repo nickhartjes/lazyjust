@@ -87,6 +87,9 @@ fn middle_truncate(s: &str, max_width: usize) -> String {
 
 #[cfg(test)]
 mod tests {
+    // These tests mutate the process-wide HOME env var. The whole suite runs
+    // under `cargo test -- --test-threads=1`; if that ever changes, gate this
+    // module with a Mutex<()> like tests/config_loader.rs.
     use super::*;
     use std::path::PathBuf;
 
@@ -115,6 +118,13 @@ mod tests {
         std::env::set_var("HOME", "/Users/nick");
         let p = PathBuf::from("/var/log/justfile");
         assert_eq!(shorten(&p, 80), "/var/log/justfile");
+    }
+
+    #[test]
+    fn home_prefix_is_not_a_path_substring_match() {
+        std::env::set_var("HOME", "/Users/nick");
+        let p = PathBuf::from("/Users/nicholas/justfile");
+        assert_eq!(shorten(&p, 80), "/Users/nicholas/justfile");
     }
 
     #[test]
