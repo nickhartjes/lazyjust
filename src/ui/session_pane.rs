@@ -46,29 +46,7 @@ pub fn render(
     for r in 0..rows_count {
         let mut spans = Vec::with_capacity(cols);
         for c in 0..cols {
-            if let Some(cell) = grid.cell(r as u16, c as u16) {
-                let mut style = Style::default();
-                if let Some(color) = convert_color(cell.fgcolor()) {
-                    style = style.fg(color);
-                }
-                if let Some(color) = convert_color(cell.bgcolor()) {
-                    style = style.bg(color);
-                }
-                if cell.bold() {
-                    style = style.add_modifier(Modifier::BOLD);
-                }
-                if cell.italic() {
-                    style = style.add_modifier(Modifier::ITALIC);
-                }
-                if cell.underline() {
-                    style = style.add_modifier(Modifier::UNDERLINED);
-                }
-                let ch = cell.contents();
-                let text: String = if ch.is_empty() { " ".into() } else { ch.into() };
-                spans.push(Span::styled(text, style));
-            } else {
-                spans.push(Span::raw(" "));
-            }
+            spans.push(cell_to_span(grid, r as u16, c as u16));
         }
         lines.push(Line::from(spans));
     }
@@ -80,6 +58,31 @@ pub fn render(
     let (total, top) = scrollback_dims(screen, rows_count);
     let buf = f.buffer_mut();
     crate::ui::scrollbar::render(buf, scroll_area, total, rows_count, top, theme);
+}
+
+fn cell_to_span(grid: &vt100::Screen, r: u16, c: u16) -> Span<'static> {
+    let Some(cell) = grid.cell(r, c) else {
+        return Span::raw(" ");
+    };
+    let mut style = Style::default();
+    if let Some(color) = convert_color(cell.fgcolor()) {
+        style = style.fg(color);
+    }
+    if let Some(color) = convert_color(cell.bgcolor()) {
+        style = style.bg(color);
+    }
+    if cell.bold() {
+        style = style.add_modifier(Modifier::BOLD);
+    }
+    if cell.italic() {
+        style = style.add_modifier(Modifier::ITALIC);
+    }
+    if cell.underline() {
+        style = style.add_modifier(Modifier::UNDERLINED);
+    }
+    let ch = cell.contents();
+    let text: String = if ch.is_empty() { " ".into() } else { ch.into() };
+    Span::styled(text, style)
 }
 
 fn scrollback_dims(screen: &vt100::Parser, viewport: usize) -> (usize, usize) {
