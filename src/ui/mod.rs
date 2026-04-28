@@ -6,6 +6,7 @@ pub mod list;
 pub mod modal;
 pub mod modal_base;
 pub mod param_modal;
+pub mod path_display;
 pub mod preview;
 pub mod scrollbar;
 pub mod session_header;
