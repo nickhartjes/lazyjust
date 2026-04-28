@@ -18,6 +18,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: jdx/mise-action@v4
+        with:
+          # Bumped from default mise-v1: the previous cache was warmed
+          # before mise.toml declared the rustfmt/clippy components, so
+          # cache-restored installs lacked them and `cargo fmt` failed.
+          cache_key_prefix: mise-v2
+      - name: ensure rust components
+        run: rustup component add rustfmt clippy
       - uses: Swatinem/rust-cache@v2
         with:
           shared-key: ci-${{ matrix.os }}
