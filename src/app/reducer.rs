@@ -227,6 +227,8 @@ fn session_exited(app: &mut App, id: crate::app::types::SessionId, code: i32) {
             s.unread = true;
         } else if let crate::app::types::Status::ShellAfterExit { .. } = s.status {
             s.status = crate::app::types::Status::Exited { code };
+        } else {
+            // Status is already Exited; another channel reported the exit first.
         }
     }
 }
@@ -274,6 +276,8 @@ fn focus_next_session(app: &mut App) {
         }
     } else if let Some(first) = ids.first() {
         app.active_session = Some(*first);
+    } else {
+        // No active session and no sessions exist; nothing to focus.
     }
 }
 
@@ -428,7 +432,7 @@ pub fn filtered_justfile_indices(app: &App, filter: &str) -> Vec<usize> {
         .iter()
         .map(|j| j.path.display().to_string())
         .collect();
-    let refs: Vec<&str> = paths.iter().map(|s| s.as_str()).collect();
+    let refs: Vec<&str> = paths.iter().map(String::as_str).collect();
     crate::app::filter::fuzzy_match(&refs, filter)
         .into_iter()
         .map(|(i, _)| i)
