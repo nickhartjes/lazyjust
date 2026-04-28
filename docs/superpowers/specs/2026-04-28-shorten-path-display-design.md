@@ -49,13 +49,16 @@ Behavior, in order:
    `std::env::var_os("HOME")`. If `HOME` is unset or empty, skip this step.
 3. If `display_width(s) <= max_width`, return `s` unchanged.
 4. Otherwise apply segment-aware middle truncation:
-   - Split on `/` into segments. Keep an explicit leading `""` (for an
-     absolute path) or `~` as the *root anchor*.
-   - Always preserve: the root anchor and the final segment (the
-     filename).
-   - Greedily prepend tail segments from the right (one at a time) into
-     a candidate `<root>/…/<seg_n>/.../<filename>` while the resulting
-     width stays `<= max_width`.
+   - Split on `/`. Treat the path as `<root>` + middle segments +
+     `<filename>`, where `<root>` is `~`, `""` (for an absolute path,
+     yielding a leading `/` when re-joined), or the first segment of a
+     relative path.
+   - Always preserve `<root>` and `<filename>`.
+   - Start the candidate as `<root>/…/<filename>`. Greedily insert
+     middle segments back in from the right (closest to the filename
+     first) one at a time, while the resulting width stays
+     `<= max_width`. The form is always
+     `<root>/…/<seg_k>/.../<seg_n-1>/<filename>` for some `k`.
    - If even `<root>/…/<filename>` exceeds `max_width`, return that
      string anyway and let ratatui clip — never truncate inside a
      segment, never split the filename.
@@ -64,14 +67,16 @@ Behavior, in order:
    `Cargo.toml` for a presentation helper. If we later see CJK paths in
    the wild we can swap the implementation without changing callers.
 
-Output examples (with `max_width = 56`):
+Output examples:
 
-| Input                                                         | Output                                  |
-| ------------------------------------------------------------- | --------------------------------------- |
-| `/Users/nick/proj/foo/justfile`                               | `~/proj/foo/justfile`                   |
-| `/Users/nick/projects/entrnce/trader/services/api/justfile`   | `~/projects/entrnce/.../api/justfile`   |
-| `/var/very/deeply/nested/repo/sub/dir/justfile`               | `/var/.../dir/justfile`                 |
-| `/justfile`                                                   | `/justfile`                             |
+| `max_width` | Input                                                       | Output                                |
+| ----------- | ----------------------------------------------------------- | ------------------------------------- |
+| 56          | `/Users/nick/proj/foo/justfile`                             | `~/proj/foo/justfile`                 |
+| 56          | `/Users/nick/projects/entrnce/trader/services/api/justfile` | `~/projects/entrnce/trader/services/api/justfile` |
+| 28          | `/Users/nick/projects/entrnce/trader/services/api/justfile` | `~/…/services/api/justfile`           |
+| 24          | `/var/very/deeply/nested/repo/sub/dir/justfile`             | `/…/sub/dir/justfile`                 |
+| 12          | `/var/very/deeply/nested/repo/sub/dir/justfile`             | `/…/justfile`                         |
+| any         | `/justfile`                                                 | `/justfile`                           |
 
 ### Integration
 
