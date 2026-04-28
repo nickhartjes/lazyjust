@@ -57,6 +57,8 @@ fn extract_group(attrs: &[serde_json::Value]) -> Option<String> {
                 let rest = rest.trim_matches(|c| c == '\'' || c == '"');
                 return Some(rest.to_string());
             }
+        } else {
+            // Other JSON value types (number, bool, null, array) are not group attributes.
         }
     }
     None
