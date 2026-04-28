@@ -12,12 +12,11 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
         .split(area);
 
     let jf = app.active_justfile();
-    let path = jf
-        .map(|j| j.path.display().to_string())
-        .unwrap_or_else(|| "<no justfile>".into());
     let count = jf.map(|j| j.recipes.len()).unwrap_or(0);
 
-    let mut spans: Vec<Span> = vec![
+    // Build every span *except* the path first, so we know exactly how
+    // many columns the path itself may consume.
+    let leading: Vec<Span> = vec![
         Span::styled("▌", Style::default().fg(theme.accent)),
         Span::raw(" "),
         Span::styled(
@@ -25,19 +24,46 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
             Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
         ),
         Span::styled("  · ", Style::default().fg(theme.dim)),
-        Span::styled(path, Style::default().fg(theme.dim)),
-        Span::styled("  · ", Style::default().fg(theme.dim)),
-        Span::styled(format!("{count} recipes"), Style::default().fg(theme.dim)),
     ];
-    if !app.startup_errors.is_empty() {
-        spans.push(Span::raw("   "));
-        spans.push(Span::styled(
+    let recipes_text = format!("{count} recipes");
+    let trailing: Vec<Span> = vec![
+        Span::styled("  · ", Style::default().fg(theme.dim)),
+        Span::styled(recipes_text.clone(), Style::default().fg(theme.dim)),
+    ];
+    let errors_span: Option<Span> = (!app.startup_errors.is_empty()).then(|| {
+        Span::styled(
             format!(" {} load errors ", app.startup_errors.len()),
             Style::default()
                 .fg(theme.error)
                 .bg(theme.bg)
                 .add_modifier(Modifier::BOLD),
-        ));
+        )
+    });
+
+    let chrome_width: usize = leading
+        .iter()
+        .chain(trailing.iter())
+        .chain(errors_span.iter())
+        .map(|s| s.content.chars().count())
+        .sum::<usize>()
+        + if errors_span.is_some() { 3 } else { 0 }; // "   " separator before errors
+
+    let path_budget: usize = (cols[0].width as usize)
+        .saturating_sub(chrome_width)
+        .max(16); // never collapse below "<root>/…/<filename>"-ish space
+
+    let path = match jf {
+        Some(j) => crate::ui::path_display::shorten(&j.path, path_budget),
+        None => "<no justfile>".to_string(),
+    };
+
+    let mut spans: Vec<Span> = Vec::with_capacity(8);
+    spans.extend(leading);
+    spans.push(Span::styled(path, Style::default().fg(theme.dim)));
+    spans.extend(trailing);
+    if let Some(err_span) = errors_span {
+        spans.push(Span::raw("   "));
+        spans.push(err_span);
     }
     f.render_widget(Paragraph::new(Line::from(spans)), cols[0]);
 
