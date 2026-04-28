@@ -65,4 +65,25 @@ mod tests {
         let p = PathBuf::from("/tmp/justfile");
         assert_eq!(shorten(&p, 80), "/tmp/justfile");
     }
+
+    #[test]
+    fn replaces_home_with_tilde() {
+        std::env::set_var("HOME", "/Users/nick");
+        let p = PathBuf::from("/Users/nick/projects/foo/justfile");
+        assert_eq!(shorten(&p, 80), "~/projects/foo/justfile");
+    }
+
+    #[test]
+    fn home_only_path_renders_as_tilde() {
+        std::env::set_var("HOME", "/Users/nick");
+        let p = PathBuf::from("/Users/nick");
+        assert_eq!(shorten(&p, 80), "~");
+    }
+
+    #[test]
+    fn unrelated_path_is_unaffected_by_home() {
+        std::env::set_var("HOME", "/Users/nick");
+        let p = PathBuf::from("/var/log/justfile");
+        assert_eq!(shorten(&p, 80), "/var/log/justfile");
+    }
 }
