@@ -58,7 +58,11 @@ fn handle_subcommand(cmd: &cli::Commands) -> anyhow::Result<()> {
 }
 
 async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
-    let disc = match discovery::discover(&cli.path) {
+    let disc = match cli.justfile.as_deref() {
+        Some(jf) => discovery::discover_explicit(jf),
+        None => discovery::discover(&cli.path),
+    };
+    let disc = match disc {
         Ok(d) => d,
         Err(e @ crate::Error::JustNotFound) => {
             eprintln!("{e}");

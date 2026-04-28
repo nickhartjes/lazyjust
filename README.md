@@ -3,7 +3,7 @@
 [![CI](https://github.com/nickhartjes/lazyjust/actions/workflows/ci.yml/badge.svg)](https://github.com/nickhartjes/lazyjust/actions/workflows/ci.yml)
 [![crates.io](https://img.shields.io/crates/v/lazyjust.svg)](https://crates.io/crates/lazyjust)
 [![license](https://img.shields.io/crates/l/lazyjust.svg)](#license)
-[![MSRV](https://img.shields.io/badge/rustc-1.78+-blue.svg)](#build-from-source)
+[![MSRV](https://img.shields.io/badge/rustc-1.79+-blue.svg)](#build-from-source)
 
 A fast, themed TUI for the [`just`](https://github.com/casey/just) command runner, written in Rust.
 
@@ -95,7 +95,7 @@ cargo install lazyjust
 
 ### Build from source
 
-Requires Rust **1.78+**.
+Requires Rust **1.79+**.
 
 ```bash
 git clone https://github.com/nickhartjes/lazyjust
