@@ -38,6 +38,8 @@ fn make_app() -> App {
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
         lazyjust::ui::icon_style::IconStyle::Round,
+        lazyjust::app::types::ListMode::Active,
+        std::path::PathBuf::from("."),
     )
 }
 
@@ -198,6 +200,8 @@ fn dropdown_switches_justfile() {
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
         lazyjust::ui::icon_style::IconStyle::Round,
+        lazyjust::app::types::ListMode::Active,
+        std::path::PathBuf::from("."),
     );
 
     reduce(&mut app, Action::OpenDropdown);

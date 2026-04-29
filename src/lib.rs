@@ -83,6 +83,8 @@ async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
         theme,
         cfg.theme_name.clone(),
         cfg.icon_style,
+        cfg.list_mode,
+        cli.path.clone(),
     );
     app.active_justfile = disc.active_index;
     app::event_loop::run(app, cfg).await

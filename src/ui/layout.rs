@@ -73,6 +73,8 @@ mod tests {
             crate::theme::registry::resolve(crate::theme::DEFAULT_THEME_NAME),
             crate::theme::DEFAULT_THEME_NAME.into(),
             crate::ui::icon_style::IconStyle::Round,
+            crate::app::types::ListMode::Active,
+            std::path::PathBuf::from("."),
         )
     }
 }

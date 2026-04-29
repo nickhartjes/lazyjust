@@ -35,6 +35,8 @@ fn minimal_app() -> App {
         resolve(DEFAULT_THEME_NAME),
         DEFAULT_THEME_NAME.into(),
         IconStyle::Round,
+        lazyjust::app::types::ListMode::Active,
+        std::path::PathBuf::from("."),
     )
 }
 
