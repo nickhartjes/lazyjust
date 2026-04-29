@@ -36,9 +36,7 @@ pub fn discover(opts: DiscoverOptions) -> Result<DiscoveryResult> {
         }
     }
 
-    let pinned = opts
-        .justfile
-        .map(|p| walk::absolutize(p.to_path_buf()));
+    let pinned = opts.justfile.map(|p| walk::absolutize(p.to_path_buf()));
     if let Some(pin) = &pinned {
         if !paths.iter().any(|p| p == pin) {
             paths.push(pin.clone());
@@ -57,10 +55,7 @@ pub fn discover(opts: DiscoverOptions) -> Result<DiscoveryResult> {
     }
 
     let active_index = match &pinned {
-        Some(pin) => justfiles
-            .iter()
-            .position(|j| &j.path == pin)
-            .unwrap_or(0),
+        Some(pin) => justfiles.iter().position(|j| &j.path == pin).unwrap_or(0),
         None => 0,
     };
 

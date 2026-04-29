@@ -73,9 +73,7 @@ mod tests {
     #[test]
     #[tracing_test::traced_test]
     fn malformed_file_falls_back_to_defaults_with_warning() {
-        let _lock = paths::env_lock()
-            .lock()
-            .unwrap_or_else(|e| e.into_inner());
+        let _lock = paths::env_lock().lock().unwrap_or_else(|e| e.into_inner());
 
         let tmp = tempfile::tempdir().unwrap();
         std::fs::write(tmp.path().join("config.toml"), "this = = = not valid toml").unwrap();

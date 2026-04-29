@@ -82,8 +82,7 @@ fn path_plus_justfile_unions_walks_and_pins_active() {
 
     let pin_abs = std::path::absolute(&pin).unwrap();
     assert_eq!(
-        result.justfiles[result.active_index].path,
-        pin_abs,
+        result.justfiles[result.active_index].path, pin_abs,
         "active_index should point at the pinned justfile"
     );
 }
@@ -94,9 +93,7 @@ fn justfile_outside_walked_tree_is_force_included() {
     // a normal walk of `tests/fixtures/tree`. Pinning it must still
     // surface it in the result and pin it active.
     let path = fixture_root();
-    let pin = fixture_root()
-        .join("ignored_by_gitignore")
-        .join("justfile");
+    let pin = fixture_root().join("ignored_by_gitignore").join("justfile");
 
     let result = discover(DiscoverOptions {
         path: Some(&path),
@@ -110,8 +107,7 @@ fn justfile_outside_walked_tree_is_force_included() {
         "expected gitignored pin to appear in result"
     );
     assert_eq!(
-        result.justfiles[result.active_index].path,
-        pin_abs,
+        result.justfiles[result.active_index].path, pin_abs,
         "active_index should point at the gitignored pin"
     );
 }
