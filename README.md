@@ -114,10 +114,35 @@ Requires [`just`](https://github.com/casey/just) on `PATH` at runtime.
 ## Usage
 
 ```bash
-lazyjust                  # scan current directory
-lazyjust [path]           # scan a specific directory
-lazyjust --justfile FILE  # pin a specific justfile as root
+lazyjust                    # recursively scan current directory for justfiles
+lazyjust [path]             # recursively scan PATH for justfiles
+lazyjust --justfile FILE    # load only FILE; skip subdirectory walk
+lazyjust --log-level LEVEL  # log verbosity (default: warn)
+lazyjust --help             # full flag reference
+lazyjust --version          # print version
 ```
+
+Discovery walks the target directory honoring `.gitignore`, plus a hardcoded
+skip list (`node_modules`, `target`, `dist`, `.git`). Recognized filenames:
+`justfile`, `Justfile`, `.justfile`, and any `*.just`. Use `d` inside the TUI
+to switch between discovered justfiles.
+
+## First run
+
+Launch `lazyjust` in any directory containing a `justfile`. The status bar at
+the bottom lists the keys you need; the rest are in the help modal.
+
+| Key | What it does |
+|---|---|
+| `?` / `F1` | Help modal — full keymap |
+| `/` | Fuzzy-filter recipes |
+| `Enter` | Run focused recipe |
+| `t` | Theme picker (live preview) |
+| `d` | Switch between discovered justfiles |
+| `q` | Quit |
+
+If no recipes show up, run `lazyjust --log-level debug` to see discovery
+errors, or press `e` to open the startup-errors modal.
 
 ## Configuration
 
