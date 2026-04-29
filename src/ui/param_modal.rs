@@ -15,11 +15,14 @@ pub fn render(f: &mut Frame, app: &App, area: Rect, theme: &crate::theme::Theme)
     else {
         return;
     };
-    let jf = match app.active_justfile() {
+    let Some((jf_idx, actual_recipe_idx)) = app.view.recipe_at(*recipe_idx) else {
+        return;
+    };
+    let jf = match app.justfiles.get(jf_idx) {
         Some(j) => j,
         None => return,
     };
-    let recipe = match jf.recipes.get(*recipe_idx) {
+    let recipe = match jf.recipes.get(actual_recipe_idx) {
         Some(r) => r,
         None => return,
     };

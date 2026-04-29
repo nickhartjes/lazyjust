@@ -444,9 +444,13 @@ pub fn filtered_justfile_indices(app: &App, filter: &str) -> Vec<usize> {
 }
 
 fn cycle_history(app: &mut App, dir: i32) {
+    let Some((jf_idx, recipe_idx)) = app.view.recipe_at(app.list_cursor) else {
+        return;
+    };
     let Some(r) = app
-        .active_justfile()
-        .and_then(|jf| jf.recipes.get(app.list_cursor))
+        .justfiles
+        .get(jf_idx)
+        .and_then(|jf| jf.recipes.get(recipe_idx))
     else {
         return;
     };

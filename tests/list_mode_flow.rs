@@ -2,9 +2,10 @@
 //! lookup, confirm `d` no-ops with status message.
 
 use lazyjust::app::reducer::reduce;
-use lazyjust::app::types::{Justfile, ListMode, Mode, Recipe};
+use lazyjust::app::types::{Justfile, ListMode, Mode, Recipe, SessionMeta, Status};
 use lazyjust::app::{Action, App};
 use std::path::PathBuf;
+use std::time::Instant;
 
 fn recipe(name: &str) -> Recipe {
     Recipe {
@@ -75,4 +76,33 @@ fn switching_back_to_active_resets_cursor_and_filters_to_active_justfile() {
     // active_justfile is still 0 → recipes from api
     assert_eq!(app.recipe_at_cursor().unwrap().name, "build");
     assert_eq!(app.list_cursor, 0);
+}
+
+#[test]
+fn cycle_history_in_all_mode_targets_owning_justfile_recipe() {
+    let mut app = make_app();
+    // Cursor at index 2 in All mode = "dev" from web justfile (jf_idx 1, recipe_idx 0).
+    reduce(&mut app, Action::CursorDown);
+    reduce(&mut app, Action::CursorDown);
+    assert_eq!(app.recipe_at_cursor().unwrap().name, "dev");
+
+    // Manually attach a session to the dev recipe.
+    let sid: u64 = 42;
+    app.sessions.push(SessionMeta {
+        id: sid,
+        recipe_name: "dev".into(),
+        command_line: "just dev".into(),
+        status: Status::Running,
+        unread: false,
+        started_at: Instant::now(),
+        log_path: PathBuf::from("/tmp/log"),
+        pid: None,
+    });
+    let web_idx = 1;
+    app.justfiles[web_idx].recipes[0].runs.push(sid);
+
+    // CycleRecipeHistoryNext should pick up the session attached to "dev"
+    // (not search the active justfile, which is "api").
+    reduce(&mut app, Action::CycleRecipeHistoryNext);
+    assert_eq!(app.active_session, Some(sid));
 }
