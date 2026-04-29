@@ -58,10 +58,10 @@ fn handle_subcommand(cmd: &cli::Commands) -> anyhow::Result<()> {
 }
 
 async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
-    let disc = match cli.justfile.as_deref() {
-        Some(jf) => discovery::discover_explicit(jf),
-        None => discovery::discover(&cli.path),
-    };
+    let disc = discovery::discover(discovery::DiscoverOptions {
+        path: cli.path.as_deref(),
+        justfile: cli.justfile.as_deref(),
+    });
     let disc = match disc {
         Ok(d) => d,
         Err(e @ crate::Error::JustNotFound) => {
@@ -73,7 +73,7 @@ async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
     let _ =
         crate::session::retention::prune_sessions(&cfg.sessions_log_dir, cfg.session_log_retention);
     let theme = theme::registry::resolve(&cfg.theme_name);
-    let app = app::App::new(
+    let mut app = app::App::new(
         disc.justfiles,
         disc.errors,
         cfg.default_split_ratio,
@@ -81,5 +81,6 @@ async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
         cfg.theme_name.clone(),
         cfg.icon_style,
     );
+    app.active_justfile = disc.active_index;
     app::event_loop::run(app, cfg).await
 }

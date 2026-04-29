@@ -4,9 +4,9 @@ use std::path::PathBuf;
 #[derive(Parser, Debug)]
 #[command(name = "lazyjust", about = "Terminal UI for just", version)]
 pub struct Cli {
-    /// Project root to scan (defaults to current directory).
-    #[arg(value_name = "PATH", default_value = ".")]
-    pub path: PathBuf,
+    /// Project root to scan. Defaults to the current directory when omitted.
+    #[arg(value_name = "PATH")]
+    pub path: Option<PathBuf>,
 
     /// Specific justfile to use as root (overrides depth-0 auto-pick).
     #[arg(long = "justfile", value_name = "FILE")]
