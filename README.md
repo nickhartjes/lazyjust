@@ -114,10 +114,18 @@ Requires [`just`](https://github.com/casey/just) on `PATH` at runtime.
 ## Usage
 
 ```bash
-lazyjust                  # scan current directory
-lazyjust [path]           # scan a specific directory
-lazyjust --justfile FILE  # pin a specific justfile as root
+lazyjust                    # recursively scan current directory for justfiles
+lazyjust [path]             # recursively scan PATH for justfiles
+lazyjust --justfile FILE    # load only FILE; skip subdirectory walk
+lazyjust --log-level LEVEL  # log verbosity (default: warn)
+lazyjust --help             # full flag reference
+lazyjust --version          # print version
 ```
+
+Discovery walks the target directory honoring `.gitignore`, plus a hardcoded
+skip list (`node_modules`, `target`, `dist`, `.git`). Recognized filenames:
+`justfile`, `Justfile`, `.justfile`, and any `*.just`. Use `d` inside the TUI
+to switch between discovered justfiles.
 
 ## Configuration
 
