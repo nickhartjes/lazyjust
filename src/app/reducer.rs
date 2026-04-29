@@ -174,6 +174,10 @@ fn help_scroll_end(app: &mut App) {
 }
 
 fn open_dropdown(app: &mut App) {
+    if app.list_mode == crate::app::types::ListMode::All {
+        app.status_message = Some("dropdown disabled in list_mode=all".into());
+        return;
+    }
     app.mode = Mode::Dropdown {
         filter: String::new(),
         cursor: app.active_justfile,

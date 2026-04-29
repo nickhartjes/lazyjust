@@ -409,6 +409,46 @@ fn set_list_mode_rebuilds_view_and_resets_cursor_and_filter() {
     assert_eq!(app.filter, "");
 }
 
+#[test]
+fn open_dropdown_in_all_mode_is_a_noop_with_status_message() {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Mode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    let r = |n: &str| Recipe {
+        name: n.into(),
+        module_path: vec![],
+        group: None,
+        params: vec![],
+        doc: None,
+        command_preview: String::new(),
+        runs: vec![],
+        dependencies: vec![],
+    };
+    let jf = Justfile {
+        path: PathBuf::from("/x/justfile"),
+        recipes: vec![r("a")],
+        groups: vec![],
+    };
+    let mut app = App::new(
+        vec![jf],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
+        ListMode::All,
+        PathBuf::from("/x"),
+    );
+    reduce(&mut app, Action::OpenDropdown);
+    assert!(matches!(app.mode, Mode::Normal));
+    assert_eq!(
+        app.status_message.as_deref(),
+        Some("dropdown disabled in list_mode=all")
+    );
+}
+
 mod list_mode_cursor {
     use lazyjust::app::reducer::reduce;
     use lazyjust::app::types::{Justfile, ListMode, Recipe};
