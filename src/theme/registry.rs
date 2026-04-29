@@ -80,16 +80,10 @@ fn load_builtin(name: &str) -> Option<Theme> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::paths::OVERRIDE_ENV;
-    use std::sync::{Mutex, OnceLock};
-
-    fn guard() -> &'static Mutex<()> {
-        static M: OnceLock<Mutex<()>> = OnceLock::new();
-        M.get_or_init(|| Mutex::new(()))
-    }
+    use crate::config::paths::{env_lock, OVERRIDE_ENV};
 
     fn with_themes_dir<T>(files: &[(&str, &str)], body: impl FnOnce() -> T) -> T {
-        let _lock = guard().lock().unwrap_or_else(|e| e.into_inner());
+        let _lock = env_lock().lock().unwrap_or_else(|e| e.into_inner());
         let tmp = tempfile::tempdir().unwrap();
         let themes = tmp.path().join("themes");
         std::fs::create_dir_all(&themes).unwrap();

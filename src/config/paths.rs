@@ -29,16 +29,21 @@ fn config_root() -> PathBuf {
         .join("lazyjust")
 }
 
+/// Process-global mutex for tests that mutate environment variables read
+/// by config discovery (`LAZYJUST_CONFIG_DIR`, `XDG_CONFIG_HOME`). All such
+/// tests across the crate must lock this same mutex; using per-module
+/// mutexes lets parallel tests race on shared env state.
+#[cfg(test)]
+pub(crate) fn env_lock() -> &'static std::sync::Mutex<()> {
+    use std::sync::{Mutex, OnceLock};
+    static M: OnceLock<Mutex<()>> = OnceLock::new();
+    M.get_or_init(|| Mutex::new(()))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::env;
-    use std::sync::{Mutex, OnceLock};
-
-    fn env_lock() -> &'static Mutex<()> {
-        static M: OnceLock<Mutex<()>> = OnceLock::new();
-        M.get_or_init(|| Mutex::new(()))
-    }
 
     #[test]
     fn env_override_wins() {
