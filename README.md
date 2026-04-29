@@ -127,6 +127,23 @@ skip list (`node_modules`, `target`, `dist`, `.git`). Recognized filenames:
 `justfile`, `Justfile`, `.justfile`, and any `*.just`. Use `d` inside the TUI
 to switch between discovered justfiles.
 
+## First run
+
+Launch `lazyjust` in any directory containing a `justfile`. The status bar at
+the bottom lists the keys you need; the rest are in the help modal.
+
+| Key | What it does |
+|---|---|
+| `?` / `F1` | Help modal — full keymap |
+| `/` | Fuzzy-filter recipes |
+| `Enter` | Run focused recipe |
+| `t` | Theme picker (live preview) |
+| `d` | Switch between discovered justfiles |
+| `q` | Quit |
+
+If no recipes show up, run `lazyjust --log-level debug` to see discovery
+errors, or press `e` to open the startup-errors modal.
+
 ## Configuration
 
 | Platform | Default path |
