@@ -359,6 +359,56 @@ fn recipe_at_cursor_returns_recipe_from_owning_justfile_in_all_mode() {
     assert_eq!(recipe.name, "b1");
 }
 
+#[test]
+fn set_list_mode_rebuilds_view_and_resets_cursor_and_filter() {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    let r = |n: &str| Recipe {
+        name: n.into(),
+        module_path: vec![],
+        group: None,
+        params: vec![],
+        doc: None,
+        command_preview: String::new(),
+        runs: vec![],
+        dependencies: vec![],
+    };
+    let a = Justfile {
+        path: PathBuf::from("/root/a/justfile"),
+        recipes: vec![r("a1"), r("a2")],
+        groups: vec![],
+    };
+    let b = Justfile {
+        path: PathBuf::from("/root/b/justfile"),
+        recipes: vec![r("b1")],
+        groups: vec![],
+    };
+    let mut app = App::new(
+        vec![a, b],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
+        ListMode::Active,
+        PathBuf::from("/root"),
+    );
+    reduce(&mut app, Action::CursorDown);
+    app.filter = "x".into();
+    assert_eq!(app.list_cursor, 1);
+    assert_eq!(app.view.recipe_count(), 2); // Active mode
+
+    reduce(&mut app, Action::SetListMode(ListMode::All));
+
+    assert_eq!(app.list_mode, ListMode::All);
+    assert_eq!(app.view.recipe_count(), 3);
+    assert_eq!(app.list_cursor, 0);
+    assert_eq!(app.filter, "");
+}
+
 mod list_mode_cursor {
     use lazyjust::app::reducer::reduce;
     use lazyjust::app::types::{Justfile, ListMode, Recipe};

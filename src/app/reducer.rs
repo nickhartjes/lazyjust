@@ -73,6 +73,8 @@ pub fn reduce(app: &mut App, action: Action) {
         Action::CloseSession(id) => close_session(app, id),
         Action::CopyLogPath => copy_log_path(app),
 
+        Action::SetListMode(mode) => set_list_mode(app, mode),
+
         Action::OpenThemePicker => open_theme_picker(app),
         Action::PickerMove(delta) => picker_move(app, delta),
         Action::PickerConfirm => picker_confirm(app),
@@ -462,6 +464,13 @@ fn cycle_history(app: &mut App, dir: i32) {
     if let Some(s) = app.session_mut(next) {
         s.unread = false;
     }
+}
+
+fn set_list_mode(app: &mut App, mode: crate::app::types::ListMode) {
+    app.list_mode = mode;
+    app.view = crate::app::view::ListView::build(&app.justfiles, mode, app.active_justfile);
+    app.list_cursor = 0;
+    app.filter.clear();
 }
 
 #[cfg(test)]
