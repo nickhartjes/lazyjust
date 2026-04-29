@@ -314,6 +314,51 @@ fn help_close_returns_to_normal() {
     assert_eq!(app.mode, Mode::Normal);
 }
 
+#[test]
+fn recipe_at_cursor_returns_recipe_from_owning_justfile_in_all_mode() {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    let r = |n: &str| Recipe {
+        name: n.into(),
+        module_path: vec![],
+        group: None,
+        params: vec![],
+        doc: None,
+        command_preview: String::new(),
+        runs: vec![],
+        dependencies: vec![],
+    };
+    let a = Justfile {
+        path: PathBuf::from("/root/a/justfile"),
+        recipes: vec![r("a1")],
+        groups: vec![],
+    };
+    let b = Justfile {
+        path: PathBuf::from("/root/b/justfile"),
+        recipes: vec![r("b1"), r("b2")],
+        groups: vec![],
+    };
+    let mut app = App::new(
+        vec![a, b],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
+        ListMode::All,
+        PathBuf::from("/root"),
+    );
+    // active_justfile defaults to 0 (justfile A); cursor 1 in All mode is
+    // recipe `b1` from justfile B.
+    reduce(&mut app, Action::CursorDown);
+    assert_eq!(app.list_cursor, 1);
+    let recipe = app.recipe_at_cursor().expect("recipe");
+    assert_eq!(recipe.name, "b1");
+}
+
 mod list_mode_cursor {
     use lazyjust::app::reducer::reduce;
     use lazyjust::app::types::{Justfile, ListMode, Recipe};

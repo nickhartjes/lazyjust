@@ -332,15 +332,22 @@ pub fn do_spawn(
     let recipe_name;
     let justfile_path;
     let cwd;
+    let owning_jf_idx;
+    let owning_recipe_idx;
     {
-        let jf = match app.active_justfile() {
+        let Some((jf_idx, recipe_idx)) = app.view.recipe_at(app.list_cursor) else {
+            return Ok(());
+        };
+        let jf = match app.justfiles.get(jf_idx) {
             Some(j) => j,
             None => return Ok(()),
         };
-        let r = match jf.recipes.get(app.list_cursor) {
+        let r = match jf.recipes.get(recipe_idx) {
             Some(r) => r,
             None => return Ok(()),
         };
+        owning_jf_idx = jf_idx;
+        owning_recipe_idx = recipe_idx;
         recipe_name = r.name.clone();
         justfile_path = jf.path.clone();
         cwd = jf
@@ -386,9 +393,8 @@ pub fn do_spawn(
     screens.insert(id, vt100::Parser::new(rows, cols, SCROLLBACK_LINES));
     app.sessions.push(meta);
     app.active_session = Some(id);
-    let cursor = app.list_cursor;
-    if let Some(jf) = app.active_justfile_mut() {
-        if let Some(r) = jf.recipes.get_mut(cursor) {
+    if let Some(jf) = app.justfiles.get_mut(owning_jf_idx) {
+        if let Some(r) = jf.recipes.get_mut(owning_recipe_idx) {
             r.runs.push(id);
         }
     }
