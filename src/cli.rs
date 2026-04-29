@@ -16,8 +16,27 @@ pub struct Cli {
     #[arg(long = "log-level", default_value = "warn")]
     pub log_level: String,
 
+    /// Override the recipe-list mode for this run. Values: active, all.
+    #[arg(long = "list-mode", value_enum, value_name = "MODE")]
+    pub list_mode: Option<ListModeArg>,
+
     #[command(subcommand)]
     pub command: Option<Commands>,
+}
+
+#[derive(clap::ValueEnum, Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ListModeArg {
+    Active,
+    All,
+}
+
+impl From<ListModeArg> for crate::app::types::ListMode {
+    fn from(v: ListModeArg) -> Self {
+        match v {
+            ListModeArg::Active => crate::app::types::ListMode::Active,
+            ListModeArg::All => crate::app::types::ListMode::All,
+        }
+    }
 }
 
 #[derive(Subcommand, Debug)]
@@ -36,4 +55,30 @@ pub enum ConfigAction {
     /// Write a commented example config to the config path.
     /// Refuses to overwrite an existing file.
     Init,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use clap::Parser;
+
+    #[test]
+    fn list_mode_flag_parses_active_and_all() {
+        let cli = Cli::try_parse_from(["lazyjust", "--list-mode", "active"]).unwrap();
+        assert_eq!(cli.list_mode, Some(ListModeArg::Active));
+        let cli = Cli::try_parse_from(["lazyjust", "--list-mode", "all"]).unwrap();
+        assert_eq!(cli.list_mode, Some(ListModeArg::All));
+    }
+
+    #[test]
+    fn list_mode_flag_rejects_invalid_value() {
+        let err = Cli::try_parse_from(["lazyjust", "--list-mode", "weird"]).unwrap_err();
+        assert!(err.to_string().to_lowercase().contains("invalid"));
+    }
+
+    #[test]
+    fn list_mode_flag_optional() {
+        let cli = Cli::try_parse_from(["lazyjust"]).unwrap();
+        assert!(cli.list_mode.is_none());
+    }
 }

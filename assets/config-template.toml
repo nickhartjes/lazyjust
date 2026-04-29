@@ -8,6 +8,11 @@
 # Built-in theme name or a filename (without .toml) under
 # <config_dir>/lazyjust/themes/.
 theme = "tokyo-night"
+# Recipe list mode.
+#   "active" (default) — show recipes for the active justfile, switch with `d`.
+#   "all"              — merge recipes from every discovered justfile in
+#                        one list, grouped by justfile path. `d` disabled.
+list_mode = "active"
 # Fraction of terminal width given to the recipe list.
 split_ratio = 0.30
 # Glyph set for list indicators. "round" | "ascii" | "none".

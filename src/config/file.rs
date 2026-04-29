@@ -35,6 +35,7 @@ pub struct EngineSection {
 pub struct UiSection {
     pub theme: Option<String>,
     pub icon_style: Option<String>,
+    pub list_mode: Option<String>,
 }
 
 impl ConfigFile {

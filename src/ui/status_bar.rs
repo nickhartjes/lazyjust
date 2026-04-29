@@ -92,9 +92,10 @@ fn hint_for<'a>(mode: &'a Mode, app: &'a App, theme: &crate::theme::Theme) -> Li
             cursor,
             recipe_idx,
         } => {
-            let jf = app.active_justfile();
-            let name = jf
-                .and_then(|j| j.recipes.get(*recipe_idx))
+            let name = app
+                .view
+                .recipe_at(*recipe_idx)
+                .and_then(|(jf_idx, ri)| app.justfiles.get(jf_idx).and_then(|j| j.recipes.get(ri)))
                 .and_then(|r| r.params.get(*cursor))
                 .map(|p| p.name.as_str())
                 .unwrap_or("");

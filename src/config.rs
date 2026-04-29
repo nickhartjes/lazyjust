@@ -43,6 +43,10 @@ pub struct Config {
     pub theme_name: String,
     /// Glyph set for list indicators. Values: `round` (default), `ascii`, or `none`.
     pub icon_style: crate::ui::icon_style::IconStyle,
+    /// Recipe-list rendering mode. `Active` (default) shows recipes for
+    /// the active justfile only; `All` merges recipes from every
+    /// discovered justfile into one list grouped by justfile path.
+    pub list_mode: crate::app::types::ListMode,
 }
 
 impl Config {
@@ -69,6 +73,13 @@ impl Config {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn default_list_mode_is_active() {
+        use crate::app::types::ListMode;
+        let d = crate::config::defaults::defaults();
+        assert_eq!(d.list_mode, ListMode::Active);
+    }
 
     #[test]
     #[tracing_test::traced_test]

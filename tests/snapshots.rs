@@ -100,6 +100,8 @@ fn make_app(justfile: Justfile, theme_name: &str, icon_style: IconStyle) -> App 
         resolve(theme_name),
         theme_name.to_string(),
         icon_style,
+        lazyjust::app::types::ListMode::Active,
+        std::path::PathBuf::from("."),
     )
 }
 

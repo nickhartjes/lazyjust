@@ -38,6 +38,8 @@ fn make_app() -> App {
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
         lazyjust::ui::icon_style::IconStyle::Round,
+        lazyjust::app::types::ListMode::Active,
+        std::path::PathBuf::from("."),
     )
 }
 
@@ -198,6 +200,8 @@ fn dropdown_switches_justfile() {
         lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
         lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
         lazyjust::ui::icon_style::IconStyle::Round,
+        lazyjust::app::types::ListMode::Active,
+        std::path::PathBuf::from("."),
     );
 
     reduce(&mut app, Action::OpenDropdown);
@@ -308,4 +312,204 @@ fn help_close_returns_to_normal() {
     };
     reduce(&mut app, Action::CloseHelp);
     assert_eq!(app.mode, Mode::Normal);
+}
+
+#[test]
+fn recipe_at_cursor_returns_recipe_from_owning_justfile_in_all_mode() {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    let r = |n: &str| Recipe {
+        name: n.into(),
+        module_path: vec![],
+        group: None,
+        params: vec![],
+        doc: None,
+        command_preview: String::new(),
+        runs: vec![],
+        dependencies: vec![],
+    };
+    let a = Justfile {
+        path: PathBuf::from("/root/a/justfile"),
+        recipes: vec![r("a1")],
+        groups: vec![],
+    };
+    let b = Justfile {
+        path: PathBuf::from("/root/b/justfile"),
+        recipes: vec![r("b1"), r("b2")],
+        groups: vec![],
+    };
+    let mut app = App::new(
+        vec![a, b],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
+        ListMode::All,
+        PathBuf::from("/root"),
+    );
+    // active_justfile defaults to 0 (justfile A); cursor 1 in All mode is
+    // recipe `b1` from justfile B.
+    reduce(&mut app, Action::CursorDown);
+    assert_eq!(app.list_cursor, 1);
+    let recipe = app.recipe_at_cursor().expect("recipe");
+    assert_eq!(recipe.name, "b1");
+}
+
+#[test]
+fn set_list_mode_rebuilds_view_and_resets_cursor_and_filter() {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    let r = |n: &str| Recipe {
+        name: n.into(),
+        module_path: vec![],
+        group: None,
+        params: vec![],
+        doc: None,
+        command_preview: String::new(),
+        runs: vec![],
+        dependencies: vec![],
+    };
+    let a = Justfile {
+        path: PathBuf::from("/root/a/justfile"),
+        recipes: vec![r("a1"), r("a2")],
+        groups: vec![],
+    };
+    let b = Justfile {
+        path: PathBuf::from("/root/b/justfile"),
+        recipes: vec![r("b1")],
+        groups: vec![],
+    };
+    let mut app = App::new(
+        vec![a, b],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
+        ListMode::Active,
+        PathBuf::from("/root"),
+    );
+    reduce(&mut app, Action::CursorDown);
+    app.filter = "x".into();
+    assert_eq!(app.list_cursor, 1);
+    assert_eq!(app.view.recipe_count(), 2); // Active mode
+
+    reduce(&mut app, Action::SetListMode(ListMode::All));
+
+    assert_eq!(app.list_mode, ListMode::All);
+    assert_eq!(app.view.recipe_count(), 3);
+    assert_eq!(app.list_cursor, 0);
+    assert_eq!(app.filter, "");
+}
+
+#[test]
+fn open_dropdown_in_all_mode_is_a_noop_with_status_message() {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Mode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    let r = |n: &str| Recipe {
+        name: n.into(),
+        module_path: vec![],
+        group: None,
+        params: vec![],
+        doc: None,
+        command_preview: String::new(),
+        runs: vec![],
+        dependencies: vec![],
+    };
+    let jf = Justfile {
+        path: PathBuf::from("/x/justfile"),
+        recipes: vec![r("a")],
+        groups: vec![],
+    };
+    let mut app = App::new(
+        vec![jf],
+        vec![],
+        0.3,
+        lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+        lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+        lazyjust::ui::icon_style::IconStyle::Round,
+        ListMode::All,
+        PathBuf::from("/x"),
+    );
+    reduce(&mut app, Action::OpenDropdown);
+    assert!(matches!(app.mode, Mode::Normal));
+    assert_eq!(
+        app.status_message.as_deref(),
+        Some("dropdown disabled in list_mode=all")
+    );
+}
+
+mod list_mode_cursor {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    fn r(n: &str) -> Recipe {
+        Recipe {
+            name: n.into(),
+            module_path: vec![],
+            group: None,
+            params: vec![],
+            doc: None,
+            command_preview: String::new(),
+            runs: vec![],
+            dependencies: vec![],
+        }
+    }
+
+    fn make_app(mode: ListMode) -> App {
+        let a = Justfile {
+            path: PathBuf::from("/root/a/justfile"),
+            recipes: vec![r("a1"), r("a2")],
+            groups: vec![],
+        };
+        let b = Justfile {
+            path: PathBuf::from("/root/b/justfile"),
+            recipes: vec![r("b1")],
+            groups: vec![],
+        };
+        App::new(
+            vec![a, b],
+            vec![],
+            0.3,
+            lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+            lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+            lazyjust::ui::icon_style::IconStyle::Round,
+            mode,
+            PathBuf::from("/root"),
+        )
+    }
+
+    #[test]
+    fn cursor_in_all_mode_advances_across_justfiles_clamping_at_total() {
+        let mut app = make_app(ListMode::All);
+        // recipe_count = 3 → cursor should clamp at 2
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 1);
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 2);
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 2); // clamped
+    }
+
+    #[test]
+    fn cursor_in_active_mode_clamps_to_active_justfile_recipes() {
+        let mut app = make_app(ListMode::Active);
+        // recipe_count = 2 (only justfile A is active)
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 1);
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 1); // clamped
+    }
 }

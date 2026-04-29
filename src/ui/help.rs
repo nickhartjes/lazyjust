@@ -49,7 +49,7 @@ pub const SECTIONS: &[Section] = &[
             },
             Entry {
                 keys: "d",
-                desc: "open justfile-switcher dropdown",
+                desc: "open justfile-switcher dropdown (disabled in list_mode=all)",
             },
             Entry {
                 keys: "Tab",
@@ -316,5 +316,23 @@ mod tests {
             })
             .count();
         assert_eq!(active_count, 1);
+    }
+
+    #[test]
+    fn list_focus_section_d_row_mentions_disabled_in_all_mode() {
+        let list_focus = SECTIONS
+            .iter()
+            .find(|s| matches!(s.id, crate::app::help_section::SectionId::ListFocus))
+            .expect("ListFocus section");
+        let d_row = list_focus
+            .entries
+            .iter()
+            .find(|e| e.keys == "d")
+            .expect("d row");
+        assert!(
+            d_row.desc.contains("disabled in list_mode=all"),
+            "desc was {:?}",
+            d_row.desc
+        );
     }
 }

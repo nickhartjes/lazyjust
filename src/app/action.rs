@@ -68,6 +68,8 @@ pub enum Action {
     MarkUnread(SessionId),
     MarkRead(SessionId),
 
+    SetListMode(crate::app::types::ListMode),
+
     OpenThemePicker,
     PickerMove(isize),
     PickerConfirm,

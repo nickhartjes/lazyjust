@@ -37,6 +37,17 @@ fn merge_ui(out: &mut Config, u: UiSection) {
             );
         }
     }
+    if let Some(lm) = u.list_mode.as_deref() {
+        if let Some(parsed) = crate::app::types::ListMode::parse(lm) {
+            out.list_mode = parsed;
+        } else {
+            tracing::warn!(
+                target: "lazyjust::config",
+                value = %lm,
+                "unknown [ui].list_mode, using default",
+            );
+        }
+    }
 }
 
 fn merge_paths(out: &mut Config, p: PathsSection) {
@@ -170,5 +181,40 @@ mod tests {
         };
         let merged = merge(file, defaults());
         assert_eq!(merged.icon_style, crate::ui::icon_style::IconStyle::Round);
+    }
+
+    #[test]
+    fn ui_list_mode_override_applies() {
+        use crate::app::types::ListMode;
+        let file = ConfigFile {
+            ui: Some(crate::config::file::UiSection {
+                list_mode: Some("all".into()),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        let merged = merge(file, defaults());
+        assert_eq!(merged.list_mode, ListMode::All);
+    }
+
+    #[test]
+    fn ui_list_mode_unknown_falls_back_to_default() {
+        use crate::app::types::ListMode;
+        let file = ConfigFile {
+            ui: Some(crate::config::file::UiSection {
+                list_mode: Some("weird".into()),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        let merged = merge(file, defaults());
+        assert_eq!(merged.list_mode, ListMode::Active);
+    }
+
+    #[test]
+    fn ui_list_mode_default_is_active_when_absent() {
+        use crate::app::types::ListMode;
+        let merged = merge(ConfigFile::default(), defaults());
+        assert_eq!(merged.list_mode, ListMode::Active);
     }
 }

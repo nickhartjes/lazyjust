@@ -73,6 +73,8 @@ pub fn reduce(app: &mut App, action: Action) {
         Action::CloseSession(id) => close_session(app, id),
         Action::CopyLogPath => copy_log_path(app),
 
+        Action::SetListMode(mode) => set_list_mode(app, mode),
+
         Action::OpenThemePicker => open_theme_picker(app),
         Action::PickerMove(delta) => picker_move(app, delta),
         Action::PickerConfirm => picker_confirm(app),
@@ -84,11 +86,9 @@ pub fn reduce(app: &mut App, action: Action) {
 }
 
 fn cursor_down(app: &mut App) {
-    if let Some(jf) = app.active_justfile() {
-        let max = jf.recipes.len().saturating_sub(1);
-        if app.list_cursor < max {
-            app.list_cursor += 1;
-        }
+    let max = app.view.recipe_count().saturating_sub(1);
+    if app.list_cursor < max {
+        app.list_cursor += 1;
     }
 }
 
@@ -174,6 +174,10 @@ fn help_scroll_end(app: &mut App) {
 }
 
 fn open_dropdown(app: &mut App) {
+    if app.list_mode == crate::app::types::ListMode::All {
+        app.status_message = Some("dropdown disabled in list_mode=all".into());
+        return;
+    }
     app.mode = Mode::Dropdown {
         filter: String::new(),
         cursor: app.active_justfile,
@@ -440,9 +444,13 @@ pub fn filtered_justfile_indices(app: &App, filter: &str) -> Vec<usize> {
 }
 
 fn cycle_history(app: &mut App, dir: i32) {
+    let Some((jf_idx, recipe_idx)) = app.view.recipe_at(app.list_cursor) else {
+        return;
+    };
     let Some(r) = app
-        .active_justfile()
-        .and_then(|jf| jf.recipes.get(app.list_cursor))
+        .justfiles
+        .get(jf_idx)
+        .and_then(|jf| jf.recipes.get(recipe_idx))
     else {
         return;
     };
@@ -466,6 +474,13 @@ fn cycle_history(app: &mut App, dir: i32) {
     }
 }
 
+fn set_list_mode(app: &mut App, mode: crate::app::types::ListMode) {
+    app.list_mode = mode;
+    app.view = crate::app::view::ListView::build(&app.justfiles, mode, app.active_justfile);
+    app.list_cursor = 0;
+    app.filter.clear();
+}
+
 #[cfg(test)]
 mod theme_picker_tests {
     use super::*;
@@ -480,6 +495,8 @@ mod theme_picker_tests {
             crate::theme::registry::resolve(crate::theme::DEFAULT_THEME_NAME),
             crate::theme::DEFAULT_THEME_NAME.to_string(),
             crate::ui::icon_style::IconStyle::Round,
+            crate::app::types::ListMode::Active,
+            std::path::PathBuf::from("."),
         )
     }
 

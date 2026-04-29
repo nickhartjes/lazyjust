@@ -61,6 +61,24 @@ pub enum Focus {
     Modal,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ListMode {
+    Active,
+    All,
+}
+
+impl ListMode {
+    /// Parse a config string. Returns `None` for unknown values so callers
+    /// can warn-log and fall back to a default.
+    pub fn parse(s: &str) -> Option<ListMode> {
+        match s {
+            "active" => Some(ListMode::Active),
+            "all" => Some(ListMode::All),
+            _ => None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Mode {
     Normal,
@@ -111,4 +129,25 @@ pub struct SessionMeta {
     pub log_path: PathBuf,
     /// OS process id of the shell child process, if the platform could provide one.
     pub pid: Option<u32>,
+}
+
+#[cfg(test)]
+mod list_mode_tests {
+    use super::*;
+
+    #[test]
+    fn list_mode_parse_known_values() {
+        assert_eq!(ListMode::parse("active"), Some(ListMode::Active));
+        assert_eq!(ListMode::parse("all"), Some(ListMode::All));
+    }
+
+    #[test]
+    fn list_mode_parse_is_case_sensitive_by_design() {
+        // Case-sensitive: TOML schema is lowercase-only and merge_ui
+        // warn-logs on mismatch.
+        assert_eq!(ListMode::parse("Active"), None);
+        assert_eq!(ListMode::parse("ALL"), None);
+        assert_eq!(ListMode::parse("weird"), None);
+        assert_eq!(ListMode::parse(""), None);
+    }
 }

@@ -14,6 +14,7 @@ pub use error::{Error, Result};
 use clap::Parser;
 use cli::Cli;
 use config::Config;
+use std::path::PathBuf;
 
 pub fn run() -> anyhow::Result<()> {
     let cli = Cli::parse();
@@ -22,7 +23,10 @@ pub fn run() -> anyhow::Result<()> {
         return handle_subcommand(cmd);
     }
 
-    let cfg = Config::load();
+    let mut cfg = Config::load();
+    if let Some(arg) = cli.list_mode {
+        cfg.list_mode = arg.into();
+    }
     let _log_guard = logging::init(&cfg, &cli.log_level)?;
 
     let rt = tokio::runtime::Builder::new_multi_thread()
@@ -80,6 +84,8 @@ async fn async_main(cli: Cli, cfg: Config) -> anyhow::Result<()> {
         theme,
         cfg.theme_name.clone(),
         cfg.icon_style,
+        cfg.list_mode,
+        cli.path.clone().unwrap_or_else(|| PathBuf::from(".")),
     );
     app.active_justfile = disc.active_index;
     app::event_loop::run(app, cfg).await
