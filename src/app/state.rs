@@ -26,6 +26,7 @@ pub struct App {
 }
 
 impl App {
+    // constructed once from Config + CLI args; builder pattern not warranted at this call count.
     #[allow(clippy::too_many_arguments)]
     pub fn new(
         justfiles: Vec<Justfile>,
