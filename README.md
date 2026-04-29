@@ -114,12 +114,13 @@ Requires [`just`](https://github.com/casey/just) on `PATH` at runtime.
 ## Usage
 
 ```bash
-lazyjust                    # recursively scan current directory for justfiles
-lazyjust [path]             # recursively scan PATH for justfiles
-lazyjust --justfile FILE    # load only FILE; skip subdirectory walk
-lazyjust --log-level LEVEL  # log verbosity (default: warn)
-lazyjust --help             # full flag reference
-lazyjust --version          # print version
+lazyjust                                   # scan current directory
+lazyjust [path]                            # scan a specific directory
+lazyjust --justfile FILE                   # pin a specific justfile as root
+lazyjust --list-mode <active|all>          # override [ui].list_mode for this run
+lazyjust --log-level LEVEL                 # log verbosity (default: warn)
+lazyjust --help                            # full flag reference
+lazyjust --version                         # print version
 ```
 
 Discovery walks the target directory honoring `.gitignore`, plus a hardcoded
@@ -165,6 +166,7 @@ lazyjust config path   # prints the resolved config file path
 theme = "tokyo-night"        # built-in or user theme name
 icon_style = "round"         # "round" | "ascii" | "none"
 split_ratio = 0.30           # fraction of width for the recipe list
+list_mode = "active"         # "active" | "all" — see docs below
 
 [paths]
 # state_dir = "/absolute/path"
@@ -178,6 +180,13 @@ session_log_retention_days = 7
 render_throttle_ms = 16
 tick_interval_ms = 250
 ```
+
+### Recipe list mode
+
+By default `lazyjust` shows recipes from one justfile at a time and exposes
+the others through the `d` dropdown. Set `list_mode = "all"` (or pass
+`--list-mode all`) to merge recipes from every discovered justfile into one
+list, grouped by justfile path. The `d` dropdown is disabled in this mode.
 
 ## Themes
 

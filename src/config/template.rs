@@ -15,4 +15,12 @@ mod tests {
         assert_eq!(engine.render_throttle_ms, Some(16));
         assert_eq!(engine.tick_interval_ms, Some(250));
     }
+
+    #[test]
+    fn template_advertises_list_mode_default() {
+        assert!(
+            CONFIG_TEMPLATE.contains("list_mode"),
+            "config-template.toml should mention the new list_mode key"
+        );
+    }
 }
