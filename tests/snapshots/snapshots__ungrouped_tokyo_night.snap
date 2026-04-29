@@ -372,7 +372,7 @@ expression: "render_to_string(&app, 80, 24)"
 (28,23) "m" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (29,23) "e" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (32,23) "·" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
-(35,23) "?" fg=Rgb(192, 202, 245) bg=Rgb(26, 27, 38) mod=NONE
+(35,23) "?" fg=Rgb(122, 162, 247) bg=Rgb(26, 27, 38) mod=NONE
 (37,23) "h" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (38,23) "e" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
 (39,23) "l" fg=Rgb(86, 95, 137) bg=Rgb(26, 27, 38) mod=NONE
