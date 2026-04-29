@@ -19,6 +19,6 @@ jobs:
         with:
           fetch-depth: 0  # Full history needed for SonarQube blame data
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@55e44800a8f495208cce6e4e82f5dedb45fcf0ef # v7.2
+        uses: SonarSource/sonarqube-scan-action@59db25f34e16620e48ab4bb9e4a5dce155cb5432 # v8.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
