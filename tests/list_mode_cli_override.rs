@@ -5,9 +5,17 @@
 use lazyjust::app::types::ListMode;
 use lazyjust::cli::ListModeArg;
 use lazyjust::config::Config;
+use std::sync::{Mutex, OnceLock};
+
+fn guard() -> &'static Mutex<()> {
+    static M: OnceLock<Mutex<()>> = OnceLock::new();
+    M.get_or_init(|| Mutex::new(()))
+}
 
 #[test]
 fn cli_flag_overrides_config_file() {
+    let _lock = guard().lock().unwrap_or_else(|e| e.into_inner());
+
     let tmp = tempfile::tempdir().unwrap();
     std::fs::write(
         tmp.path().join("config.toml"),
