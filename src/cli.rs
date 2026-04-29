@@ -17,7 +17,7 @@ pub struct Cli {
     pub log_level: String,
 
     /// Override the recipe-list mode for this run. Values: active, all.
-    #[arg(long = "list-mode", value_enum)]
+    #[arg(long = "list-mode", value_enum, value_name = "MODE")]
     pub list_mode: Option<ListModeArg>,
 
     #[command(subcommand)]
