@@ -1,4 +1,4 @@
-use crate::app::types::{ListMode, Recipe};
+use crate::app::types::{ListMode, Recipe, Status};
 use crate::app::view::RowRef;
 use crate::app::App;
 use crate::ui::focus::is_list_active;
@@ -57,6 +57,9 @@ fn build_lines<'a>(
     }
 }
 
+// 8 args ferry render context shared by both list-mode helpers; a
+// shared RenderCtx struct can come later if more args accumulate.
+#[allow(clippy::too_many_arguments)]
 fn build_active_mode<'a>(
     positions: &[(usize, usize)],
     scored: &[(usize, u32)],
@@ -84,6 +87,9 @@ fn build_active_mode<'a>(
     out
 }
 
+// 8 args ferry render context shared by both list-mode helpers; a
+// shared RenderCtx struct can come later if more args accumulate.
+#[allow(clippy::too_many_arguments)]
 fn build_all_mode<'a>(
     positions: &[(usize, usize)],
     scored: &[(usize, u32)],
@@ -98,16 +104,9 @@ fn build_all_mode<'a>(
     // Group surviving recipe positions by jf_idx, preserving the score
     // ordering inside each group.
     let mut by_jf: HashMap<usize, Vec<usize>> = HashMap::new();
-    let mut jf_order: Vec<usize> = Vec::new();
     for (pos, _score) in scored {
         let (jf_idx, _recipe_idx) = positions[*pos];
-        by_jf
-            .entry(jf_idx)
-            .and_modify(|v| v.push(*pos))
-            .or_insert_with(|| {
-                jf_order.push(jf_idx);
-                vec![*pos]
-            });
+        by_jf.entry(jf_idx).or_default().push(*pos);
     }
 
     // Iterate justfiles in view order so the section ordering follows
@@ -272,14 +271,14 @@ fn session_indicators_for<'a>(
 }
 
 fn status_span(
-    status: crate::app::types::Status,
+    status: Status,
     unread: bool,
     theme: &crate::theme::Theme,
     style: IconStyle,
     g: &crate::ui::icon_style::Glyphs,
 ) -> Span<'static> {
     let (icon, color) = match status {
-        crate::app::types::Status::Running => (
+        Status::Running => (
             if style == IconStyle::None {
                 ""
             } else {
@@ -287,13 +286,13 @@ fn status_span(
             },
             theme.running,
         ),
-        crate::app::types::Status::ShellAfterExit { code } | crate::app::types::Status::Exited { code } if code == 0 => {
+        Status::ShellAfterExit { code } | Status::Exited { code } if code == 0 => {
             ("✓", if unread { theme.success } else { theme.dim })
         }
-        crate::app::types::Status::ShellAfterExit { .. } | crate::app::types::Status::Exited { .. } => {
+        Status::ShellAfterExit { .. } | Status::Exited { .. } => {
             ("✗", if unread { theme.error } else { theme.dim })
         }
-        crate::app::types::Status::Broken => ("!", theme.warn),
+        Status::Broken => ("!", theme.warn),
     };
     Span::styled(icon.to_string(), Style::default().fg(color))
 }
