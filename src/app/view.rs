@@ -27,17 +27,7 @@ impl ListView {
         Self { rows }
     }
 
-    /// Index (within `rows`) of the `n`-th `Recipe` row, skipping headers.
-    /// Returns `None` if there are fewer than `n + 1` recipe rows.
-    pub fn recipe_row_position(&self, n: usize) -> Option<usize> {
-        self.rows
-            .iter()
-            .enumerate()
-            .filter(|(_, r)| matches!(r, RowRef::Recipe { .. }))
-            .nth(n)
-            .map(|(i, _)| i)
-    }
-
+    /// Number of `Recipe` rows in this view (headers excluded).
     pub fn recipe_count(&self) -> usize {
         self.rows
             .iter()
@@ -184,5 +174,18 @@ mod tests {
         assert_eq!(v_active.recipe_count(), 1);
         let v_all = ListView::build(&files, ListMode::All, 0);
         assert_eq!(v_all.recipe_count(), 2);
+    }
+
+    #[test]
+    fn active_mode_uses_jf_idx_of_active_justfile_not_zero() {
+        let files = vec![jf("a/justfile", &["x"]), jf("b/justfile", &["y", "z"])];
+        let v = ListView::build(&files, ListMode::Active, 1);
+        assert_eq!(
+            v.rows,
+            vec![
+                RowRef::Recipe { jf_idx: 1, recipe_idx: 0 },
+                RowRef::Recipe { jf_idx: 1, recipe_idx: 1 },
+            ]
+        );
     }
 }
