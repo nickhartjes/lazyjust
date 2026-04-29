@@ -22,7 +22,10 @@ pub fn run() -> anyhow::Result<()> {
         return handle_subcommand(cmd);
     }
 
-    let cfg = Config::load();
+    let mut cfg = Config::load();
+    if let Some(arg) = cli.list_mode {
+        cfg.list_mode = arg.into();
+    }
     let _log_guard = logging::init(&cfg, &cli.log_level)?;
 
     let rt = tokio::runtime::Builder::new_multi_thread()
