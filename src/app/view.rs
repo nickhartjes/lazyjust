@@ -109,8 +109,14 @@ mod tests {
         assert_eq!(
             v.rows,
             vec![
-                RowRef::Recipe { jf_idx: 0, recipe_idx: 0 },
-                RowRef::Recipe { jf_idx: 0, recipe_idx: 1 },
+                RowRef::Recipe {
+                    jf_idx: 0,
+                    recipe_idx: 0
+                },
+                RowRef::Recipe {
+                    jf_idx: 0,
+                    recipe_idx: 1
+                },
             ]
         );
     }
@@ -130,10 +136,19 @@ mod tests {
             v.rows,
             vec![
                 RowRef::Header { jf_idx: 0 },
-                RowRef::Recipe { jf_idx: 0, recipe_idx: 0 },
-                RowRef::Recipe { jf_idx: 0, recipe_idx: 1 },
+                RowRef::Recipe {
+                    jf_idx: 0,
+                    recipe_idx: 0
+                },
+                RowRef::Recipe {
+                    jf_idx: 0,
+                    recipe_idx: 1
+                },
                 RowRef::Header { jf_idx: 1 },
-                RowRef::Recipe { jf_idx: 1, recipe_idx: 0 },
+                RowRef::Recipe {
+                    jf_idx: 1,
+                    recipe_idx: 0
+                },
             ]
         );
     }
@@ -150,9 +165,15 @@ mod tests {
             v.rows,
             vec![
                 RowRef::Header { jf_idx: 0 },
-                RowRef::Recipe { jf_idx: 0, recipe_idx: 0 },
+                RowRef::Recipe {
+                    jf_idx: 0,
+                    recipe_idx: 0
+                },
                 RowRef::Header { jf_idx: 2 },
-                RowRef::Recipe { jf_idx: 2, recipe_idx: 0 },
+                RowRef::Recipe {
+                    jf_idx: 2,
+                    recipe_idx: 0
+                },
             ]
         );
     }
@@ -183,8 +204,14 @@ mod tests {
         assert_eq!(
             v.rows,
             vec![
-                RowRef::Recipe { jf_idx: 1, recipe_idx: 0 },
-                RowRef::Recipe { jf_idx: 1, recipe_idx: 1 },
+                RowRef::Recipe {
+                    jf_idx: 1,
+                    recipe_idx: 0
+                },
+                RowRef::Recipe {
+                    jf_idx: 1,
+                    recipe_idx: 1
+                },
             ]
         );
     }

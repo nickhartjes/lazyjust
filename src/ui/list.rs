@@ -21,11 +21,7 @@ pub(crate) fn build_lines_for_test<'a>(app: &'a App, width: u16) -> Vec<Line<'a>
     build_lines(app, &app.theme, width)
 }
 
-fn build_lines<'a>(
-    app: &'a App,
-    theme: &crate::theme::Theme,
-    width: u16,
-) -> Vec<Line<'a>> {
+fn build_lines<'a>(app: &'a App, theme: &crate::theme::Theme, width: u16) -> Vec<Line<'a>> {
     let glyphs = app.icon_style.glyphs();
     let style = app.icon_style;
     let g = &glyphs;
@@ -127,10 +123,7 @@ fn build_all_mode<'a>(
         let Some(survivors) = by_jf.get(&jf_idx) else {
             continue;
         };
-        let label = relativize_to_root(
-            &app.justfiles[jf_idx].path,
-            &app.discovery_root,
-        );
+        let label = relativize_to_root(&app.justfiles[jf_idx].path, &app.discovery_root);
         out.push(section_header(&label, theme, width));
         for pos in survivors {
             let (jf, recipe_idx) = positions[*pos];
@@ -366,7 +359,10 @@ mod tests {
         let joined = plain.join("\n");
         assert!(joined.contains("build"), "expected build in {joined}");
         assert!(joined.contains("test"), "expected test in {joined}");
-        assert!(!joined.contains("dev"), "should not contain web's dev recipe");
+        assert!(
+            !joined.contains("dev"),
+            "should not contain web's dev recipe"
+        );
     }
 
     fn render_to_plain(line: &ratatui::text::Line) -> String {

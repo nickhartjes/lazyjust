@@ -15,11 +15,7 @@ pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme)
 }
 
 fn render_all_mode(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
-    let total_recipes: usize = app
-        .justfiles
-        .iter()
-        .map(|j| j.recipes.len())
-        .sum();
+    let total_recipes: usize = app.justfiles.iter().map(|j| j.recipes.len()).sum();
     let leading: Vec<Span> = vec![
         Span::styled("▌", Style::default().fg(theme.accent)),
         Span::raw(" "),
@@ -36,8 +32,7 @@ fn render_all_mode(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::T
         .sum::<usize>();
     let path_budget: usize = (area.width as usize).saturating_sub(chrome_width).max(8);
 
-    let root_label =
-        crate::ui::path_display::shorten(&app.discovery_root, path_budget);
+    let root_label = crate::ui::path_display::shorten(&app.discovery_root, path_budget);
 
     let trailing = format!(
         "  · {} justfiles, {} recipes",
@@ -182,10 +177,7 @@ mod tests {
         })
         .unwrap();
         let buf = term.backend().buffer().clone();
-        buf.content()
-            .iter()
-            .map(|c| c.symbol())
-            .collect::<String>()
+        buf.content().iter().map(|c| c.symbol()).collect::<String>()
     }
 
     #[test]
