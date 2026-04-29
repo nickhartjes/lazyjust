@@ -84,11 +84,9 @@ pub fn reduce(app: &mut App, action: Action) {
 }
 
 fn cursor_down(app: &mut App) {
-    if let Some(jf) = app.active_justfile() {
-        let max = jf.recipes.len().saturating_sub(1);
-        if app.list_cursor < max {
-            app.list_cursor += 1;
-        }
+    let max = app.view.recipe_count().saturating_sub(1);
+    if app.list_cursor < max {
+        app.list_cursor += 1;
     }
 }
 

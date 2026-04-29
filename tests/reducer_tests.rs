@@ -313,3 +313,68 @@ fn help_close_returns_to_normal() {
     reduce(&mut app, Action::CloseHelp);
     assert_eq!(app.mode, Mode::Normal);
 }
+
+mod list_mode_cursor {
+    use lazyjust::app::reducer::reduce;
+    use lazyjust::app::types::{Justfile, ListMode, Recipe};
+    use lazyjust::app::{Action, App};
+    use std::path::PathBuf;
+
+    fn r(n: &str) -> Recipe {
+        Recipe {
+            name: n.into(),
+            module_path: vec![],
+            group: None,
+            params: vec![],
+            doc: None,
+            command_preview: String::new(),
+            runs: vec![],
+            dependencies: vec![],
+        }
+    }
+
+    fn make_app(mode: ListMode) -> App {
+        let a = Justfile {
+            path: PathBuf::from("/root/a/justfile"),
+            recipes: vec![r("a1"), r("a2")],
+            groups: vec![],
+        };
+        let b = Justfile {
+            path: PathBuf::from("/root/b/justfile"),
+            recipes: vec![r("b1")],
+            groups: vec![],
+        };
+        App::new(
+            vec![a, b],
+            vec![],
+            0.3,
+            lazyjust::theme::registry::resolve(lazyjust::theme::DEFAULT_THEME_NAME),
+            lazyjust::theme::DEFAULT_THEME_NAME.to_string(),
+            lazyjust::ui::icon_style::IconStyle::Round,
+            mode,
+            PathBuf::from("/root"),
+        )
+    }
+
+    #[test]
+    fn cursor_in_all_mode_advances_across_justfiles_clamping_at_total() {
+        let mut app = make_app(ListMode::All);
+        // recipe_count = 3 → cursor should clamp at 2
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 1);
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 2);
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 2); // clamped
+    }
+
+    #[test]
+    fn cursor_in_active_mode_clamps_to_active_justfile_recipes() {
+        let mut app = make_app(ListMode::Active);
+        // recipe_count = 2 (only justfile A is active)
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 1);
+        reduce(&mut app, Action::CursorDown);
+        assert_eq!(app.list_cursor, 1); // clamped
+    }
+}
