@@ -8,7 +8,7 @@ pub struct Cli {
     #[arg(value_name = "PATH")]
     pub path: Option<PathBuf>,
 
-    /// Specific justfile to use as root (overrides depth-0 auto-pick).
+    /// Pin FILE as the active justfile; walk its parent for siblings.
     #[arg(long = "justfile", value_name = "FILE")]
     pub justfile: Option<PathBuf>,
 

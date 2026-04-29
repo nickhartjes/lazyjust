@@ -116,7 +116,7 @@ Requires [`just`](https://github.com/casey/just) on `PATH` at runtime.
 ```bash
 lazyjust                  # scan current directory
 lazyjust [path]           # scan a specific directory
-lazyjust --justfile FILE  # pin a specific justfile as root
+lazyjust --justfile FILE    # walk FILE's directory, pin FILE as active
 ```
 
 ## Configuration
