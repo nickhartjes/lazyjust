@@ -31,6 +31,7 @@ fn hint_for<'a>(mode: &'a Mode, app: &'a App, theme: &crate::theme::Theme) -> Li
     let sep = Span::styled("  ·  ", Style::default().fg(theme.dim));
     let k = |s: &str| Span::styled(s.to_string(), Style::default().fg(theme.fg));
     let d = |s: &str| Span::styled(s.to_string(), Style::default().fg(theme.dim));
+    let a = |s: &str| Span::styled(s.to_string(), Style::default().fg(theme.accent));
     match mode {
         Mode::Normal if matches!(app.focus, Focus::Session) => Line::from(vec![
             k("F12 / Ctrl+g"),
@@ -49,7 +50,7 @@ fn hint_for<'a>(mode: &'a Mode, app: &'a App, theme: &crate::theme::Theme) -> Li
             Span::raw(" "),
             d("close"),
             sep,
-            k("?"),
+            a("?"),
             Span::raw(" "),
             d("help"),
         ]),
@@ -66,7 +67,7 @@ fn hint_for<'a>(mode: &'a Mode, app: &'a App, theme: &crate::theme::Theme) -> Li
             Span::raw(" "),
             d("theme"),
             sep.clone(),
-            k("?"),
+            a("?"),
             Span::raw(" "),
             d("help"),
             sep,
