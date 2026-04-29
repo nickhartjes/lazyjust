@@ -130,3 +130,24 @@ pub struct SessionMeta {
     /// OS process id of the shell child process, if the platform could provide one.
     pub pid: Option<u32>,
 }
+
+#[cfg(test)]
+mod list_mode_tests {
+    use super::*;
+
+    #[test]
+    fn list_mode_parse_known_values() {
+        assert_eq!(ListMode::parse("active"), Some(ListMode::Active));
+        assert_eq!(ListMode::parse("all"), Some(ListMode::All));
+    }
+
+    #[test]
+    fn list_mode_parse_is_case_sensitive_by_design() {
+        // Case-sensitive: TOML schema is lowercase-only and merge_ui
+        // warn-logs on mismatch.
+        assert_eq!(ListMode::parse("Active"), None);
+        assert_eq!(ListMode::parse("ALL"), None);
+        assert_eq!(ListMode::parse("weird"), None);
+        assert_eq!(ListMode::parse(""), None);
+    }
+}
