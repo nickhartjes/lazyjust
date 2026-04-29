@@ -61,6 +61,24 @@ pub enum Focus {
     Modal,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ListMode {
+    Active,
+    All,
+}
+
+impl ListMode {
+    /// Parse a config string. Returns `None` for unknown values so callers
+    /// can warn-log and fall back to a default.
+    pub fn parse(s: &str) -> Option<ListMode> {
+        match s {
+            "active" => Some(ListMode::Active),
+            "all" => Some(ListMode::All),
+            _ => None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Mode {
     Normal,
