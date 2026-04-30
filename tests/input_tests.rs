@@ -64,3 +64,18 @@ fn split_resize_keys() {
         Some(Action::ResetSplit)
     );
 }
+
+#[test]
+fn ctrl_c_requests_quit_in_normal_mode() {
+    let evt = Event::Key(KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL));
+    assert_eq!(handle_event(&evt, &Mode::Normal), Some(Action::RequestQuit));
+}
+
+#[test]
+fn ctrl_c_requests_quit_in_filter_mode() {
+    let evt = Event::Key(KeyEvent::new(KeyCode::Char('c'), KeyModifiers::CONTROL));
+    assert_eq!(
+        handle_event(&evt, &Mode::FilterInput),
+        Some(Action::RequestQuit)
+    );
+}

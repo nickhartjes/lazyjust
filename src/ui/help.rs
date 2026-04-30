@@ -84,8 +84,8 @@ pub const SECTIONS: &[Section] = &[
                 desc: "open the startup-errors modal",
             },
             Entry {
-                keys: "q",
-                desc: "quit — confirms if sessions are running",
+                keys: "q / Ctrl+c",
+                desc: "quit — confirms if sessions are running (Ctrl+c in a focused session forwards SIGINT to the child)",
             },
         ],
     },

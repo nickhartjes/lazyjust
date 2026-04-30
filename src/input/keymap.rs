@@ -9,6 +9,16 @@ pub fn handle_event(evt: &Event, mode: &Mode) -> Option<Action> {
         _ => return None,
     };
 
+    // Ctrl-C as a global quit shortcut. The event loop forwards keys to
+    // the PTY before reaching here when focus=Session && mode=Normal, so
+    // Ctrl-C still signals the running child in that case. In any other
+    // state (List focus, or session focus with a modal open), this
+    // routes to RequestQuit and the reducer prompts if sessions are
+    // running.
+    if key.modifiers.contains(KeyModifiers::CONTROL) && key.code == KeyCode::Char('c') {
+        return Some(Action::RequestQuit);
+    }
+
     match mode {
         Mode::Normal => normal_mode(key),
         Mode::FilterInput => filter_mode(key),
