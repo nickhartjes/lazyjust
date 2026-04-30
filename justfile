@@ -101,8 +101,8 @@ release VERSION:
     git add Cargo.toml Cargo.lock
     git commit -m "release: v{{VERSION}}" -m "$body"
 
-    # 8. Tag.
-    git tag "v{{VERSION}}"
+    # 8. Tag (annotated so tag.gpgsign / tag.forceSignAnnotated configs work).
+    git tag -a "v{{VERSION}}" -m "release: v{{VERSION}}" -m "$body"
 
     # 9. Tell the human how to push.
     echo
