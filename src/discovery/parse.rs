@@ -28,7 +28,7 @@ pub fn parse_dump_with_path(json: &str, path: &PathBuf) -> Result<Vec<Recipe>> {
             dependencies: r.dependencies.into_iter().map(|d| d.recipe).collect(),
         })
         .collect();
-    recipes.sort_by(|a, b| a.name.cmp(&b.name));
+    recipes.sort_by(|a, b| a.group.cmp(&b.group).then_with(|| a.name.cmp(&b.name)));
     Ok(recipes)
 }
 
