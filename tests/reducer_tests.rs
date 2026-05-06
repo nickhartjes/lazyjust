@@ -181,16 +181,30 @@ fn mark_read_unread_flip() {
 
 #[test]
 fn dropdown_switches_justfile() {
-    use lazyjust::app::types::{Justfile, Mode};
+    use lazyjust::app::types::{Justfile, Mode, Recipe};
+    use lazyjust::app::view::RowRef;
+
+    fn recipe(name: &str) -> Recipe {
+        Recipe {
+            name: name.into(),
+            module_path: vec![],
+            group: None,
+            params: vec![],
+            doc: None,
+            command_preview: String::new(),
+            runs: vec![],
+            dependencies: vec![],
+        }
+    }
 
     let a = Justfile {
         path: "/a".into(),
-        recipes: vec![],
+        recipes: vec![recipe("a-only")],
         groups: vec![],
     };
     let b = Justfile {
         path: "/b".into(),
-        recipes: vec![],
+        recipes: vec![recipe("b-one"), recipe("b-two")],
         groups: vec![],
     };
     let mut app = App::new(
@@ -210,6 +224,19 @@ fn dropdown_switches_justfile() {
     reduce(&mut app, Action::SelectDropdown);
     assert_eq!(app.active_justfile, 1);
     assert_eq!(app.mode, Mode::Normal);
+    assert_eq!(
+        app.view.rows,
+        vec![
+            RowRef::Recipe {
+                jf_idx: 1,
+                recipe_idx: 0,
+            },
+            RowRef::Recipe {
+                jf_idx: 1,
+                recipe_idx: 1,
+            },
+        ]
+    );
 }
 
 #[test]

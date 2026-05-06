@@ -219,6 +219,11 @@ fn select_dropdown(app: &mut App) {
             app.active_justfile = chosen;
             app.list_cursor = 0;
             app.filter.clear();
+            app.view = crate::app::view::ListView::build(
+                &app.justfiles,
+                app.list_mode,
+                app.active_justfile,
+            );
         }
         app.mode = Mode::Normal;
     }
