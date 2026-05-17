@@ -12,16 +12,36 @@ use ratatui::Frame;
 
 pub fn render(f: &mut Frame, area: Rect, app: &App, theme: &crate::theme::Theme) {
     let _ = is_list_active(app.focus);
-    let lines = build_lines(app, theme, area.width);
-    f.render_widget(Paragraph::new(lines), area);
+    let (lines, selected_line) = build_lines(app, theme, area.width);
+    let offset = compute_scroll_offset(lines.len(), area.height, selected_line);
+    f.render_widget(Paragraph::new(lines).scroll((offset, 0)), area);
+}
+
+// Center the selected row in the viewport when the list overflows so the cursor
+// stays visible as the user navigates with j/k.
+fn compute_scroll_offset(total: usize, visible: u16, selected_line: Option<usize>) -> u16 {
+    let Some(sel) = selected_line else {
+        return 0;
+    };
+    let visible = visible as usize;
+    if visible == 0 || total <= visible {
+        return 0;
+    }
+    let max_offset = total - visible;
+    let half = visible / 2;
+    sel.saturating_sub(half).min(max_offset) as u16
 }
 
 #[cfg(test)]
 pub(crate) fn build_lines_for_test<'a>(app: &'a App, width: u16) -> Vec<Line<'a>> {
-    build_lines(app, &app.theme, width)
+    build_lines(app, &app.theme, width).0
 }
 
-fn build_lines<'a>(app: &'a App, theme: &crate::theme::Theme, width: u16) -> Vec<Line<'a>> {
+fn build_lines<'a>(
+    app: &'a App,
+    theme: &crate::theme::Theme,
+    width: u16,
+) -> (Vec<Line<'a>>, Option<usize>) {
     let glyphs = app.icon_style.glyphs();
     let style = app.icon_style;
     let g = &glyphs;
@@ -65,8 +85,9 @@ fn build_active_mode<'a>(
     g: &crate::ui::icon_style::Glyphs,
     width: u16,
     selected: usize,
-) -> Vec<Line<'a>> {
+) -> (Vec<Line<'a>>, Option<usize>) {
     let mut out: Vec<Line> = Vec::new();
+    let mut selected_line: Option<usize> = None;
     let mut current_group: Option<&str> = None;
     for (displayed_idx, (pos, _score)) in scored.iter().enumerate() {
         let (jf_idx, recipe_idx) = positions[*pos];
@@ -78,9 +99,12 @@ fn build_active_mode<'a>(
             current_group = group_name;
         }
         let is_cursor = displayed_idx == selected;
+        if is_cursor {
+            selected_line = Some(out.len());
+        }
         out.push(row(r, app, theme, style, g, is_cursor, width));
     }
-    out
+    (out, selected_line)
 }
 
 // 8 args ferry render context shared by both list-mode helpers; a
@@ -95,7 +119,7 @@ fn build_all_mode<'a>(
     g: &crate::ui::icon_style::Glyphs,
     width: u16,
     selected: usize,
-) -> Vec<Line<'a>> {
+) -> (Vec<Line<'a>>, Option<usize>) {
     use std::collections::HashMap;
     // Group surviving recipe positions by jf_idx, preserving the score
     // ordering inside each group.
@@ -109,6 +133,7 @@ fn build_all_mode<'a>(
     // discovery's path-sorted layout. Drop justfiles with no surviving
     // recipes.
     let mut out: Vec<Line> = Vec::new();
+    let mut selected_line: Option<usize> = None;
     let mut emitted = 0usize;
     let view_jf_order: Vec<usize> = app
         .view
@@ -130,11 +155,14 @@ fn build_all_mode<'a>(
             debug_assert_eq!(jf, jf_idx);
             let r: &Recipe = &app.justfiles[jf].recipes[recipe_idx];
             let is_cursor = emitted == selected;
+            if is_cursor {
+                selected_line = Some(out.len());
+            }
             emitted += 1;
             out.push(row(r, app, theme, style, g, is_cursor, width));
         }
     }
-    out
+    (out, selected_line)
 }
 
 fn section_header<'a>(label: &str, theme: &crate::theme::Theme, width: u16) -> Line<'a> {
@@ -367,5 +395,38 @@ mod tests {
 
     fn render_to_plain(line: &ratatui::text::Line) -> String {
         line.spans.iter().map(|s| s.content.as_ref()).collect()
+    }
+
+    #[test]
+    fn scroll_offset_zero_when_list_fits() {
+        assert_eq!(super::compute_scroll_offset(5, 10, Some(4)), 0);
+    }
+
+    #[test]
+    fn scroll_offset_zero_when_no_selection() {
+        assert_eq!(super::compute_scroll_offset(100, 10, None), 0);
+    }
+
+    #[test]
+    fn scroll_offset_centers_selection_when_overflow() {
+        // visible=10, half=5. selected at line 20 → offset = 20 - 5 = 15.
+        assert_eq!(super::compute_scroll_offset(50, 10, Some(20)), 15);
+    }
+
+    #[test]
+    fn scroll_offset_clamped_to_max_at_bottom() {
+        // total=50, visible=10 → max_offset=40. selected near bottom doesn't exceed.
+        assert_eq!(super::compute_scroll_offset(50, 10, Some(49)), 40);
+    }
+
+    #[test]
+    fn scroll_offset_zero_when_selection_near_top() {
+        // selected_line=3, half=5 → saturating_sub = 0.
+        assert_eq!(super::compute_scroll_offset(50, 10, Some(3)), 0);
+    }
+
+    #[test]
+    fn scroll_offset_handles_zero_height() {
+        assert_eq!(super::compute_scroll_offset(50, 0, Some(10)), 0);
     }
 }
