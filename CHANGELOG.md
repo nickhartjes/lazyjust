@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2026-08-23
+
+Maintenance release: dependency refresh only. lazyjust's own production code
+is byte-identical to 0.2.4 — no behaviour changes, no new features, no fixes
+to lazyjust itself.
+
+### Changed
+- Refreshed every dependency to its latest compatible release ([#61]). The
+  one with plausible reach into lazyjust is `ratatui` 0.30.0 → 0.30.2, whose
+  buffer-diff fix for "uncovered" cells ([ratatui#2587]) touches the overlay
+  path every modal here goes through; no lazyjust-side symptom was
+  identified, so treat it as hygiene rather than a fix. Also `tokio`
+  1.52.3 → 1.53.1, `ignore` 0.4.25 → 0.4.33, `clap` 4.6.1 → 4.6.6, plus
+  `anyhow`, `futures`, `serde`, `serde_json`, `thiserror`, `toml`,
+  `toml_edit` and ~100 transitive crates.
+
+### Internal
+- Serialized the `path_display` tests that mutate `HOME` behind a module
+  mutex. They raced under default `cargo test` parallelism — reproducible at
+  7 failures in 40 runs — and failed intermittently on Windows CI ([#61]).
+- SonarQube now runs on a weekly schedule, and its bot guard is scoped to
+  pull requests, so a broken scan can no longer go unnoticed while `main` is
+  quiet ([#65]).
+- Dev toolchain moved to Rust 1.98.0 and `just` 1.58.0 ([#61]).
+
 ## [0.2.4] - 2026-05-17
 
 ### Fixed
@@ -103,6 +128,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bump `dirs` 6, `thiserror` 2, `portable-pty` 0.9, `vt100` 0.16, `toml_edit` 0.25, `rstest` 0.26 ([#15]).
 
+[#61]: https://github.com/nickhartjes/lazyjust/pull/61
+[#65]: https://github.com/nickhartjes/lazyjust/pull/65
+[ratatui#2587]: https://github.com/ratatui/ratatui/pull/2587
+[0.2.5]: https://github.com/nickhartjes/lazyjust/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/nickhartjes/lazyjust/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/nickhartjes/lazyjust/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/nickhartjes/lazyjust/compare/v0.2.1...v0.2.2
