@@ -4,6 +4,14 @@ on:
     branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
+  # Heartbeat: surface silent breakage while main is quiet. The scan skips
+  # Renovate PRs (see the job guard), so with no pushes to main this workflow
+  # can go months without executing -- it sat idle 2026-05-17 -> 2026-08-23
+  # while SONAR_TOKEN expired, and nothing reported it.
+  schedule:
+    # Mondays 06:37 UTC. Deliberately off the hour: GitHub delays or drops
+    # scheduled runs queued on popular marks like :00.
+    - cron: '37 6 * * 1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,7 +20,14 @@ concurrency:
 jobs:
   sonarqube:
     name: SonarQube Scan
-    if: github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]'
+    # Skip bot *pull requests* only. This guard used to apply to every event,
+    # which made the heartbeat above unreliable: on push and schedule runs
+    # github.actor is the last actor on the branch, so it resolves to
+    # renovate[bot] right after a dependency PR merges -- skipping exactly the
+    # runs we depend on to notice a broken scan.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.actor != 'renovate[bot]' && github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
