@@ -87,111 +87,145 @@ fn middle_truncate(s: &str, max_width: usize) -> String {
 
 #[cfg(test)]
 mod tests {
-    // These tests mutate the process-wide HOME env var. The whole suite runs
-    // under `cargo test -- --test-threads=1`; if that ever changes, gate this
-    // module with a Mutex<()> like tests/config_loader.rs.
     use super::*;
     use std::path::PathBuf;
+    use std::sync::{Mutex, OnceLock};
+
+    // Serialize these tests: `render_with_home_tilde` reads the process-wide
+    // HOME env var, and these tests mutate it. Default `cargo test`
+    // parallelism let a `with_home(None, ..)` case clear HOME while a tilde
+    // case was asserting on it, which failed roughly 1 run in 6. A
+    // module-level mutex avoids that without pulling in serial_test, and
+    // without forcing the whole suite to `--test-threads=1`.
+    // Same pattern as tests/config_loader.rs.
+    fn guard() -> &'static Mutex<()> {
+        static M: OnceLock<Mutex<()>> = OnceLock::new();
+        M.get_or_init(|| Mutex::new(()))
+    }
+
+    /// Run `body` with HOME set to `home` (or unset when `None`), holding the
+    /// module lock for the duration. HOME is cleared afterwards.
+    fn with_home<T>(home: Option<&str>, body: impl FnOnce() -> T) -> T {
+        let _lock = guard().lock().unwrap_or_else(|e| e.into_inner());
+        match home {
+            Some(h) => std::env::set_var("HOME", h),
+            None => std::env::remove_var("HOME"),
+        }
+        let out = body();
+        std::env::remove_var("HOME");
+        out
+    }
 
     #[test]
     fn returns_unchanged_when_within_width() {
-        let p = PathBuf::from("/tmp/justfile");
-        assert_eq!(shorten(&p, 80), "/tmp/justfile");
+        with_home(None, || {
+            let p = PathBuf::from("/tmp/justfile");
+            assert_eq!(shorten(&p, 80), "/tmp/justfile");
+        });
     }
 
     #[test]
     fn replaces_home_with_tilde() {
-        std::env::set_var("HOME", "/Users/nick");
-        let p = PathBuf::from("/Users/nick/projects/foo/justfile");
-        assert_eq!(shorten(&p, 80), "~/projects/foo/justfile");
+        with_home(Some("/Users/nick"), || {
+            let p = PathBuf::from("/Users/nick/projects/foo/justfile");
+            assert_eq!(shorten(&p, 80), "~/projects/foo/justfile");
+        });
     }
 
     #[test]
     fn home_only_path_renders_as_tilde() {
-        std::env::set_var("HOME", "/Users/nick");
-        let p = PathBuf::from("/Users/nick");
-        assert_eq!(shorten(&p, 80), "~");
+        with_home(Some("/Users/nick"), || {
+            let p = PathBuf::from("/Users/nick");
+            assert_eq!(shorten(&p, 80), "~");
+        });
     }
 
     #[test]
     fn unrelated_path_is_unaffected_by_home() {
-        std::env::set_var("HOME", "/Users/nick");
-        let p = PathBuf::from("/var/log/justfile");
-        assert_eq!(shorten(&p, 80), "/var/log/justfile");
+        with_home(Some("/Users/nick"), || {
+            let p = PathBuf::from("/var/log/justfile");
+            assert_eq!(shorten(&p, 80), "/var/log/justfile");
+        });
     }
 
     #[test]
     fn home_prefix_is_not_a_path_substring_match() {
-        std::env::set_var("HOME", "/Users/nick");
-        let p = PathBuf::from("/Users/nicholas/justfile");
-        assert_eq!(shorten(&p, 80), "/Users/nicholas/justfile");
+        with_home(Some("/Users/nick"), || {
+            let p = PathBuf::from("/Users/nicholas/justfile");
+            assert_eq!(shorten(&p, 80), "/Users/nicholas/justfile");
+        });
     }
 
     #[test]
     fn middle_truncates_long_absolute_path() {
-        std::env::set_var("HOME", "/Users/nick");
-        let p = PathBuf::from("/Users/nick/projects/entrnce/trader/services/api/justfile");
-        let out = shorten(&p, 28);
-        assert!(out.starts_with("~/"), "expected leading ~/, got {out:?}");
-        assert!(out.contains('…'), "expected ellipsis, got {out:?}");
-        assert!(
-            out.ends_with("/justfile"),
-            "expected /justfile tail, got {out:?}"
-        );
-        assert!(
-            out.chars().count() <= 28,
-            "expected ≤28 cols, got {} ({out:?})",
-            out.chars().count()
-        );
+        with_home(Some("/Users/nick"), || {
+            let p = PathBuf::from("/Users/nick/projects/entrnce/trader/services/api/justfile");
+            let out = shorten(&p, 28);
+            assert!(out.starts_with("~/"), "expected leading ~/, got {out:?}");
+            assert!(out.contains('…'), "expected ellipsis, got {out:?}");
+            assert!(
+                out.ends_with("/justfile"),
+                "expected /justfile tail, got {out:?}"
+            );
+            assert!(
+                out.chars().count() <= 28,
+                "expected ≤28 cols, got {} ({out:?})",
+                out.chars().count()
+            );
+        });
     }
 
     #[test]
     fn middle_truncates_non_home_path() {
-        std::env::remove_var("HOME");
-        let p = PathBuf::from("/var/very/deeply/nested/repo/sub/dir/justfile");
-        let out = shorten(&p, 24);
-        assert!(
-            out.starts_with("/…/"),
-            "expected /…/ root anchor, got {out:?}"
-        );
-        assert!(
-            out.ends_with("/justfile"),
-            "expected /justfile tail, got {out:?}"
-        );
-        assert!(
-            out.chars().count() <= 24,
-            "got {} ({out:?})",
-            out.chars().count()
-        );
+        with_home(None, || {
+            let p = PathBuf::from("/var/very/deeply/nested/repo/sub/dir/justfile");
+            let out = shorten(&p, 24);
+            assert!(
+                out.starts_with("/…/"),
+                "expected /…/ root anchor, got {out:?}"
+            );
+            assert!(
+                out.ends_with("/justfile"),
+                "expected /justfile tail, got {out:?}"
+            );
+            assert!(
+                out.chars().count() <= 24,
+                "got {} ({out:?})",
+                out.chars().count()
+            );
+        });
     }
 
     #[test]
     fn very_tight_budget_returns_root_ellipsis_filename_even_if_over_budget() {
-        std::env::remove_var("HOME");
-        let p = PathBuf::from("/var/x/y/z/justfile");
-        let out = shorten(&p, 5);
-        assert_eq!(out, "/…/justfile");
+        with_home(None, || {
+            let p = PathBuf::from("/var/x/y/z/justfile");
+            let out = shorten(&p, 5);
+            assert_eq!(out, "/…/justfile");
+        });
     }
 
     #[test]
     fn root_only_path_unchanged() {
-        std::env::remove_var("HOME");
-        let p = PathBuf::from("/justfile");
-        assert_eq!(shorten(&p, 5), "/justfile");
+        with_home(None, || {
+            let p = PathBuf::from("/justfile");
+            assert_eq!(shorten(&p, 5), "/justfile");
+        });
     }
 
     #[test]
     fn relative_path_with_no_root_segment() {
-        std::env::remove_var("HOME");
-        let p = PathBuf::from("a/b/c/d/e/justfile");
-        let out = shorten(&p, 14);
-        assert!(out.starts_with("a/"), "got {out:?}");
-        assert!(out.contains('…'));
-        assert!(out.ends_with("/justfile"));
-        assert!(
-            out.chars().count() <= 14,
-            "got {} ({out:?})",
-            out.chars().count()
-        );
+        with_home(None, || {
+            let p = PathBuf::from("a/b/c/d/e/justfile");
+            let out = shorten(&p, 14);
+            assert!(out.starts_with("a/"), "got {out:?}");
+            assert!(out.contains('…'));
+            assert!(out.ends_with("/justfile"));
+            assert!(
+                out.chars().count() <= 14,
+                "got {} ({out:?})",
+                out.chars().count()
+            );
+        });
     }
 }
