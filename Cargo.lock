@@ -1038,7 +1038,7 @@ checksum = "20870f649af7073d53e38067b2a84312175d56ea15217e1b15bc83506ec50afb"
 
 [[package]]
 name = "lazyjust"
-version = "0.2.5"
+version = "0.2.6"
 dependencies = [
  "anyhow",
  "arboard",
