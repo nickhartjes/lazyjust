@@ -142,3 +142,110 @@ async fn session_manager_spawn_recipe_primes_shell_and_emits_done() {
         }
     }
 }
+
+/// A stand-in for an rc file that probes the terminal before handing over
+/// to the real shell — the shape of `fastfetch`, powerlevel10k's instant
+/// prompt, and anything else that draws inline images. It emits
+/// `ESC [ 6 n` and then blocks reading stdin one byte at a time until the
+/// report's terminating `R` arrives.
+///
+/// Without an answer it never returns, and it eats the primed recipe line
+/// while it waits — the user-visible symptom is a blank session pane.
+const PROBE_SHELL: &str = r#"#!/bin/sh
+stty raw -echo
+printf '\033[6n'
+while :; do
+  c=$(dd bs=1 count=1 2>/dev/null)
+  case "$c" in R) break ;; esac
+done
+stty sane
+exec /bin/sh -i
+"#;
+
+fn write_probe_shell(tmp: &tempfile::TempDir) -> PathBuf {
+    use std::os::unix::fs::PermissionsExt;
+    let path = tmp.path().join("probe-shell.sh");
+    std::fs::write(&path, PROBE_SHELL).unwrap();
+    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    path
+}
+
+#[test]
+fn answers_cursor_query_so_the_primed_recipe_still_runs() {
+    use lazyjust::app::event_loop::feed_session_bytes;
+
+    let tmp = tempfile::tempdir().unwrap();
+    let justfile = make_justfile(&tmp);
+    let probe = write_probe_shell(&tmp);
+
+    let argv = vec![probe.display().to_string()];
+    let mut spawned = spawn(&argv, tmp.path(), 24, 80).unwrap();
+
+    // Drain the PTY on a thread so the main thread can answer queries and
+    // prime the recipe on the same idle heuristic `SessionManager` uses.
+    let (tx, rx) = std::sync::mpsc::channel::<Vec<u8>>();
+    let mut reader = spawned.reader;
+    std::thread::spawn(move || {
+        let mut chunk = [0u8; 8192];
+        loop {
+            match reader.read(&mut chunk) {
+                Ok(0) => break,
+                Ok(n) => {
+                    if tx.send(chunk[..n].to_vec()).is_err() {
+                        break;
+                    }
+                }
+                Err(e) if e.kind() == std::io::ErrorKind::Interrupted => continue,
+                Err(_) => break,
+            }
+        }
+    });
+
+    let mut screen = vt100::Parser::new(24, 80, 0);
+    let mut collected: Vec<u8> = Vec::new();
+    let mut last_output: Option<Instant> = None;
+    let mut primed = false;
+    let start = Instant::now();
+    let deadline = start + Duration::from_secs(20);
+
+    loop {
+        assert!(
+            Instant::now() < deadline,
+            "timed out: the probing shell never ran the recipe. \
+             cursor query answered? captured {} bytes",
+            collected.len()
+        );
+
+        if let Ok(bytes) = rx.recv_timeout(Duration::from_millis(50)) {
+            collected.extend_from_slice(&bytes);
+            last_output = Some(Instant::now());
+            // This is exactly what the event loop does for SessionBytes.
+            for report in feed_session_bytes(&mut screen, &bytes) {
+                spawned.writer.write_all(&report).unwrap();
+                spawned.writer.flush().unwrap();
+            }
+        }
+
+        let (_, codes) = scan_done_marker(&collected);
+        if !codes.is_empty() {
+            assert_eq!(codes[0], 0, "recipe exited non-zero");
+            assert!(
+                String::from_utf8_lossy(&collected).contains("lazyjust-hello"),
+                "done marker arrived without the recipe's output"
+            );
+            let _ = spawned.child.kill();
+            return;
+        }
+
+        if !primed {
+            let idle = last_output.is_some_and(|t| t.elapsed() >= Duration::from_millis(400));
+            if idle || start.elapsed() >= Duration::from_secs(5) {
+                let line = prime_line(&justfile, "hi", &[]);
+                spawned.writer.write_all(line.as_bytes()).unwrap();
+                spawned.writer.write_all(b"\r").unwrap();
+                spawned.writer.flush().unwrap();
+                primed = true;
+            }
+        }
+    }
+}

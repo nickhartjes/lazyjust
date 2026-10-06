@@ -250,7 +250,9 @@ fn handle_app_event(
         AppEvent::SessionBytes { id, bytes } => {
             mgr.write_log(id, &bytes);
             if let Some(screen) = screens.get_mut(&id) {
-                screen.process(&bytes);
+                for report in feed_session_bytes(screen, &bytes) {
+                    let _ = mgr.write(id, &report);
+                }
             }
             if app.active_session != Some(id) {
                 if let Some(s) = app.session_mut(id) {
@@ -266,6 +268,30 @@ fn handle_app_event(
         }
         AppEvent::Crossterm(_) | AppEvent::Tick => {}
     }
+}
+
+/// Feed PTY bytes into the session screen, answering any cursor-position
+/// query (`ESC [ 6 n`) the stream carries. Returns the DSR reports owed
+/// back to the PTY, in order.
+///
+/// Each report is built from the cursor position *at the point the query
+/// appeared*, so bytes trailing the query do not skew the answer. An
+/// unanswered query stalls the shell's rc files and swallows the primed
+/// recipe line — see `session::osc::split_cursor_queries`.
+pub fn feed_session_bytes(screen: &mut vt100::Parser, bytes: &[u8]) -> Vec<Vec<u8>> {
+    use crate::session::osc::{cursor_report, split_cursor_queries};
+
+    let chunks = split_cursor_queries(bytes);
+    let last = chunks.len() - 1;
+    let mut reports = Vec::with_capacity(last);
+    for (i, chunk) in chunks.iter().enumerate() {
+        screen.process(chunk);
+        if i < last {
+            let (row, col) = screen.screen().cursor_position();
+            reports.push(cursor_report(row, col));
+        }
+    }
+    reports
 }
 
 pub fn spawn_highlighted(
@@ -433,5 +459,46 @@ fn encode_key(key: crossterm::event::KeyEvent) -> Vec<u8> {
         KeyCode::Home => b"\x1b[H".to_vec(),
         KeyCode::End => b"\x1b[F".to_vec(),
         _ => Vec::new(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::feed_session_bytes;
+
+    fn parser() -> vt100::Parser {
+        vt100::Parser::new(24, 80, 0)
+    }
+
+    #[test]
+    fn plain_bytes_owe_no_report() {
+        let mut p = parser();
+        assert!(feed_session_bytes(&mut p, b"hello").is_empty());
+        assert_eq!(p.screen().cursor_position(), (0, 5));
+    }
+
+    #[test]
+    fn cursor_query_is_answered_with_position_at_the_query() {
+        let mut p = parser();
+        // Cursor sits at row 0, col 3 when the query arrives; the reply is
+        // 1-based, so row 1, col 4.
+        let replies = feed_session_bytes(&mut p, b"abc\x1b[6ndef");
+        assert_eq!(replies, vec![b"\x1b[1;4R".to_vec()]);
+        // Bytes after the query are still rendered.
+        assert_eq!(p.screen().contents(), "abcdef");
+    }
+
+    #[test]
+    fn each_query_reports_the_position_at_that_moment() {
+        let mut p = parser();
+        let replies = feed_session_bytes(&mut p, b"ab\x1b[6ncd\x1b[6n");
+        assert_eq!(replies, vec![b"\x1b[1;3R".to_vec(), b"\x1b[1;5R".to_vec()]);
+    }
+
+    #[test]
+    fn query_bytes_are_not_rendered() {
+        let mut p = parser();
+        feed_session_bytes(&mut p, b"\x1b[6n");
+        assert_eq!(p.screen().contents(), "");
     }
 }
