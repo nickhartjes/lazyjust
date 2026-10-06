@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2026-10-06
+
+Fixes a bug that left the session pane blank for anyone whose shell rc
+runs a tool that probes the terminal — `fastfetch`, powerlevel10k's
+instant prompt, or anything else drawing inline images.
+
+### Fixed
+- Recipes run again when the user's shell rc probes the terminal. The
+  session PTY spawns `$SHELL -i`, so rc files run before the primed recipe
+  line. Tools that draw inline images emit a DSR cursor-position query
+  (`ESC [ 6 n`) and then block reading stdin for the report. Nothing ever
+  replied — lazyjust had no DSR handling and `vt100` has none either — so
+  the probe never returned and swallowed the primed recipe line while
+  hunting for its answer. The recipe never ran, and the pane kept showing
+  the screen the rc file had already cleared. lazyjust now answers the
+  query with the cursor position at the point the query appeared ([#76]).
+
+  Latent since `01fd4c9` (0.1.0) replaced the recipe-embedded wrapper with
+  priming an interactive shell; it only started biting when `fastfetch`
+  2.69.0 began probing.
+
+### Changed
+- Refreshed 54 lockfile packages, plus two manifest bumps `cargo update`
+  cannot make on its own: `dirs` 6 → 7 and `rstest` 0.26 → 0.27 ([#76]).
+  The `dirs` major is safe here — its only breaking change is
+  `preference_dir` on Windows, which lazyjust does not call, and the three
+  functions it does use resolve identically on macOS and Linux. No config
+  or session-log migration. Supersedes [#56], [#67], [#68], [#69], [#70],
+  [#71], [#72], [#73], [#74] and [#75].
+
+### Internal
+- Dev toolchain moved to Rust 1.99.0; `jdx/mise-action` to v5.1.1 and the
+  SonarQube scan action to a newer digest ([#76]).
+- Added a PTY regression test that spawns its own terminal-probing shell.
+  The existing session integration test forces `SHELL=/bin/sh`, which runs
+  no rc file, which is why CI never caught this ([#76]).
+
 ## [0.2.5] - 2026-08-23
 
 Maintenance release: dependency refresh only. lazyjust's own production code
@@ -128,9 +165,21 @@ to lazyjust itself.
 ### Changed
 - Bump `dirs` 6, `thiserror` 2, `portable-pty` 0.9, `vt100` 0.16, `toml_edit` 0.25, `rstest` 0.26 ([#15]).
 
+[#56]: https://github.com/nickhartjes/lazyjust/pull/56
+[#67]: https://github.com/nickhartjes/lazyjust/pull/67
+[#68]: https://github.com/nickhartjes/lazyjust/pull/68
+[#69]: https://github.com/nickhartjes/lazyjust/pull/69
+[#70]: https://github.com/nickhartjes/lazyjust/pull/70
+[#71]: https://github.com/nickhartjes/lazyjust/pull/71
+[#72]: https://github.com/nickhartjes/lazyjust/pull/72
+[#73]: https://github.com/nickhartjes/lazyjust/pull/73
+[#74]: https://github.com/nickhartjes/lazyjust/pull/74
+[#75]: https://github.com/nickhartjes/lazyjust/pull/75
+[#76]: https://github.com/nickhartjes/lazyjust/pull/76
 [#61]: https://github.com/nickhartjes/lazyjust/pull/61
 [#65]: https://github.com/nickhartjes/lazyjust/pull/65
 [ratatui#2587]: https://github.com/ratatui/ratatui/pull/2587
+[0.2.6]: https://github.com/nickhartjes/lazyjust/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/nickhartjes/lazyjust/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/nickhartjes/lazyjust/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/nickhartjes/lazyjust/compare/v0.2.2...v0.2.3
