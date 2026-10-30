@@ -54,7 +54,7 @@ fn parse_color(s: &str) -> Result<Color, ThemeError> {
         return Ok(Color::Indexed(n));
     }
     if let Some(hex) = t.strip_prefix('#') {
-        if hex.len() == 6 {
+        if hex.len() == 6 && hex.is_ascii() {
             let r = u8::from_str_radix(&hex[0..2], 16).map_err(|_| ThemeError::Color(s.into()))?;
             let g = u8::from_str_radix(&hex[2..4], 16).map_err(|_| ThemeError::Color(s.into()))?;
             let b = u8::from_str_radix(&hex[4..6], 16).map_err(|_| ThemeError::Color(s.into()))?;
@@ -108,6 +108,15 @@ mod tests {
     #[test]
     fn empty_string_is_error() {
         assert!(matches!(parse_color(""), Err(ThemeError::Color(_))));
+    }
+
+    #[test]
+    fn multibyte_hex_is_error_not_panic() {
+        // 6 bytes but not 6 chars: byte slicing would split the 'é'.
+        assert!(matches!(
+            parse_color("#a\u{e9}123"),
+            Err(ThemeError::Color(_))
+        ));
     }
 
     #[test]
