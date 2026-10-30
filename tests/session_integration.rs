@@ -201,7 +201,8 @@ fn answers_cursor_query_so_the_primed_recipe_still_runs() {
         }
     });
 
-    let mut screen = vt100::Parser::new(24, 80, 0);
+    let mut screen =
+        vt100::Parser::new(vt100::Parser::DEFAULT_ROWS, vt100::Parser::DEFAULT_COLS, 0);
     let mut collected: Vec<u8> = Vec::new();
     let mut last_output: Option<Instant> = None;
     let mut primed = false;
