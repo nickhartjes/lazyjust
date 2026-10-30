@@ -116,11 +116,7 @@ impl SessionManager {
                 }
             });
 
-            let log_writer = std::fs::OpenOptions::new()
-                .create(true)
-                .append(true)
-                .open(&log_path)
-                .ok();
+            let log_writer = crate::logging::open_session_log(&log_path).ok();
 
             self.handles.insert(
                 id,
