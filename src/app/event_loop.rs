@@ -16,12 +16,18 @@ use ratatui::backend::CrosstermBackend;
 use ratatui::Terminal;
 use std::collections::HashMap;
 use std::io::stdout;
+use std::num::NonZeroU16;
 use std::time::Instant;
 use tokio::sync::mpsc;
 
 /// vt100 scrollback capacity per session. User scrolls with PgUp/PgDn/Home/End
 /// when session pane is focused.
 const SCROLLBACK_LINES: usize = 2000;
+
+/// vt100 rejects a zero-sized screen; a pane squeezed to nothing renders as 1x1.
+fn screen_dim(n: u16) -> NonZeroU16 {
+    NonZeroU16::new(n).unwrap_or(NonZeroU16::MIN)
+}
 
 pub struct TerminalGuard;
 
@@ -78,10 +84,12 @@ pub async fn run(mut app: App, cfg: Config) -> Result<()> {
                         let panes = crate::ui::layout::compute(size.into(), &app);
                         // right pane body = pane.height - borders (2) - session header (1) - spacer (1)
                         // right pane cols  = pane.width  - borders (2) - scroll thumb (1)
-                        let pane_rows = panes.right.height.saturating_sub(4);
-                        let pane_cols = panes.right.width.saturating_sub(3);
+                        let pane_rows = panes.right.height.saturating_sub(4).max(1);
+                        let pane_cols = panes.right.width.saturating_sub(3).max(1);
                         for (id, screen) in screens.iter_mut() {
-                            screen.screen_mut().set_size(pane_rows, pane_cols);
+                            screen
+                                .screen_mut()
+                                .set_size(screen_dim(pane_rows), screen_dim(pane_cols));
                             let _ = mgr.resize(*id, pane_rows, pane_cols);
                         }
                         dirty = true;
@@ -416,7 +424,10 @@ pub fn do_spawn(
         cfg.session_log_size_cap,
     )?;
 
-    screens.insert(id, vt100::Parser::new(rows, cols, SCROLLBACK_LINES));
+    screens.insert(
+        id,
+        vt100::Parser::new(screen_dim(rows), screen_dim(cols), SCROLLBACK_LINES),
+    );
     app.sessions.push(meta);
     app.active_session = Some(id);
     if let Some(jf) = app.justfiles.get_mut(owning_jf_idx) {
@@ -467,7 +478,7 @@ mod tests {
     use super::feed_session_bytes;
 
     fn parser() -> vt100::Parser {
-        vt100::Parser::new(24, 80, 0)
+        vt100::Parser::new(vt100::Parser::DEFAULT_ROWS, vt100::Parser::DEFAULT_COLS, 0)
     }
 
     #[test]
