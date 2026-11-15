@@ -9,7 +9,13 @@ pub fn prune_sessions(root: &Path, max_age: Duration) -> std::io::Result<()> {
     for entry in std::fs::read_dir(root)? {
         let entry = entry?;
         let path = entry.path();
-        if !path.is_dir() {
+        // Only prune what `session_log_path` created: the configured root may
+        // be a directory the user also keeps other things in.
+        let ours = entry
+            .file_name()
+            .to_str()
+            .is_some_and(crate::logging::is_session_day_dir);
+        if !ours || !path.is_dir() {
             continue;
         }
         let meta = entry.metadata()?;
