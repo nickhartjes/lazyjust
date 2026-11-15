@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.7] - 2026-11-15
+
+Hardening release from a security review, plus a dependency refresh.
+No new features and no config or session-log migration.
+
+### Security
+- Session-log retention no longer deletes directories it did not create.
+  On every launch `prune_sessions` removed *every* subdirectory of
+  `sessions_log_dir` older than the retention window, swallowing errors.
+  Since that path is user-configurable, pointing it at e.g. `~/logs` would
+  silently wipe old subfolders. It now only prunes the `YYYY-MM-DD`
+  directories lazyjust itself creates ([#87]).
+- Session logs are owner-only on unix: log files are created `0600` and
+  the directories lazyjust creates (`state_dir`, the sessions dir, day
+  dirs) `0700`. Pre-existing directories keep their mode ([#87]).
+
+### Fixed
+- A theme colour with a multi-byte character (e.g. `#aé123`) passed the
+  length check and panicked when sliced; it is now rejected as invalid
+  ([#87]).
+- The Nix package no longer triggers nixpkgs' `stdenv.isLinux is
+  deprecated` evaluation warning in downstream flakes ([#95]).
+
+### Changed
+- `vt100` 0.16 → 0.18. Its `NonZeroU16` screen sizes made lazyjust clamp
+  the resize path to 1x1, as the spawn path already did, so a pane
+  squeezed to nothing can no longer hand it a zero dimension ([#84]).
+- Refreshed `tokio` 1.54.1, `arboard` 3.7.0, `ignore` 0.4.34, `serde_json`
+  1.0.154, `toml` 1.2.1, `toml_edit` 0.25.19 and `rstest` 0.28 ([#79],
+  [#82], [#85], [#78], [#92], [#91], [#88]).
+
+### Internal
+- Dev toolchain moved to Rust 1.100.0 and `just` 1.59.0; CI action bumps
+  for `mise-action`, the SonarQube scan action, `install-nix-action` and
+  `rust-cache` ([#94], [#81], [#90], [#89], [#93], [#86]).
+- Renovate now groups all non-major updates into a single PR ([#96]).
+
 ## [0.2.6] - 2026-10-06
 
 Fixes a bug that left the session pane blank for anyone whose shell rc
@@ -165,6 +202,23 @@ to lazyjust itself.
 ### Changed
 - Bump `dirs` 6, `thiserror` 2, `portable-pty` 0.9, `vt100` 0.16, `toml_edit` 0.25, `rstest` 0.26 ([#15]).
 
+[#78]: https://github.com/nickhartjes/lazyjust/pull/78
+[#79]: https://github.com/nickhartjes/lazyjust/pull/79
+[#81]: https://github.com/nickhartjes/lazyjust/pull/81
+[#82]: https://github.com/nickhartjes/lazyjust/pull/82
+[#84]: https://github.com/nickhartjes/lazyjust/pull/84
+[#85]: https://github.com/nickhartjes/lazyjust/pull/85
+[#86]: https://github.com/nickhartjes/lazyjust/pull/86
+[#87]: https://github.com/nickhartjes/lazyjust/pull/87
+[#88]: https://github.com/nickhartjes/lazyjust/pull/88
+[#89]: https://github.com/nickhartjes/lazyjust/pull/89
+[#90]: https://github.com/nickhartjes/lazyjust/pull/90
+[#91]: https://github.com/nickhartjes/lazyjust/pull/91
+[#92]: https://github.com/nickhartjes/lazyjust/pull/92
+[#93]: https://github.com/nickhartjes/lazyjust/pull/93
+[#94]: https://github.com/nickhartjes/lazyjust/pull/94
+[#95]: https://github.com/nickhartjes/lazyjust/pull/95
+[#96]: https://github.com/nickhartjes/lazyjust/pull/96
 [#56]: https://github.com/nickhartjes/lazyjust/pull/56
 [#67]: https://github.com/nickhartjes/lazyjust/pull/67
 [#68]: https://github.com/nickhartjes/lazyjust/pull/68
@@ -179,6 +233,7 @@ to lazyjust itself.
 [#61]: https://github.com/nickhartjes/lazyjust/pull/61
 [#65]: https://github.com/nickhartjes/lazyjust/pull/65
 [ratatui#2587]: https://github.com/ratatui/ratatui/pull/2587
+[0.2.7]: https://github.com/nickhartjes/lazyjust/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/nickhartjes/lazyjust/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/nickhartjes/lazyjust/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/nickhartjes/lazyjust/compare/v0.2.3...v0.2.4
