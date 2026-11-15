@@ -19,7 +19,7 @@ mkShell {
     cargo-nextest
     cargo-watch
     pkg-config
-  ] ++ lib.optionals stdenv.isLinux [
+  ] ++ lib.optionals stdenv.hostPlatform.isLinux [
     libxcb
     libxkbcommon
     wayland

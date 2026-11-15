@@ -28,7 +28,7 @@ let
 
     nativeBuildInputs = [ pkg-config makeWrapper just ];
 
-    buildInputs = lib.optionals stdenv.isLinux [
+    buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
       libxcb
       libxkbcommon
       wayland
